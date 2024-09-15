@@ -10,6 +10,7 @@ import {
   ScrollView,
   TextInput,
   FlatList,
+  Keyboard,
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,15 +19,20 @@ import {
   FontAwesome5,
   FontAwesome6,
   Octicons,
-  MaterialIcons,
   FontAwesome,
-  MaterialCommunityIcons,
+  MaterialIcons,
   Ionicons,
   Foundation,
   AntDesign,
+  SimpleLineIcons,
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Ministries from "./Ministries";
+import Calender from "./Calender";
+import Cellgroups from "./Cellgroups";
+import Forums from "./Forums";
+import Notifications from "./Notifications";
 
 const BtnsData = [
   {
@@ -34,7 +40,7 @@ const BtnsData = [
     title: "Ministries",
     vectoricon: "FontAwesome5",
     icon: "church",
-    selected: true,
+    selected: false,
   },
   {
     id: "2",
@@ -57,6 +63,13 @@ const BtnsData = [
     icon: "church",
     selected: false,
   },
+  {
+    id: "5",
+    title: "Refresh",
+    vectoricon: "SimpleLineIcons",
+    icon: "refresh",
+    selected: true,
+  },
 ];
 
 const Home = ({ navigation }) => {
@@ -73,6 +86,7 @@ const Home = ({ navigation }) => {
   const [showAlert, setShowAlert] = React.useState(false);
   const [alerttext, setAlerttext] = React.useState("");
   const [alerttitle, setAlerttitle] = React.useState("");
+  const [showTabs, setShowTabs] = useState(true);
 
   const doAlert = (txt, ttl) => {
     setShowAlert(!showAlert);
@@ -82,9 +96,11 @@ const Home = ({ navigation }) => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [btns, setBtns] = useState([]);
-  const [prevbtn, setPrevbtn] = useState("1");
+  const [prevbtn, setPrevbtn] = useState("5");
+  const [page, setPage] = useState("5");
 
   const changeState = (id) => {
+    setPage(id);
     let markers = [...btns];
     let index = markers.findIndex((el) => el.id == id);
     let previndex = markers.findIndex((el) => el.id == prevbtn);
@@ -181,6 +197,19 @@ const Home = ({ navigation }) => {
           />
         </>
       )}
+      {id == 5 && (
+        <>
+          <SimpleLineIcons
+            name="refresh"
+            size={17}
+            style={
+              selected == true
+                ? { marginRight: 5, color: "#ffffff" }
+                : { marginRight: 5, color: "#000000" }
+            }
+          />
+        </>
+      )}
       <Text
         style={
           selected == true
@@ -218,6 +247,20 @@ const Home = ({ navigation }) => {
       setBtns(BtnsData);
     };
     asyncFetch();
+  }, []);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setShowTabs(false);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setShowTabs(true);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
   }, []);
 
   if (!fontsLoaded) {
@@ -258,39 +301,58 @@ const Home = ({ navigation }) => {
         }}
       />
       <View style={styles.viewTop}>
-        <View
-          style={{
-            width: "80%",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Text style={{ fontFamily: "PlayfairDisplayRegular", fontSize: 16 }}>
-            Hi Emma Griffins
-          </Text>
-          <Text
-            style={{
-              fontFamily: "PlayfairDisplayRegular",
-              fontSize: 22,
-              lineHeight: 24,
-              marginTop: 10
-            }}
-          >
-            Good Morning
-          </Text>
-        </View>
-        <View
-          style={{
-            width: "20%",
-            alignItems: "center",
-            justifyContent: "flex-end",
-          }}
-        >
-          <Image
-            style={styles.imgLogo}
-            source={require("../../assets/user.png")}
-          />
-        </View>
+        {showTabs && (
+          <>
+            <View
+              style={{
+                width: "20%",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Image
+                style={styles.imgUsr}
+                source={require("../../assets/user.png")}
+              />
+            </View>
+            <View
+              style={{
+                width: "50%",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Text
+                style={{ fontFamily: "PlayfairDisplayRegular", fontSize: 18 }}
+              >
+                Hi Emma Griffins
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "PlayfairDisplayRegular",
+                  fontSize: 22,
+                  lineHeight: 24,
+                  marginTop: 10,
+                }}
+              >
+                Good Morning
+              </Text>
+            </View>
+            <View
+              style={{
+                width: "30%",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
+              
+               <Image
+        style={styles.imgLogo}
+        source={require("../../assets/nlcc-logo-1.png")}
+      />
+            </View>
+          </>
+        )}
       </View>
       <View style={styles.viewMiddle}>
         <View style={styles.viewInput}>
@@ -310,10 +372,10 @@ const Home = ({ navigation }) => {
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "space-between",
             paddingHorizontal: 5,
             width: "100%",
             marginTop: 30,
+            flexDirection: "column",
           }}
         >
           {btns && (
@@ -327,49 +389,153 @@ const Home = ({ navigation }) => {
             />
           )}
         </View>
+        {page == 1 && (
+          <>
+            <Text
+              style={{
+                fontFamily: "GeneralSansRegular",
+                fontSize: 14,
+                lineHeight: 24,
+                marginTop: 20,
+              }}
+            >
+              Be part of diffrent ministries available
+            </Text>
+            <Ministries />
+          </>
+        )}
+        {page == 2 && (
+          <>
+            <Text
+              style={{
+                fontFamily: "GeneralSansRegular",
+                fontSize: 14,
+                lineHeight: 24,
+                marginTop: 20,
+              }}
+            >
+              View events and church services as part of our calender
+            </Text>
+            <Calender />
+          </>
+        )}
+        {page == 3 && (
+          <>
+            <Text
+              style={{
+                fontFamily: "GeneralSansRegular",
+                fontSize: 14,
+                lineHeight: 24,
+                marginTop: 20,
+              }}
+            >
+              Be part of a Cell Group
+            </Text>
+            <Cellgroups />
+          </>
+        )}
+        {page == 4 && (
+          <>
+            <Text
+              style={{
+                fontFamily: "GeneralSansRegular",
+                fontSize: 14,
+                lineHeight: 24,
+                marginTop: 20,
+              }}
+            >
+              Be part of the discussion forums on the listed topics
+            </Text>
+            <Forums />
+          </>
+        )}
+        {page == 5 && (
+          <>
+            <Image
+              style={styles.imgChurch}
+              source={require("../../assets/church.png")}
+            />
+
+            <View
+              style={{ width: "100%", flexDirection: "row", marginTop: 30 }}
+            >
+              <View
+                style={{
+                  width: "50%",
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                }}
+              >
+                <Text
+                  style={{ fontFamily: "GeneralSansRegular", fontSize: 14 }}
+                >
+                  Notifications (30)
+                </Text>
+              </View>
+              <View
+                style={{
+                  width: "50%",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Text
+                  style={{ fontFamily: "GeneralSansRegular", fontSize: 14 }}
+                >
+                  View All
+                </Text>
+              </View>
+            </View>
+            <Notifications />
+          </>
+        )}
       </View>
       <View style={styles.viewBottom}>
-        <View style={styles.viewInTabs}>
-          <TouchableOpacity
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <Ionicons color="#000000" name="home" size={25} />
-            <Text style={{ color: "#000000" }}>Home</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Orders")}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <Ionicons color="#1a6363" name="cart-outline" size={25} />
-            <Text style={{ color: "#1a6363" }}>Services</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Chat")}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <Ionicons
-              color="#1a6363"
-              name="chatbox-ellipses-outline"
-              size={25}
-            />
-            <Text style={{ color: "#1a6363" }}>Contributions</Text>
-          </TouchableOpacity>
+        {showTabs && (
+          <>
+            <View style={styles.viewInTabs}>
+              <TouchableOpacity
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <Ionicons color="#000000" name="home" size={25} />
+                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#000000" }}>Home</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Services")}
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <Ionicons color="#1a6363" name="cart-outline" size={25} />
+                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Services</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Contributions")}
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <Ionicons
+                  color="#1a6363"
+                  name="chatbox-ellipses-outline"
+                  size={25}
+                />
+                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Contributions</Text>
+              </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Support")}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <MaterialIcons color="#1a6363" name="support-agent" size={25} />
-            <Text style={{ color: "#1a6363" }}>Events</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("More")}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <Foundation color="#1a6363" name="indent-more" size={25} />
-            <Text style={{ color: "#1a6363" }}>More</Text>
-          </TouchableOpacity>
-        </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Events")}
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <MaterialIcons color="#1a6363" name="support-agent" size={25} />
+                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Events</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("More")}
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <Foundation color="#1a6363" name="indent-more" size={25} />
+                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>More</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
     </LinearGradient>
   );
@@ -387,13 +553,28 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    marginTop: 10,
+    marginTop: 25,
   },
-  imgLogo: {
+  imgUsr: {
     width: 45,
     height: 45,
     borderRadius: 22.5,
     alignSelf: "center",
+    resizeMode: "cover",
+  },
+  imgLogo: {
+    width: '100%',
+    height: 35,
+    borderRadius: 22.5,
+    alignSelf: "center",
+    resizeMode: "cover",
+  },
+  imgChurch: {
+    marginTop: 20,
+    width: "100%",
+    alignSelf: "center",
+    height: "30%",
+    borderRadius: 5,
     resizeMode: "cover",
   },
   viewMiddle: {
@@ -403,7 +584,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   viewBottom: {
-    flex: 0.8,
+    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -414,8 +595,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     height: 55,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ffffff"
+    borderWidth: 1,
+    borderColor: "#ffffff",
+    borderRadius: 8
   },
   viewBtns: {
     flexDirection: "column",
@@ -444,7 +626,7 @@ const styles = StyleSheet.create({
   inputTextInput: {
     width: "98%",
     height: 45,
-    color: "#ffffff",
+    color: "#000000",
     fontSize: 16,
     fontFamily: "GeneralSansMedium",
   },
@@ -455,6 +637,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     marginTop: 10,
+    backgroundColor: "#ffffff",
+    paddingTop: 8,
+    paddingBottom: 3,
+    borderRadius: 10,
+    marginBottom: 5,
   },
 });
 

@@ -11,8 +11,12 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
+import {
+  FontAwesome6
+} from "react-native-vector-icons";
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setStatusBarBackgroundColor } from "expo-status-bar";
 
 const Splash = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
@@ -26,6 +30,7 @@ const Splash = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       const unloadScreen = () => {
+        //console.log('SignIn');
         navigation.navigate('SignIn');
       };
       setTimeout(() => {
@@ -52,6 +57,20 @@ const Splash = ({ navigation }) => {
         source={require("../../assets/nlcc-logo-1.png")}
       />
       <Text style={styles.txtTagline}>NEW LIFE COVENANT CHURCH</Text>
+      <View style={{width: '100%', flexDirection: 'row', marginTop: 105}}>
+      <View style={{width: '50%'}}>
+
+      </View>
+      <View style={{width: '50%', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+      <FontAwesome6
+            name="church"
+            size={25}
+            style={{ color: "#ffffff", alignSelf: 'flex-end', marginRight: 60 }}
+          />
+      <Text style={styles.txtLowTagline}>A place to belong</Text>
+
+      </View>
+      </View>
     </LinearGradient>
   );
 };
@@ -61,6 +80,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    width: '100%',
+    flexDirection: 'column',
+    paddingHorizontal: 20
   },
   imgLogo: {
     width: 300,
@@ -69,12 +91,23 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   txtTagline: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'PlayfairDisplayRegular',
-    textAlign: 'center',
+    alignSelf: 'flex-end',
     color: '#FFFFFF',
     // color: '#1a6363',
-    marginTop: 15
+    marginTop: 5,
+    marginRight: 25
+  },
+  txtLowTagline: {
+    fontSize: 18,
+    fontFamily: 'PlayfairDisplayRegular',
+    alignSelf: 'flex-end',
+    lineHeight: 30,
+    color: '#FFFFFF',
+    //color: '#1a6363',
+    marginTop: 5,
+    marginRight: 25
   },
 });
 

@@ -17,7 +17,7 @@ import { SimpleLineIcons, FontAwesome } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const SignIn = ({ navigation }) => {
+const ForgotPassword = ({ navigation }) => {
 
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
@@ -50,8 +50,8 @@ const SignIn = ({ navigation }) => {
     );
   };
 
-  const handleSignIn = (email) => {
-    navigation.navigate('Home');
+  const handleProceed = (email) => {
+    navigation.navigate('Otp');
   };
 
   useFocusEffect(
@@ -109,10 +109,10 @@ const SignIn = ({ navigation }) => {
         source={require("../../assets/nlcc-logo-1.png")}
       />
       <Text style={styles.txtTagline}>NEW LIFE COVENANT CHURCH</Text>
-      <Text style={styles.txtFormName}>Sign In</Text>
-      {/* <Text style={styles.txtFormInstruction}>
-          Provide your account details and press login button
-        </Text> */}
+      <Text style={styles.txtFormName}>Forgot Password</Text>
+      <Text style={styles.txtFormInstruction}>
+          Provide email to proceed and receive password reset instructions
+        </Text>
 
         <View style={styles.viewInputs}>
           <View style={styles.viewInput}>
@@ -129,58 +129,15 @@ const SignIn = ({ navigation }) => {
                 value={inputs.email}
                 onChangeText={(text) => setInputs({ ...inputs, email: text })}
                 style={styles.inputTextInput}
-                placeholder="Enter your email: example@gmail.com"
+                placeholder="Enter your account email"
               />
             </View>
           </View>
-          <View style={[styles.viewInput, { marginTop: 20 }]}>
-            <View style={styles.viewIcon}>
-              <SimpleLineIcons
-                name="lock"
-                size={25}
-                style={styles.icoInputIcon}
-              />
-            </View>
-            <View style={styles.viewTextInput}>
-              <TextInput
-                autoCorrect={false}
-                value={inputs.password}
-                secureTextEntry={hidepin}
-                onChangeText={(text) =>
-                  setInputs({ ...inputs, password: text })
-                }
-                style={styles.inputTextInput}
-                placeholder="Enter your password"
-              />
-            </View>
-            <TouchableOpacity
-              onPress={() => setHidepin(!hidepin)}
-              style={styles.viewToggler}
-            >
-              {hidepin && (
-                <>
-                  <FontAwesome
-                    name="eye-slash"
-                    size={25}
-                    style={styles.icoInputIcon}
-                  />
-                </>
-              )}
-              {hidepin == false && (
-                <>
-                  <FontAwesome
-                    name="eye"
-                    size={25}
-                    style={styles.icoInputIcon}
-                  />
-                </>
-              )}
-            </TouchableOpacity>
-          </View>
+         
         </View>
         <View style={styles.viewBtns}>
           <TouchableOpacity
-            onPress={() => handleSignIn()}
+            onPress={() => handleProceed()}
             style={styles.btnBtns1}
           >
             {isactive && (
@@ -190,25 +147,12 @@ const SignIn = ({ navigation }) => {
             )}
             {isactive == false && (
               <>
-                <Text style={styles.txtBtnTxt1}>Log In</Text>
+                <Text style={styles.txtBtnTxt1}>Proceed</Text>
               </>
             )}
           </TouchableOpacity>
-          <Text
-            onPress={() => navigation.navigate("ForgotPassword")}
-            style={styles.txtForgotPin}
-          >
-            Forgot password?
-          </Text>
-          <Text
-            onPress={() => navigation.navigate("SignUp")}
-            style={styles.txtDontHave}
-          >
-            Not yet registered?{"  "}
-            <Text style={{ color: "#FFFFF0", fontFamily: "GeneralSansMedium" }}>
-              Register
-            </Text>
-          </Text>
+       
+          
         </View>
     </LinearGradient>
   );
@@ -239,6 +183,14 @@ const styles = StyleSheet.create({
     fontFamily: 'GeneralSansRegular',
     textAlign: 'center',
     color: '#FFFFF0',
+    marginTop: 35,
+    lineHeight: 36
+  },
+  txtFormInstruction: {
+    fontSize: 12,
+    fontFamily: 'GeneralSansRegular',
+    textAlign: 'center',
+    color: '#000000',
     marginTop: 35,
     lineHeight: 36
   },
@@ -332,4 +284,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignIn;
+export default ForgotPassword;
