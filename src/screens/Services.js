@@ -151,8 +151,8 @@ const Services = ({ navigation }) => {
           <TouchableOpacity
             style={{ justifyContent: "center", alignItems: "center" }}
           >
-            <Ionicons color="#000000" name="cart-outline" size={25} />
-            <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#000000" }}>Services</Text>
+            <Ionicons color="#bd7925" name="cart-outline" size={25} />
+            <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#bd7925" }}>Services</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigation.navigate("Contributions")}

@@ -147,19 +147,19 @@ const Events = ({ navigation }) => {
             <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Home</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Services")}
+            onPress={() => navigation.navigate("Sermons")}
             style={{ justifyContent: "center", alignItems: "center" }}
           >
-            <Ionicons color="#1a6363" name="cart-outline" size={25} />
-            <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Services</Text>
+            <FontAwesome6 color="#1a6363" name="book-bible" size={25} />
+            <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Sermons</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigation.navigate("Contributions")}
             style={{ justifyContent: "center", alignItems: "center" }}
           >
-            <Ionicons
+            <FontAwesome6
               color="#1a6363"
-              name="chatbox-ellipses-outline"
+              name="money-check"
               size={25}
             />
             <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Contributions</Text>
@@ -168,14 +168,14 @@ const Events = ({ navigation }) => {
           <TouchableOpacity
             style={{ justifyContent: "center", alignItems: "center" }}
           >
-            <MaterialIcons color="#000000" name="support-agent" size={25} />
-            <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#000000" }}>Events</Text>
+            <FontAwesome6 color="#bd7925" name="building-user" size={25} />
+            <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#bd7925" }}>Events</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigation.navigate("More")}
             style={{ justifyContent: "center", alignItems: "center" }}
           >
-            <Foundation color="#1a6363" name="indent-more" size={25} />
+            <AntDesign color="#1a6363" name="appstore1" size={25} />
             <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>More</Text>
           </TouchableOpacity>
         </View>

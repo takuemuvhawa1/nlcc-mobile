@@ -15,58 +15,65 @@ import {
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect } from "@react-navigation/native";
-import {
-  MaterialIcons
-} from "react-native-vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { MaterialIcons } from "react-native-vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const apiData = [
   {
     id: "1",
     type: "Easter Monday",
-    theme:
-      "The death of Jesus",
+    theme: "The death of Jesus",
+    description: "Easter Monday is the second day of Eastertide and a public holiday in some countries. In Western Christianity it marks the second day of the Octave of Easter; in Eastern Christianity it marks the second day of Bright Week",
     date: "12/12/2000",
-    time: "12:34 Pm"
+    time: "12:34 Pm",
+    enddate: "14/12/2000",
+    endtime: "14:00 Pm",
   },
   {
     id: "2",
     type: "Church Service",
-    theme:
-      "The power of giving",
+    theme: "The power of giving",
+    description: "When you give to someone else, it can create a sense of connection and gratitude that can improve your relationship and bring you closer together. Giving to others doesn't have to be about spending money or buying someone a super expensive gift, there are plenty of free acts of kindness and giving you can do.",
     date: "12/12/2000",
-    time: "12:34 Pm"
+    time: "12:34 Pm",
+    enddate: null,
+    endtime: "14:34 Pm",
   },
   {
     id: "3",
     type: "Harare Gardens Miracles",
-    theme:
-      "The power of giving",
+    theme: "Salvation through worship",
+    description: "If you are sick and afflicted, you must know that God's love heals; and you can be healed right now. He sent his word, and healed them (Psalm 107:20). He is ...",
     date: "12/12/2000",
-    time: "12:34 Pm"
+    time: "12:34 Pm",
+    enddate: "16/12/2000",
+    endtime: "14:00 Pm",
   },
   {
     id: "4",
     type: "Church Service",
-    theme:
-      "The power of giving",
+    theme: "The power of giving",
+    description: "When you give tithes and offerings, it helps your local church actively be the church by helping others. Giving encourages a grateful and generous spirit and can help steer us away from greed and discontent. Plus, I always say that being outrageously generous is the most fun you'll ever have with money!",
     date: "12/12/2000",
-    time: "12:34 Pm"
+    time: "12:34 Pm",
+    enddate: null,
+    endtime: "13:34 Pm",
   },
 ];
 
-const Calender = ({ navigation }) => {
-
+const Calender = () => {
   const [data, setData] = useState([]);
+  const navigation = useNavigation();
+  const showEvent = async (id) => {
+    let result = data.find((obj) => obj.id === id);
+    console.log(id);
+    await AsyncStorage.setItem("SelectedEvent", JSON.stringify(result));
+    navigation.navigate("Event");
+  };
 
-  const SingleItem = ({
-    id,
-    type,
-    theme,
-    date,
-    time
-  }) => (
-    <TouchableOpacity style={{ marginTop: 10 }}>
+  const SingleItem = ({ id, type, theme, date, time }) => (
+    <TouchableOpacity style={{ marginTop: 10 }} onPress={() => showEvent(id)}>
       <View
         style={{
           flexDirection: "row",
@@ -111,7 +118,7 @@ const Calender = ({ navigation }) => {
               marginTop: 7,
             }}
           >
-            {date}{" "}{time}
+            {date} {time}
           </Text>
         </View>
         <View style={{ width: "20%" }}>

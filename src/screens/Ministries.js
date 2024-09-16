@@ -17,6 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect } from "@react-navigation/native";
 import { MaterialIcons } from "react-native-vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 const apiData = [
   {
@@ -25,7 +26,7 @@ const apiData = [
     description:
       "This is a ministry for laddies of all ages from adult and above and we discuss all matters...",
     admin: "Christabel Mwanza",
-    adminphone: "+263778476",
+    adminphone: "+263778476234",
     joined: true,
   },
   {
@@ -34,7 +35,7 @@ const apiData = [
     description:
       "This is a ministry for man of all ages from adult and above and we discuss all matters...",
     admin: "Jonnah Kavaza",
-    adminphone: "+263778476",
+    adminphone: "+263778476654",
     joined: false,
   },
   {
@@ -43,7 +44,7 @@ const apiData = [
     description:
       "This is a ministry for kids and we discuss all matters that affect them biblically assisting to mould...",
     admin: "Chris Chibwe",
-    adminphone: "+263778476",
+    adminphone: "+263778476122",
     joined: false,
   },
   {
@@ -52,16 +53,28 @@ const apiData = [
     description:
       "This is a ministry for all age grups from adult and above and we discuss all matters...",
     admin: "Abigail Kurai",
-    adminphone: "+263778476",
+    adminphone: "+263778476000",
     joined: true,
   },
 ];
 
-const Ministries = ({ navigation }) => {
+const Ministries = () => {
   const [data, setData] = useState([]);
+  const navigation = useNavigation();
+
+  const showMinistry = async (id) => {
+    let result = data.find((obj) => obj.id === id);
+    console.log(id);
+    console.log(result.admin);
+    await AsyncStorage.setItem("SelectedMinistry", JSON.stringify(result));
+    navigation.navigate("Ministry");
+  };
 
   const SingleItem = ({ id, name, description, admin, adminphone, joined }) => (
-    <TouchableOpacity style={{ marginTop: 10 }}>
+    <TouchableOpacity
+      style={{ marginTop: 10 }}
+      onPress={() => showMinistry(id)}
+    >
       <View
         style={{
           flexDirection: "row",

@@ -17,6 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect } from "@react-navigation/native";
 import { MaterialIcons } from "react-native-vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from '@react-navigation/native';
 
 const apiData = [
   {
@@ -57,8 +58,9 @@ const apiData = [
   },
 ];
 
-const Forums = ({ navigation }) => {
+const Forums = () => {
   const [data, setData] = useState([]);
+  const navigation = useNavigation();
 
   const SingleItem = ({ id, name, description, admin, adminphone, joined }) => (
     <TouchableOpacity style={{ marginTop: 10 }}>

@@ -24,13 +24,86 @@ import {
   Ionicons,
   Foundation,
   AntDesign,
-  Feather,
-  SimpleLineIcons
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const More = ({ navigation }) => {
+const apiData = [
+  {
+    id: "1",
+    name: "Kingdom Cathedral",
+    weblink: "www.youtube.com",
+    date: "12-12-2000",
+  },
+  {
+    id: "2",
+    name: "Church Renovations",
+    weblink: "www.youtube.com0",
+    date: "12-12-2000",
+  },
+  {
+    id: "3",
+    name: "Special Offering",
+    weblink: "www.youtube.com",
+    date: "12-12-2000",
+  },
+  {
+    id: "4",
+    name: "Kingdom Cathedral",
+    weblink: "www.youtube.com",
+    date: "12-12-2000",
+  },
+  {
+    id: "5",
+    name: "Kingdom Cathedral",
+    weblink: "www.youtube.com",
+    date: "12-12-2000",
+  },
+  {
+    id: "6",
+    name: "Church Renovations",
+    weblink: "www.youtube.com0",
+    date: "12-12-2000",
+  },
+  {
+    id: "7",
+    name: "Special Offering",
+    weblink: "www.youtube.com",
+    date: "12-12-2000",
+  },
+  {
+    id: "8",
+    name: "Kingdom Cathedral",
+    weblink: "www.youtube.com",
+    date: "12-12-2000",
+  },
+  {
+    id: "9",
+    name: "Kingdom Cathedral",
+    weblink: "www.youtube.com",
+    date: "12-12-2000",
+  },
+  {
+    id: "10",
+    name: "Church Renovations",
+    weblink: "www.youtube.com0",
+    date: "12-12-2000",
+  },
+  {
+    id: "11",
+    name: "Special Offering",
+    weblink: "www.youtube.com",
+    date: "12-12-2000",
+  },
+  {
+    id: "12",
+    name: "Kingdom Cathedral",
+    weblink: "www.youtube.com",
+    date: "12-12-2000",
+  },
+];
+
+const Sermons = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
     GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
@@ -39,6 +112,8 @@ const More = ({ navigation }) => {
     PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
   });
 
+  const [data, setData] = useState([]);
+  const [searchtext, setSearchtext] = React.useState("");
   const [isactive, setIsactive] = React.useState(false);
   const [showAlert, setShowAlert] = React.useState(false);
   const [alerttext, setAlerttext] = React.useState("");
@@ -50,115 +125,77 @@ const More = ({ navigation }) => {
     setAlerttitle(ttl);
   };
 
-  const RenderItem = ({ title }) => (
-    <TouchableOpacity
-
-      onPress={()=>{
-        {title == "My Profile" && (
-          navigation.navigate('MyProfile')
-        )}
-
-        {title == "Ministry Admin" && (
-          navigation.navigate('Home')
-        )}
-
-        {title == "Cell Group Admin" && (
-          navigation.navigate('Home')
-        )}
-        {title == "Events Admin" && (
-          navigation.navigate('Home')
-        )}
-        {title == "Settings" && (
-          navigation.navigate('MyProfile')
-        )}
-        {title == "About NLCC" && (
-          navigation.navigate('About')
-        )}
-        {title == "Sign Out" && (
-          navigation.navigate('SignIn')
-        )}
-        }
-      }
-      style={{
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        marginTop: 10,
-        borderColor: "#1a6363",
-        borderWidth: 0.5,
-        height: 60,
-        borderRadius: 8,
-      }}
-    >
+  const SingleItem = ({ id, name, weblink, date }) => (
+    <TouchableOpacity style={{ marginTop: 10 }}>
       <View
         style={{
           flexDirection: "row",
-          justifyContent: "space-between",
-          paddingHorizontal: 5,
-          width: "98.5%",
-          backgroundColor: "#1a6363",
-          borderWidth: 0.5,
-          height: 52,
+          width:'100%',
+          height: 100,
+          backgroundColor: "white",
+          borderColor: "#1a636340",
+          borderWidth: 1,
           borderRadius: 8,
           paddingHorizontal: 15,
-          paddingTop: 15,
         }}
       >
-        <Text
-          style={{
-            fontFamily: "GeneralSansRegular",
-            fontSize: 14,
-            color: "#ffffff",
-          }}
-        >
-          {title}
-        </Text>
-
-        {title == "My Profile" && (
-          <>
-            <FontAwesome color="#ffffff" name="user-o" size={20} />
-          </>
-        )}
-
-        {title == "Ministry Admin" && (
-          <>
-            <FontAwesome color="#ffffff" name="user-circle" size={20} />
-          </>
-        )}
-
-        {title == "Cell Group Admin" && (
-          <>
-            <FontAwesome color="#ffffff" name="user-circle" size={20} />
-          </>
-        )}
-        {title == "Events Admin" && (
-          <>
-            <FontAwesome color="#ffffff" name="user-circle" size={20} />
-          </>
-        )}
-        {title == "Settings" && (
-          <>
-            <Feather color="#ffffff" name="settings" size={20} />
-          </>
-        )}
-        {title == "About NLCC" && (
-          <>
-            <SimpleLineIcons color="#ffffff" name="info" size={20} />
-          </>
-        )}
-        {title == "Sign Out" && (
-          <>
-            <FontAwesome color="#ffffff" name="sign-out" size={22} />
-          </>
-        )}
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: "GeneralSansMedium",
+              textAlign: "flex-start",
+              color: "#000000",
+              marginTop: 10,
+            }}
+          >
+            {name}
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: "GeneralSansRegular",
+              textAlign: "flex-start",
+              color: "#bd7925",
+              marginTop: 7,
+            }}
+          >
+            {date}
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: "GeneralSansRegular",
+              textAlign: "flex-start",
+              color: "#000000",
+              marginTop: 7,
+            }}
+          >
+            {weblink}
+          </Text>
+        </View>
+        <View style={{ width: "30%", justifyContent: 'center', alignItems: 'center' }}>
+        <Image
+            style={styles.imgYouTube}
+            source={require("../../assets/youtube5.png")}
+          />
+        </View>
       </View>
     </TouchableOpacity>
   );
 
+  const renderItem = ({ item }) => (
+    <SingleItem
+      id={item.id}
+      name={item.name}
+      weblink={item.weblink}
+      date={item.date}
+    />
+  );
+
   useEffect(() => {
     const asyncFetch = () => {
-      console.log("first");
+      setData(apiData);
     };
     asyncFetch();
   }, []);
@@ -216,7 +253,7 @@ const More = ({ navigation }) => {
               marginTop: 10,
             }}
           >
-            More
+            Sermons
           </Text>
         </View>
         <View
@@ -233,13 +270,45 @@ const More = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.viewMiddle}>
-        <RenderItem title={"My Profile"} />
-        <RenderItem title={"Ministry Admin"} />
-        <RenderItem title={"Cell Group Admin"} />
-        <RenderItem title={"Events Admin"} />
-        <RenderItem title={"Settings"} />
-        <RenderItem title={"About NLCC"} />
-        <RenderItem title={"Sign Out"} />
+        <View
+          style={{
+            flexDirection: "column",
+            justifyContent: "space-between",
+            paddingHorizontal: 5,
+            width: "100%",
+            marginTop: 30,
+          }}
+        >
+          <View style={styles.viewInput}>
+            <View style={styles.viewIcon}>
+              <Octicons name="search" size={25} style={styles.icoInputIcon} />
+            </View>
+            <View style={styles.viewTextInput}>
+              <TextInput
+                autoCorrect={false}
+                value={searchtext}
+                onChangeText={(text) => setSearchtext(text)}
+                style={styles.inputTextInput}
+                placeholder="Search sermon . . ."
+              />
+            </View>
+          </View>
+          <View style={{paddingBottom: 20, height: '92%'}}>
+          {data && (
+            <>
+            <FlatList
+              vertical
+              data={data}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{paddingBottom:100}} 
+            />
+            </>
+          )}
+
+          </View>
+        </View>
       </View>
       <View style={styles.viewBottom}>
         <View style={styles.viewInTabs}>
@@ -262,20 +331,20 @@ const More = ({ navigation }) => {
             onPress={() => navigation.navigate("Sermons")}
             style={{ justifyContent: "center", alignItems: "center" }}
           >
-            <FontAwesome6 color="#1a6363" name="book-bible" size={25} />
+            <FontAwesome6 color="#bd7925" name="book-bible" size={25} />
             <Text
               style={{
                 fontFamily: "GeneralSansRegular",
                 fontSize: 14,
-                color: "#1a6363",
+                color: "#bd7925",
               }}
             >
               Sermons
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Contributions")}
             style={{ justifyContent: "center", alignItems: "center" }}
+            onPress={() => navigation.navigate("Contributions")}
           >
             <FontAwesome6
               color="#1a6363"
@@ -309,14 +378,15 @@ const More = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => navigation.navigate("More")}
             style={{ justifyContent: "center", alignItems: "center" }}
           >
-            <AntDesign color="#bd7925" name="appstore1" size={25} />
+            <AntDesign color="#1a6363" name="appstore1" size={25} />
             <Text
               style={{
                 fontFamily: "GeneralSansRegular",
                 fontSize: 14,
-                color: "#bd7925",
+                color: "#1a6363",
               }}
             >
               More
@@ -349,6 +419,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     resizeMode: "cover",
   },
+  imgYouTube: {
+    width: "100%",
+    height: 60,
+    resizeMode: "cover",
+  },
   viewMiddle: {
     flex: 8,
     flexDirection: "column",
@@ -376,6 +451,34 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 5,
   },
+  viewInput: {
+    flexDirection: "row",
+    width: "100%",
+    height: 55,
+    borderWidth: 1,
+    borderColor: "#ffffff",
+    borderRadius: 8,
+  },
+  viewIcon: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "15%",
+  },
+  icoInputIcon: {
+    color: "grey",
+  },
+  viewTextInput: {
+    width: "70%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  inputTextInput: {
+    width: "98%",
+    height: 45,
+    color: "#000000",
+    fontSize: 16,
+    fontFamily: "GeneralSansMedium",
+  },
 });
 
-export default More;
+export default Sermons;

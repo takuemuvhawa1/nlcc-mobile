@@ -63,7 +63,7 @@ const Notifications = ({ navigation }) => {
         style={{
           flexDirection: "row",
           width: "100%",
-          height: 80,
+          height: 75,
           backgroundColor: "white",
           borderColor: "#1a636340",
           borderWidth: 1,
@@ -100,7 +100,7 @@ const Notifications = ({ navigation }) => {
               fontFamily: "GeneralSansRegular",
               textAlign: "flex-start",
               color: "#bd7925",
-              marginTop: 7,
+              marginTop: 5,
             }}
           >
             Sent On: {date}{" "}{time}

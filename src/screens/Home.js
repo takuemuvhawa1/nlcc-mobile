@@ -146,8 +146,8 @@ const Home = ({ navigation }) => {
       {id == 1 && (
         <>
           <FontAwesome6
-            name="church"
-            size={15}
+            name="people-roof"
+            size={17}
             style={
               selected == true
                 ? { marginRight: 5, color: "#ffffff" }
@@ -158,9 +158,9 @@ const Home = ({ navigation }) => {
       )}
       {id == 2 && (
         <>
-          <FontAwesome6
-            name="people-roof"
-            size={15}
+          <FontAwesome
+            name="calendar"
+            size={17}
             style={
               selected == true
                 ? { marginRight: 5, color: "#ffffff" }
@@ -172,9 +172,9 @@ const Home = ({ navigation }) => {
 
       {id == 3 && (
         <>
-          <MaterialIcons
-            name="event-note"
-            size={20}
+          <FontAwesome6
+            name="users-viewfinder"
+            size={17}
             style={
               selected == true
                 ? { marginRight: 5, color: "#ffffff" }
@@ -187,7 +187,7 @@ const Home = ({ navigation }) => {
       {id == 4 && (
         <>
           <FontAwesome6
-            name="people-carry-box"
+            name="users-rays"
             size={17}
             style={
               selected == true
@@ -323,17 +323,17 @@ const Home = ({ navigation }) => {
               }}
             >
               <Text
-                style={{ fontFamily: "PlayfairDisplayRegular", fontSize: 18 }}
+                style={{
+                  fontFamily: "PlayfairDisplayRegular",
+                  fontSize: 20,
+                  lineHeight: 24,
+                  marginTop: 10,
+                }}
               >
                 Hi Emma Griffins
               </Text>
               <Text
-                style={{
-                  fontFamily: "PlayfairDisplayRegular",
-                  fontSize: 22,
-                  lineHeight: 24,
-                  marginTop: 10,
-                }}
+                style={{ fontFamily: "PlayfairDisplayRegular", fontSize: 18, lineHeight: 24 }}
               >
                 Good Morning
               </Text>
@@ -497,23 +497,23 @@ const Home = ({ navigation }) => {
               <TouchableOpacity
                 style={{ justifyContent: "center", alignItems: "center" }}
               >
-                <Ionicons color="#000000" name="home" size={25} />
-                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#000000" }}>Home</Text>
+                <Ionicons color="#bd7925" name="home" size={25} />
+                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#bd7925" }}>Home</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.navigate("Services")}
+                onPress={() => navigation.navigate("Sermons")}
                 style={{ justifyContent: "center", alignItems: "center" }}
               >
-                <Ionicons color="#1a6363" name="cart-outline" size={25} />
-                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Services</Text>
+                <FontAwesome6 color="#1a6363" name="book-bible" size={25} />
+                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Sermons</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => navigation.navigate("Contributions")}
                 style={{ justifyContent: "center", alignItems: "center" }}
               >
-                <Ionicons
+                <FontAwesome6
                   color="#1a6363"
-                  name="chatbox-ellipses-outline"
+                  name="money-check"
                   size={25}
                 />
                 <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Contributions</Text>
@@ -523,14 +523,14 @@ const Home = ({ navigation }) => {
                 onPress={() => navigation.navigate("Events")}
                 style={{ justifyContent: "center", alignItems: "center" }}
               >
-                <MaterialIcons color="#1a6363" name="support-agent" size={25} />
+                <FontAwesome6 color="#1a6363" name="building-user" size={22} />
                 <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Events</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => navigation.navigate("More")}
                 style={{ justifyContent: "center", alignItems: "center" }}
               >
-                <Foundation color="#1a6363" name="indent-more" size={25} />
+                <AntDesign color="#1a6363" name="appstore1" size={25} />
                 <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>More</Text>
               </TouchableOpacity>
             </View>
