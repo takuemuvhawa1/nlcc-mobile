@@ -63,7 +63,7 @@ const Notifications = ({ navigation }) => {
         style={{
           flexDirection: "row",
           width: "100%",
-          height: 75,
+          height: 78,
           backgroundColor: "white",
           borderColor: "#1a636340",
           borderWidth: 1,
@@ -144,7 +144,7 @@ const Notifications = ({ navigation }) => {
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={() => <View style={{ width: 7 }} />}
-          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
         />
       )}
     </View>

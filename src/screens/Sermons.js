@@ -293,7 +293,7 @@ const Sermons = ({ navigation }) => {
               />
             </View>
           </View>
-          <View style={{paddingBottom: 20, height: '92%'}}>
+          <View style={{paddingBottom: 20, height: '94%'}}>
           {data && (
             <>
             <FlatList

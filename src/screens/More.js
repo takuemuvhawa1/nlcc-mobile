@@ -1,34 +1,23 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   View,
-  ImageBackground,
   Text,
   TouchableOpacity,
   Image,
-  StatusBar,
-  ScrollView,
-  TextInput,
-  FlatList,
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "@react-navigation/native";
+
 import {
-  FontAwesome5,
   FontAwesome6,
-  Octicons,
-  MaterialIcons,
   FontAwesome,
-  MaterialCommunityIcons,
   Ionicons,
-  Foundation,
   AntDesign,
   Feather,
   SimpleLineIcons
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const More = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
@@ -95,7 +84,6 @@ const More = ({ navigation }) => {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          paddingHorizontal: 5,
           width: "98.5%",
           backgroundColor: "#1a6363",
           borderWidth: 0.5,

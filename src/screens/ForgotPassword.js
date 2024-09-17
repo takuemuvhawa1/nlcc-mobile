@@ -1,19 +1,17 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
-  ImageBackground,
   Text,
   TouchableOpacity,
   Image,
-  StatusBar,
-  ScrollView,
+  ActivityIndicator,
   TextInput
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect } from '@react-navigation/native';
-import { SimpleLineIcons, FontAwesome } from "react-native-vector-icons";
+import { SimpleLineIcons } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -62,7 +60,7 @@ const ForgotPassword = ({ navigation }) => {
       setTimeout(() => {
         unloadScreen();
       }, 5000);
-    }, [navigation])
+    }, [])
   );
 
 
@@ -161,7 +159,8 @@ const ForgotPassword = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center"
+    alignItems: "center",
+    paddingHorizontal: 7
   },
   imgLogo: {
     width: 150,
@@ -192,7 +191,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#000000',
     marginTop: 35,
-    lineHeight: 36
+    lineHeight: 14,
   },
   viewInputs: {
     flexDirection: "column",
@@ -227,11 +226,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  viewToggler: {
-    width: "15%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   inputTextInput: {
     width: "98%",
     height: 45,
@@ -252,36 +246,7 @@ const styles = StyleSheet.create({
     fontFamily: "GeneralSansMedium",
     textAlign: "center",
     color: "#FFFFF0",
-  },
-  txtForgotPin: {
-    fontSize: 14,
-    fontFamily: "GeneralSansMedium",
-    alignSelf: "left",
-    color: "#FFFFF0",
-    marginTop: 15,
-  },
-  txtLoginWith: {
-    fontSize: 14,
-    fontFamily: "GeneralSansRegular",
-    alignSelf: "center",
-    color: "#ffffff90",
-    marginTop: 15,
-  },
-  viewSocialHandles: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-    paddingHorizontal: 40,
-    marginTop: 15,
-  },
-  txtDontHave: {
-    fontSize: 14,
-    fontFamily: "GeneralSansRegular",
-    alignSelf: "center",
-    color: "#ffffff",
-    marginTop: 100,
-  },
+  }
 });
 
 export default ForgotPassword;

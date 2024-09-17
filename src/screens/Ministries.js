@@ -56,6 +56,42 @@ const apiData = [
     adminphone: "+263778476000",
     joined: true,
   },
+  {
+    id: "5",
+    name: "Ladies Ministry",
+    description:
+      "This is a ministry for laddies of all ages from adult and above and we discuss all matters...",
+    admin: "Christabel Mwanza",
+    adminphone: "+263778476234",
+    joined: true,
+  },
+  {
+    id: "6",
+    name: "Mens Ministry",
+    description:
+      "This is a ministry for man of all ages from adult and above and we discuss all matters...",
+    admin: "Jonnah Kavaza",
+    adminphone: "+263778476654",
+    joined: false,
+  },
+  {
+    id: "7",
+    name: "Covenant Kids Ministry",
+    description:
+      "This is a ministry for kids and we discuss all matters that affect them biblically assisting to mould...",
+    admin: "Chris Chibwe",
+    adminphone: "+263778476122",
+    joined: false,
+  },
+  {
+    id: "8",
+    name: "Covenant Care Ministry",
+    description:
+      "This is a ministry for all age grups from adult and above and we discuss all matters...",
+    admin: "Abigail Kurai",
+    adminphone: "+263778476000",
+    joined: true,
+  },
 ];
 
 const Ministries = () => {

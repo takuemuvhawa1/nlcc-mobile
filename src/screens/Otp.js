@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -6,7 +6,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  StatusBar,
   ActivityIndicator,
 } from "react-native";
 import { useFonts } from "expo-font";
@@ -242,9 +241,6 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 3,
   },
-  icoInputIcon: {
-    color: "grey",
-  },
   viewTextInput: {
     width: "20%",
     justifyContent: "center",
@@ -254,11 +250,6 @@ const styles = StyleSheet.create({
     borderColor: "#ffffff80",
     borderRadius: 7,
     backgroundColor: "#ffffff",
-  },
-  inputTextInput: {
-    width: "98%",
-    height: 45,
-    alignItems: "center",
   },
   btnBtns1: {
     width: "100%",
@@ -273,28 +264,6 @@ const styles = StyleSheet.create({
     fontFamily: "GeneralSansMedium",
     textAlign: "center",
     color: "#FFFFF0",
-  },
-  txtForgotPin: {
-    fontSize: 14,
-    fontFamily: "GeneralSansRegular",
-    alignSelf: "left",
-    color: "#ffffff",
-    marginTop: 15,
-  },
-  txtLoginWith: {
-    fontSize: 14,
-    fontFamily: "GeneralSansRegular",
-    alignSelf: "center",
-    color: "#ffffff90",
-    marginTop: 15,
-  },
-  viewSocialHandles: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-    paddingHorizontal: 40,
-    marginTop: 15,
   },
   txtDontHave: {
     fontSize: 14,

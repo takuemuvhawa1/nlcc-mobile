@@ -1,28 +1,20 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
-  ImageBackground,
   Text,
   TouchableOpacity,
   Image,
-  StatusBar,
-  ScrollView,
   TextInput,
   FlatList,
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "@react-navigation/native";
+
 import {
-  FontAwesome5,
   FontAwesome6,
   Octicons,
-  MaterialIcons,
-  FontAwesome,
-  MaterialCommunityIcons,
   Ionicons,
-  Foundation,
   AntDesign,
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -126,19 +118,20 @@ const Contributions = ({ navigation }) => {
   };
 
   const SingleItem = ({ id, name, amount, date }) => (
-    <TouchableOpacity style={{ marginTop: 10 }} onPress={() => showGroup(id)}>
-      <View
-        style={{
+    <TouchableOpacity style={{
           flexDirection: "row",
-          width:160,
+          width:'47%',
           height: 100,
           backgroundColor: "white",
           borderColor: "#1a636340",
           borderWidth: 1,
           borderRadius: 8,
           paddingHorizontal: 15,
+          marginTop: 10
         }}
-      >
+        
+         onPress={() => showGroup(id)}>
+      
         <View style={{ width: "80%" }}>
           <Text
             style={{
@@ -174,7 +167,7 @@ const Contributions = ({ navigation }) => {
             ${amount}
           </Text>
         </View>
-      </View>
+
     </TouchableOpacity>
   );
 
@@ -287,7 +280,7 @@ const Contributions = ({ navigation }) => {
               />
             </View>
           </View>
-          <View style={{paddingBottom: 20, height: '92%'}}>
+          <View style={{paddingBottom: 20, height: '94%'}}>
           {data && (
             <>
             <FlatList

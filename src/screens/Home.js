@@ -1,28 +1,22 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
-  ImageBackground,
   Text,
   TouchableOpacity,
   Image,
-  StatusBar,
-  ScrollView,
   TextInput,
   FlatList,
   Keyboard,
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "@react-navigation/native";
+
 import {
-  FontAwesome5,
   FontAwesome6,
   Octicons,
   FontAwesome,
-  MaterialIcons,
   Ionicons,
-  Foundation,
   AntDesign,
   SimpleLineIcons,
 } from "react-native-vector-icons";
@@ -58,7 +52,7 @@ const BtnsData = [
   },
   {
     id: "4",
-    title: "Discussion Forums",
+    title: "Feeds",
     vectoricon: "FontAwesome5",
     icon: "church",
     selected: false,
@@ -120,7 +114,7 @@ const Home = ({ navigation }) => {
       style={
         selected == true
           ? {
-              width: 150,
+              width: 130,
               height: 45,
               alignItems: "center",
               justifyContent: "center",
@@ -131,7 +125,7 @@ const Home = ({ navigation }) => {
               borderColor: "#bd7925",
             }
           : {
-              width: 150,
+              width: 130,
               height: 45,
               alignItems: "center",
               justifyContent: "center",
@@ -305,7 +299,7 @@ const Home = ({ navigation }) => {
           <>
             <View
               style={{
-                width: "20%",
+                width: "15%",
                 flexDirection: "column",
                 justifyContent: "flex-start",
               }}
@@ -317,7 +311,7 @@ const Home = ({ navigation }) => {
             </View>
             <View
               style={{
-                width: "50%",
+                width: "52%",
                 flexDirection: "column",
                 justifyContent: "flex-start",
               }}
@@ -371,11 +365,9 @@ const Home = ({ navigation }) => {
         </View>
         <View
           style={{
-            flexDirection: "row",
             paddingHorizontal: 5,
             width: "100%",
             marginTop: 30,
-            flexDirection: "column",
           }}
         >
           {btns && (
@@ -401,7 +393,9 @@ const Home = ({ navigation }) => {
             >
               Be part of diffrent ministries available
             </Text>
+            <View style={{height: '75%'}}>
             <Ministries />
+            </View>
           </>
         )}
         {page == 2 && (
@@ -416,7 +410,9 @@ const Home = ({ navigation }) => {
             >
               View events and church services as part of our calender
             </Text>
+            <View style={{height: '75%'}}>
             <Calender />
+            </View>
           </>
         )}
         {page == 3 && (
@@ -431,7 +427,9 @@ const Home = ({ navigation }) => {
             >
               Be part of a Cell Group
             </Text>
+            <View style={{height: '75%'}}>
             <Cellgroups />
+            </View>
           </>
         )}
         {page == 4 && (
@@ -446,7 +444,9 @@ const Home = ({ navigation }) => {
             >
               Be part of the discussion forums on the listed topics
             </Text>
+            <View style={{height: '75%'}}>
             <Forums />
+            </View>
           </>
         )}
         {page == 5 && (
@@ -457,7 +457,7 @@ const Home = ({ navigation }) => {
             />
 
             <View
-              style={{ width: "100%", flexDirection: "row", marginTop: 30 }}
+              style={{ width: "100%", flexDirection: "row", marginTop: 20}}
             >
               <View
                 style={{
@@ -486,7 +486,9 @@ const Home = ({ navigation }) => {
                 </Text>
               </View>
             </View>
+            <View style={{height: '41%'}}>
             <Notifications />
+            </View>
           </>
         )}
       </View>
@@ -559,14 +561,12 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    alignSelf: "center",
     resizeMode: "cover",
   },
   imgLogo: {
-    width: '100%',
+    width: '98%',
     height: 35,
-    borderRadius: 22.5,
-    alignSelf: "center",
+    alignSelf: "flex-start",
     resizeMode: "cover",
   },
   imgChurch: {
@@ -599,12 +599,6 @@ const styles = StyleSheet.create({
     borderColor: "#ffffff",
     borderRadius: 8
   },
-  viewBtns: {
-    flexDirection: "column",
-    width: "100%",
-    marginTop: 40,
-    paddingHorizontal: 20,
-  },
   viewIcon: {
     justifyContent: "center",
     alignItems: "center",
@@ -615,11 +609,6 @@ const styles = StyleSheet.create({
   },
   viewTextInput: {
     width: "70%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  viewToggler: {
-    width: "15%",
     justifyContent: "center",
     alignItems: "center",
   },

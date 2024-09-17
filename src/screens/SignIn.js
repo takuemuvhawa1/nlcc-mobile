@@ -1,14 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
-  ImageBackground,
   Text,
   TouchableOpacity,
   Image,
-  StatusBar,
-  ScrollView,
-  TextInput
+  TextInput,
+  ActivityIndicator
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
@@ -62,7 +60,7 @@ const SignIn = ({ navigation }) => {
       setTimeout(() => {
         unloadScreen();
       }, 5000);
-    }, [navigation])
+    }, [])
   );
 
 
@@ -306,21 +304,6 @@ const styles = StyleSheet.create({
     fontFamily: "GeneralSansMedium",
     alignSelf: "left",
     color: "#FFFFF0",
-    marginTop: 15,
-  },
-  txtLoginWith: {
-    fontSize: 14,
-    fontFamily: "GeneralSansRegular",
-    alignSelf: "center",
-    color: "#ffffff90",
-    marginTop: 15,
-  },
-  viewSocialHandles: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-    paddingHorizontal: 40,
     marginTop: 15,
   },
   txtDontHave: {

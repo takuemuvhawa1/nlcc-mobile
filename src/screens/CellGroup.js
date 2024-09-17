@@ -1,31 +1,17 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, {  useEffect } from "react";
 import {
   StyleSheet,
   View,
-  ImageBackground,
   Text,
   TouchableOpacity,
-  Image,
-  StatusBar,
-  ScrollView,
-  TextInput,
-  FlatList,
+  Image
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { useIsFocused } from "@react-navigation/native";
 import {
-  FontAwesome5,
   FontAwesome6,
-  Octicons,
-  MaterialIcons,
-  FontAwesome,
-  MaterialCommunityIcons,
   Ionicons,
-  Foundation,
-  AntDesign,
-  Feather,
-  SimpleLineIcons,
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -170,7 +156,6 @@ const CellGroup = ({ navigation, props }) => {
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              paddingHorizontal: 5,
               width: "98.5%",
               backgroundColor: "#1a6363",
               borderWidth: 0.5,
@@ -403,41 +388,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     resizeMode: "cover",
   },
-  imgUsr: {
-    width: 90,
-    height: 90,
-    borderRadius: 22.5,
-    alignSelf: "center",
-    resizeMode: "cover",
-    marginTop: 40,
-  },
   viewMiddle: {
     flex: 8,
     flexDirection: "column",
     width: "100%",
     marginTop: 10,
-  },
-  viewBottom: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-    marginTop: 10,
-  },
-  viewInTabs: {
-    width: "100%",
-    justifyContent: "space-between",
-    paddingHorizontal: 5,
-    alignItems: "center",
-    flexDirection: "row",
-    marginTop: 10,
-    backgroundColor: "#ffffff",
-    paddingTop: 8,
-    paddingBottom: 3,
-    borderRadius: 10,
-    marginBottom: 5,
-  },
+  }
 });
 
 export default CellGroup;
