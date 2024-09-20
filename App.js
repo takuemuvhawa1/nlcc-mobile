@@ -15,11 +15,19 @@ import Otp from './src/screens/Otp';
 import ResetPassword from './src/screens/ResetPassword';
 import About from './src/screens/About';
 import MyProfile from './src/screens/MyProfile';
+import Ministry from './src/screens/Ministry';
+import Event from './src/screens/Event';
+import CellGroup from './src/screens/CellGroup';
+import Sermons from './src/screens/Sermons';
+import Register from './src/screens/Register';
+import SetPassword from './src/screens/SetPassword';
+import SelectMinistry from './src/screens/SelectMinistry';
+import AdminMinistry from './src/screens/AdminMinistry';
 
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [initialRouteName, setInitialRouteName] = React.useState('About');
+  const [initialRouteName, setInitialRouteName] = React.useState('More');
   
   // React.useEffect(() => {
   //   setTimeout(() => {
@@ -47,10 +55,6 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      {!initialRouteName ? (
-        <Loader visible={true} />
-      ) : (
-        <>
           <Stack.Navigator
             initialRouteName={initialRouteName}
             screenOptions={{headerShown: false}}>
@@ -66,10 +70,15 @@ const App = () => {
             <Stack.Screen name="ResetPassword" component={ResetPassword} />
             <Stack.Screen name="About" component={About} />
             <Stack.Screen name="MyProfile" component={MyProfile} />
-           
+            <Stack.Screen name="Ministry" component={Ministry} />
+            <Stack.Screen name="Event" component={Event} />
+            <Stack.Screen name="CellGroup" component={CellGroup} />
+            <Stack.Screen name="Sermons" component={Sermons} />
+            <Stack.Screen name="Register" component={Register} />
+            <Stack.Screen name="SetPassword" component={SetPassword} />
+            <Stack.Screen name="SelectMinistry" component={SelectMinistry} />
+            <Stack.Screen name="AdminMinistry" component={AdminMinistry} />
           </Stack.Navigator>
-        </>
-      )}
     </NavigationContainer>
   );
 };
