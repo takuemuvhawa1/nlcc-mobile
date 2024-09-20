@@ -1,21 +1,13 @@
 import React, { useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  FlatList,
-} from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { useIsFocused } from "@react-navigation/native";
-import { FontAwesome, Ionicons } from "react-native-vector-icons";
+import { FontAwesome6, Ionicons, Feather } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Event = ({ navigation, props }) => {
+const AdminMinistry = ({ navigation, props }) => {
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
     GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
@@ -26,14 +18,13 @@ const Event = ({ navigation, props }) => {
 
   const [record, setRecord] = React.useState({
     id: "",
-    type: "",
-    theme: "",
+    name: "",
     description: "",
-    date: "",
-    time: "",
-    enddate: null,
-    endtime: null,
-    volunteertasks: [],
+    admin: "",
+    adminphone: "",
+    members: "",
+    joinrequesting: "",
+    leaverequesting: "",
   });
 
   const [isactive, setIsactive] = React.useState(false);
@@ -49,52 +40,22 @@ const Event = ({ navigation, props }) => {
     setAlerttitle(ttl);
   };
 
-  const OneTask = ({ id, task, requirements }) => (
-    <View
-      style={{
-        marginTop: 10,
-        backgroundColor: "#1a636320",
-        width: '49%',
-        height: 40, 
-        borderRadius: 8,
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        paddingHorizontal: 10
-      }}
-    >
-    <Text
-      style={{
-        fontFamily: "GeneralSansMedium",
-        fontSize: 18,
-        color: "#1a6363",
-      }}
-    >
-      {task}
-    </Text>
-    </View>
-  );
-
-  const renderItem = ({ item }) => (
-    <OneTask id={item.id} task={item.task} requirements={item.requirements} />
-  );
-
   useEffect(() => {
     const findFormData = async () => {
       try {
-        const slctdObj = await AsyncStorage.getItem("SelectedEvent");
-        const eventObj = JSON.parse(slctdObj);
+        const slctdObj = await AsyncStorage.getItem("SelectedMinistry");
+        const ministryObj = JSON.parse(slctdObj);
 
-        if (eventObj) {
+        if (ministryObj) {
           setRecord({
-            id: eventObj.id,
-            type: eventObj.type,
-            theme: eventObj.theme,
-            description: eventObj.description,
-            date: eventObj.date,
-            time: eventObj.time,
-            enddate: eventObj.enddate,
-            endtime: eventObj.endtime,
-            volunteertasks: eventObj.volunteertasks,
+            id: ministryObj.id,
+            name: ministryObj.name,
+            description: ministryObj.description,
+            admin: ministryObj.admin,
+            adminphone: ministryObj.adminphone,
+            members: ministryObj.members,
+            joinrequesting: ministryObj.joinrequesting,
+            leaverequesting: ministryObj.leaverequesting
           });
 
           console.log("Ministry data found");
@@ -150,7 +111,7 @@ const Event = ({ navigation, props }) => {
       />
       <View style={styles.viewTop}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => navigation.navigate("SelectMinistry")}
           style={{
             width: "70%",
             flexDirection: "column",
@@ -205,10 +166,10 @@ const Event = ({ navigation, props }) => {
                 color: "#ffffff",
               }}
             >
-              {record.type}
+              {record.name}
             </Text>
-            <FontAwesome
-              name="calendar"
+            <FontAwesome6
+              name="people-roof"
               size={20}
               style={{ marginRight: 5, color: "#ffffff" }}
             />
@@ -220,18 +181,6 @@ const Event = ({ navigation, props }) => {
             fontSize: 18,
             color: "#000000",
             marginTop: 30,
-            alignSelf: "center",
-            textAlign: "justify",
-          }}
-        >
-          Theme: {record.theme}
-        </Text>
-        <Text
-          style={{
-            fontFamily: "GeneralSansMedium",
-            fontSize: 18,
-            color: "#000000",
-            marginTop: 20,
             marginBottom: 30,
             alignSelf: "center",
             textAlign: "justify",
@@ -261,7 +210,7 @@ const Event = ({ navigation, props }) => {
                 marginTop: 15,
               }}
             >
-              Start Time
+              Leader:
             </Text>
           </View>
           <View style={{ width: "60%", flexDirection: "column" }}>
@@ -274,35 +223,8 @@ const Event = ({ navigation, props }) => {
                 alignSelf: "flex-end",
               }}
             >
-              {record.date} {record.time}
+              {record.admin}
             </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            width: "100%",
-            borderBottomColor: "#1a636350",
-            borderBottomWidth: 0.5,
-            borderTopColor: "#1a636350",
-            borderTopWidth: 0.5,
-            paddingBottom: 15,
-          }}
-        >
-          <View style={{ width: "40%" }}>
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#000000",
-                marginTop: 15,
-              }}
-            >
-              End Time
-            </Text>
-          </View>
-          <View style={{ width: "60%", flexDirection: "column" }}>
             <Text
               style={{
                 fontFamily: "GeneralSansMedium",
@@ -312,54 +234,97 @@ const Event = ({ navigation, props }) => {
                 alignSelf: "flex-end",
               }}
             >
-              {record.enddate} {record.endtime}
+              {record.adminphone}
             </Text>
           </View>
         </View>
-
-        {record.volunteertasks.length > 0 && (
-          <>
-            <View
+        <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "98.5%",
+              backgroundColor: "#1a636360",
+              borderWidth: 0.5,
+              height: 52,
+              borderRadius: 8,
+              paddingHorizontal: 15,
+              paddingTop: 15,
+            }}
+          >
+            <Text
               style={{
-                width: "100%",
-                borderTopColor: "#1a636350",
-                borderTopWidth: 0.5,
-                paddingBottom: 15,
+                fontFamily: "GeneralSansMedium",
+                fontSize: 18,
+                color: "#ffffff"
               }}
             >
-              <View style={{ width: "40%" }}>
-                <Text
-                  style={{
-                    fontFamily: "GeneralSansMedium",
-                    fontSize: 18,
-                    color: "#000000",
-                    marginTop: 15,
-                  }}
-                >
-                  Volunteer Tasks
-                </Text>
-              </View>
-            </View>
-            <View
+              New members requesting to join:{" "}{record.joinrequesting}
+            </Text>
+            <Feather
+              name="chevron-down"
+              size={20}
+              style={{ marginRight: 5, color: "#ffffff" }}
+            />
+        </View>
+        <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "98.5%",
+              backgroundColor: "#1a636360",
+              borderWidth: 0.5,
+              height: 52,
+              borderRadius: 8,
+              paddingHorizontal: 15,
+              paddingTop: 15,
+              marginTop: 15,
+            }}
+          >
+            <Text
               style={{
-                width: "100%",
-                height: "30%",
-                paddingBottom: 15,
+                fontFamily: "GeneralSansMedium",
+                fontSize: 18,
+                color: "#ffffff"
               }}
             >
-              <FlatList
-                vertical
-                numColumns={2}
-                data={record.volunteertasks}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                columnWrapperStyle={{ justifyContent: "space-between" }}
-                contentContainerStyle={{ paddingBottom: 100 }}
-                showsHorizontalScrollIndicator={false}
-              />
-            </View>
-          </>
-        )}
+              Old members requesting to leave:{" "}{record.joinrequesting}
+            </Text>
+            <Feather
+              name="chevron-down"
+              size={20}
+              style={{ marginRight: 5, color: "#ffffff" }}
+            />
+        </View>
+        <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "98.5%",
+              backgroundColor: "#1a636360",
+              borderWidth: 0.5,
+              height: 52,
+              borderRadius: 8,
+              paddingHorizontal: 15,
+              paddingTop: 15,
+              marginTop: 15,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: "GeneralSansMedium",
+                fontSize: 18,
+                color: "#ffffff"
+              }}
+            >
+              All members:{" "}{record.members}
+            </Text>
+            <Feather
+              name="chevron-down"
+              size={20}
+              style={{ marginRight: 5, color: "#ffffff" }}
+            />
+        </View>
+     
       </View>
     </LinearGradient>
   );
@@ -394,4 +359,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Event;
+export default AdminMinistry;

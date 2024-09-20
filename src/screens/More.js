@@ -48,7 +48,7 @@ const More = ({ navigation }) => {
         )}
 
         {title == "Ministry Admin" && (
-          navigation.navigate('Home')
+          navigation.navigate('SelectMinistry')
         )}
 
         {title == "Cell Group Admin" && (

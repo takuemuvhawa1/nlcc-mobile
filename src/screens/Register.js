@@ -5,17 +5,17 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  TextInput,
-  ActivityIndicator
+  ActivityIndicator,
+  TextInput
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect } from '@react-navigation/native';
-import { SimpleLineIcons, FontAwesome } from "react-native-vector-icons";
+import { SimpleLineIcons } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const SignIn = ({ navigation }) => {
+const Register = ({ navigation }) => {
 
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
@@ -48,8 +48,8 @@ const SignIn = ({ navigation }) => {
     );
   };
 
-  const handleSignIn = (email) => {
-    navigation.navigate('Home');
+  const handleProceed = (email) => {
+    navigation.navigate('SetPassword');
   };
 
   useFocusEffect(
@@ -107,10 +107,11 @@ const SignIn = ({ navigation }) => {
         source={require("../../assets/nlcc-logo-1.png")}
       />
       <Text style={styles.txtTagline}>NEW LIFE COVENANT CHURCH</Text>
-      <Text style={styles.txtFormName}>Sign In</Text>
-      {/* <Text style={styles.txtFormInstruction}>
-          Provide your account details and press login button
-        </Text> */}
+      <Text style={styles.txtFormName}>Register</Text>
+
+      <Text style={styles.txtFormInstruction}>
+          Provide your email address to confirm you are registered. You will receive an OTP and further instructions to set a new password and proceed into the application.
+      </Text>
 
         <View style={styles.viewInputs}>
           <View style={styles.viewInput}>
@@ -127,58 +128,15 @@ const SignIn = ({ navigation }) => {
                 value={inputs.email}
                 onChangeText={(text) => setInputs({ ...inputs, email: text })}
                 style={styles.inputTextInput}
-                placeholder="Enter your email: example@gmail.com"
+                placeholder="Email address"
               />
             </View>
           </View>
-          <View style={[styles.viewInput, { marginTop: 20 }]}>
-            <View style={styles.viewIcon}>
-              <SimpleLineIcons
-                name="lock"
-                size={25}
-                style={styles.icoInputIcon}
-              />
-            </View>
-            <View style={styles.viewTextInput}>
-              <TextInput
-                autoCorrect={false}
-                value={inputs.password}
-                secureTextEntry={hidepin}
-                onChangeText={(text) =>
-                  setInputs({ ...inputs, password: text })
-                }
-                style={styles.inputTextInput}
-                placeholder="Enter your password"
-              />
-            </View>
-            <TouchableOpacity
-              onPress={() => setHidepin(!hidepin)}
-              style={styles.viewToggler}
-            >
-              {hidepin && (
-                <>
-                  <FontAwesome
-                    name="eye-slash"
-                    size={25}
-                    style={styles.icoInputIcon}
-                  />
-                </>
-              )}
-              {hidepin == false && (
-                <>
-                  <FontAwesome
-                    name="eye"
-                    size={25}
-                    style={styles.icoInputIcon}
-                  />
-                </>
-              )}
-            </TouchableOpacity>
-          </View>
+         
         </View>
         <View style={styles.viewBtns}>
           <TouchableOpacity
-            onPress={() => handleSignIn()}
+            onPress={() => handleProceed()}
             style={styles.btnBtns1}
           >
             {isactive && (
@@ -188,25 +146,12 @@ const SignIn = ({ navigation }) => {
             )}
             {isactive == false && (
               <>
-                <Text style={styles.txtBtnTxt1}>Log In</Text>
+                <Text style={styles.txtBtnTxt1}>Proceed</Text>
               </>
             )}
           </TouchableOpacity>
-          <Text
-            onPress={() => navigation.navigate("ForgotPassword")}
-            style={styles.txtForgotPin}
-          >
-            Forgot password?
-          </Text>
-          <Text
-            onPress={() => navigation.navigate("Register")}
-            style={styles.txtDontHave}
-          >
-            Not yet registered?{"  "}
-            <Text style={{ color: "#FFFFF0", fontFamily: "GeneralSansMedium" }}>
-              Register
-            </Text>
-          </Text>
+       
+          
         </View>
     </LinearGradient>
   );
@@ -215,7 +160,8 @@ const SignIn = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center"
+    alignItems: "center",
+    paddingHorizontal: 7
   },
   imgLogo: {
     width: 150,
@@ -239,6 +185,15 @@ const styles = StyleSheet.create({
     color: '#FFFFF0',
     marginTop: 35,
     lineHeight: 36
+  },
+  txtFormInstruction: {
+    fontSize: 14,
+    fontFamily: 'GeneralSansRegular',
+    textAlign: 'center',
+    color: '#000000',
+    marginTop: 15,
+    lineHeight: 20,
+    paddingHorizontal: 20
   },
   viewInputs: {
     flexDirection: "column",
@@ -273,11 +228,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  viewToggler: {
-    width: "15%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   inputTextInput: {
     width: "98%",
     height: 45,
@@ -298,21 +248,7 @@ const styles = StyleSheet.create({
     fontFamily: "GeneralSansMedium",
     textAlign: "center",
     color: "#FFFFF0",
-  },
-  txtForgotPin: {
-    fontSize: 14,
-    fontFamily: "GeneralSansMedium",
-    alignSelf: "left",
-    color: "#FFFFF0",
-    marginTop: 15,
-  },
-  txtDontHave: {
-    fontSize: 14,
-    fontFamily: "GeneralSansRegular",
-    alignSelf: "center",
-    color: "#ffffff",
-    marginTop: 100,
-  },
+  }
 });
 
-export default SignIn;
+export default Register;

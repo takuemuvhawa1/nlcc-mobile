@@ -15,7 +15,7 @@ import { SimpleLineIcons, FontAwesome } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const SignIn = ({ navigation }) => {
+const SetPassword = ({ navigation }) => {
 
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
@@ -48,7 +48,7 @@ const SignIn = ({ navigation }) => {
     );
   };
 
-  const handleSignIn = (email) => {
+  const handleBtnPress = (email) => {
     navigation.navigate('Home');
   };
 
@@ -107,16 +107,17 @@ const SignIn = ({ navigation }) => {
         source={require("../../assets/nlcc-logo-1.png")}
       />
       <Text style={styles.txtTagline}>NEW LIFE COVENANT CHURCH</Text>
-      <Text style={styles.txtFormName}>Sign In</Text>
-      {/* <Text style={styles.txtFormInstruction}>
-          Provide your account details and press login button
-        </Text> */}
+      <Text style={styles.txtFormName}>Welcome: Gemma Griffins</Text>
+        <Text style={styles.txtFormInstruction}>
+          Enter the OTP you received on your email and set your password to proceed
+        </Text>
 
         <View style={styles.viewInputs}>
-          <View style={styles.viewInput}>
+         
+          <View style={[styles.viewInput, { marginTop: 20 }]}>
             <View style={styles.viewIcon}>
               <SimpleLineIcons
-                name="envelope"
+                name="lock"
                 size={25}
                 style={styles.icoInputIcon}
               />
@@ -124,12 +125,38 @@ const SignIn = ({ navigation }) => {
             <View style={styles.viewTextInput}>
               <TextInput
                 autoCorrect={false}
-                value={inputs.email}
-                onChangeText={(text) => setInputs({ ...inputs, email: text })}
+                value={inputs.password}
+                secureTextEntry={hidepin}
+                onChangeText={(text) =>
+                  setInputs({ ...inputs, password: text })
+                }
                 style={styles.inputTextInput}
-                placeholder="Enter your email: example@gmail.com"
+                placeholder="Enter OTP you received on email"
               />
             </View>
+            <TouchableOpacity
+              onPress={() => setHidepin(!hidepin)}
+              style={styles.viewToggler}
+            >
+              {hidepin && (
+                <>
+                  <FontAwesome
+                    name="eye-slash"
+                    size={25}
+                    style={styles.icoInputIcon}
+                  />
+                </>
+              )}
+              {hidepin == false && (
+                <>
+                  <FontAwesome
+                    name="eye"
+                    size={25}
+                    style={styles.icoInputIcon}
+                  />
+                </>
+              )}
+            </TouchableOpacity>
           </View>
           <View style={[styles.viewInput, { marginTop: 20 }]}>
             <View style={styles.viewIcon}>
@@ -148,7 +175,51 @@ const SignIn = ({ navigation }) => {
                   setInputs({ ...inputs, password: text })
                 }
                 style={styles.inputTextInput}
-                placeholder="Enter your password"
+                placeholder="Enter your new password"
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => setHidepin(!hidepin)}
+              style={styles.viewToggler}
+            >
+              {hidepin && (
+                <>
+                  <FontAwesome
+                    name="eye-slash"
+                    size={25}
+                    style={styles.icoInputIcon}
+                  />
+                </>
+              )}
+              {hidepin == false && (
+                <>
+                  <FontAwesome
+                    name="eye"
+                    size={25}
+                    style={styles.icoInputIcon}
+                  />
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.viewInput, { marginTop: 20 }]}>
+            <View style={styles.viewIcon}>
+              <SimpleLineIcons
+                name="lock"
+                size={25}
+                style={styles.icoInputIcon}
+              />
+            </View>
+            <View style={styles.viewTextInput}>
+              <TextInput
+                autoCorrect={false}
+                value={inputs.password}
+                secureTextEntry={hidepin}
+                onChangeText={(text) =>
+                  setInputs({ ...inputs, password: text })
+                }
+                style={styles.inputTextInput}
+                placeholder="Enter your password confirmation"
               />
             </View>
             <TouchableOpacity
@@ -178,7 +249,7 @@ const SignIn = ({ navigation }) => {
         </View>
         <View style={styles.viewBtns}>
           <TouchableOpacity
-            onPress={() => handleSignIn()}
+            onPress={() => handleBtnPress()}
             style={styles.btnBtns1}
           >
             {isactive && (
@@ -188,25 +259,11 @@ const SignIn = ({ navigation }) => {
             )}
             {isactive == false && (
               <>
-                <Text style={styles.txtBtnTxt1}>Log In</Text>
+                <Text style={styles.txtBtnTxt1}>Save New Password</Text>
               </>
             )}
           </TouchableOpacity>
-          <Text
-            onPress={() => navigation.navigate("ForgotPassword")}
-            style={styles.txtForgotPin}
-          >
-            Forgot password?
-          </Text>
-          <Text
-            onPress={() => navigation.navigate("Register")}
-            style={styles.txtDontHave}
-          >
-            Not yet registered?{"  "}
-            <Text style={{ color: "#FFFFF0", fontFamily: "GeneralSansMedium" }}>
-              Register
-            </Text>
-          </Text>
+         
         </View>
     </LinearGradient>
   );
@@ -231,6 +288,15 @@ const styles = StyleSheet.create({
     //color: '#FFFFFF',
     color: '#1a6363',
     marginTop: 15
+  },
+  txtFormInstruction: {
+    fontSize: 14,
+    fontFamily: 'GeneralSansRegular',
+    textAlign: 'center',
+    color: '#000000',
+    marginTop: 15,
+    lineHeight: 20,
+    paddingHorizontal: 20
   },
   txtFormName: {
     fontSize: 20,
@@ -266,7 +332,7 @@ const styles = StyleSheet.create({
     width: "15%",
   },
   icoInputIcon: {
-    color: "grey",
+    color: "#00000060",
   },
   viewTextInput: {
     width: "70%",
@@ -298,21 +364,7 @@ const styles = StyleSheet.create({
     fontFamily: "GeneralSansMedium",
     textAlign: "center",
     color: "#FFFFF0",
-  },
-  txtForgotPin: {
-    fontSize: 14,
-    fontFamily: "GeneralSansMedium",
-    alignSelf: "left",
-    color: "#FFFFF0",
-    marginTop: 15,
-  },
-  txtDontHave: {
-    fontSize: 14,
-    fontFamily: "GeneralSansRegular",
-    alignSelf: "center",
-    color: "#ffffff",
-    marginTop: 100,
-  },
+  }
 });
 
-export default SignIn;
+export default SetPassword;
