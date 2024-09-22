@@ -14,6 +14,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { SimpleLineIcons } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Apilink from "../constants/Links";
 
 const Register = ({ navigation }) => {
 
@@ -27,8 +28,7 @@ const Register = ({ navigation }) => {
 
   const [hidepin, setHidepin] = React.useState(true);
   const [inputs, setInputs] = React.useState({
-    email: "",
-    password: "",
+    email: ""
   });
 
   const [isactive, setIsactive] = React.useState(false);
@@ -48,21 +48,47 @@ const Register = ({ navigation }) => {
     );
   };
 
-  const handleProceed = (email) => {
-    navigation.navigate('SetPassword');
+  const handleProceed = async () => {
+    
+    if (inputs.email == "") {
+      doAlert("Fill in your email before you proceed", "Submission Error");
+      return;
+    }
+
+    if (!validateEmail(inputs.email)) {
+      doAlert("Email is not in correct format", "Submission Error");
+      return;
+    }
+
+    setIsactive(true);
+
+    const apiLink = Apilink.getLink();
+
+    let signinresponse = await fetch(`${apiLink}onboarding/searchmember`, {
+      method: "post",
+      body: JSON.stringify({
+        email: inputs.email,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    let resJson = await signinresponse.json();
+
+    console.log(resJson);
+
+    if (resJson.message=="Email found") {
+      setInputs({
+        email: ""
+      });
+      setIsactive(false);
+      await AsyncStorage.setItem("TypedEmail",inputs.email);
+      await AsyncStorage.setItem("ReceivedOTP",resJson.randNum);
+      navigation.navigate("SetPassword");
+      return;
+    }
   };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const unloadScreen = () => {
-        console.log('SignIn');
-      };
-      setTimeout(() => {
-        unloadScreen();
-      }, 5000);
-    }, [])
-  );
-
 
   if (!fontsLoaded) {
     return null;
@@ -174,7 +200,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'PlayfairDisplayRegular',
     textAlign: 'center',
-    //color: '#FFFFFF',
     color: '#1a6363',
     marginTop: 15
   },

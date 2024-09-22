@@ -75,6 +75,19 @@ const Home = ({ navigation }) => {
     PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
   });
 
+  const [userdata, setUserdata] = React.useState({
+    Tkn: "",
+    UserID: "",
+    UserAlias: "",
+    UserGender: "",
+    UserEmail: "",
+    UserPhone: "",
+    UserAddress: "",
+    UserZone: "",
+    UserImg: "",
+  });
+
+  const [dayhour, setDayhour] = React.useState("");
   const [searchtext, setSearchtext] = React.useState("");
   const [isactive, setIsactive] = React.useState(false);
   const [showAlert, setShowAlert] = React.useState(false);
@@ -237,10 +250,34 @@ const Home = ({ navigation }) => {
   );
 
   useEffect(() => {
-    const asyncFetch = () => {
+    const asyncFetch = async () => {
       setBtns(BtnsData);
+      const Tkn = await AsyncStorage.getItem("Tkn");
+      const UserID = await AsyncStorage.getItem("UserID");
+      const UserAlias = await AsyncStorage.getItem("UserAlias");
+      const UserGender = await AsyncStorage.getItem("UserGender");
+      const UserEmail = await AsyncStorage.getItem("UserEmail");
+      const UserPhone = await AsyncStorage.getItem("UserPhone");
+      const UserAddress = await AsyncStorage.getItem("UserAddress");
+      const UserZone = await AsyncStorage.getItem("UserZone");
+      //const UserImg = await AsyncStorage.getItem("UserImg");
+
+      if (UserID) {
+        setUserdata({
+          Tkn,
+          UserID,
+          UserAlias,
+          UserGender,
+          UserEmail,
+          UserPhone,
+          UserAddress,
+          UserZone,
+          UserImg: "",
+        });
+      }
     };
     asyncFetch();
+    getHour();
   }, []);
 
   useEffect(() => {
@@ -256,6 +293,12 @@ const Home = ({ navigation }) => {
       hideSubscription.remove();
     };
   }, []);
+
+  const getHour = () => {
+    const date = new Date();
+    const hour = date.getHours();
+    setDayhour(hour);
+  };
 
   if (!fontsLoaded) {
     return null;
@@ -324,13 +367,47 @@ const Home = ({ navigation }) => {
                   marginTop: 10,
                 }}
               >
-                Hi Emma Griffins
+                Hi {userdata.UserAlias}
               </Text>
-              <Text
-                style={{ fontFamily: "PlayfairDisplayRegular", fontSize: 18, lineHeight: 24 }}
-              >
-                Good Morning
-              </Text>
+              {dayhour < 12 && (
+                <>
+                  <Text
+                    style={{
+                      fontFamily: "PlayfairDisplayRegular",
+                      fontSize: 18,
+                      lineHeight: 24,
+                    }}
+                  >
+                    Good Afternoon
+                  </Text>
+                </>
+              )}
+              {dayhour >= 12 && dayhour < 18 && (
+                <>
+                  <Text
+                    style={{
+                      fontFamily: "PlayfairDisplayRegular",
+                      fontSize: 18,
+                      lineHeight: 24,
+                    }}
+                  >
+                    Good Morning
+                  </Text>
+                </>
+              )}
+              {dayhour >= 18 && (
+                <>
+                  <Text
+                    style={{
+                      fontFamily: "PlayfairDisplayRegular",
+                      fontSize: 18,
+                      lineHeight: 24,
+                    }}
+                  >
+                    Good Evening
+                  </Text>
+                </>
+              )}
             </View>
             <View
               style={{
@@ -339,11 +416,10 @@ const Home = ({ navigation }) => {
                 justifyContent: "flex-end",
               }}
             >
-              
-               <Image
-        style={styles.imgLogo}
-        source={require("../../assets/nlcc-logo-1.png")}
-      />
+              <Image
+                style={styles.imgLogo}
+                source={require("../../assets/nlcc-logo-1.png")}
+              />
             </View>
           </>
         )}
@@ -393,8 +469,8 @@ const Home = ({ navigation }) => {
             >
               Be part of diffrent ministries available
             </Text>
-            <View style={{height: '75%'}}>
-            <Ministries />
+            <View style={{ height: "75%" }}>
+              <Ministries />
             </View>
           </>
         )}
@@ -410,8 +486,8 @@ const Home = ({ navigation }) => {
             >
               View events and church services as part of our calender
             </Text>
-            <View style={{height: '75%'}}>
-            <Calender />
+            <View style={{ height: "75%" }}>
+              <Calender />
             </View>
           </>
         )}
@@ -427,8 +503,8 @@ const Home = ({ navigation }) => {
             >
               Be part of a Cell Group
             </Text>
-            <View style={{height: '75%'}}>
-            <Cellgroups />
+            <View style={{ height: "75%" }}>
+              <Cellgroups />
             </View>
           </>
         )}
@@ -444,8 +520,8 @@ const Home = ({ navigation }) => {
             >
               Be part of the discussion forums on the listed topics
             </Text>
-            <View style={{height: '75%'}}>
-            <Forums />
+            <View style={{ height: "75%" }}>
+              <Forums />
             </View>
           </>
         )}
@@ -457,7 +533,7 @@ const Home = ({ navigation }) => {
             />
 
             <View
-              style={{ width: "100%", flexDirection: "row", marginTop: 20}}
+              style={{ width: "100%", flexDirection: "row", marginTop: 20 }}
             >
               <View
                 style={{
@@ -486,8 +562,8 @@ const Home = ({ navigation }) => {
                 </Text>
               </View>
             </View>
-            <View style={{height: '41%'}}>
-            <Notifications />
+            <View style={{ height: "41%" }}>
+              <Notifications />
             </View>
           </>
         )}
@@ -500,25 +576,45 @@ const Home = ({ navigation }) => {
                 style={{ justifyContent: "center", alignItems: "center" }}
               >
                 <Ionicons color="#bd7925" name="home" size={25} />
-                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#bd7925" }}>Home</Text>
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#bd7925",
+                  }}
+                >
+                  Home
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => navigation.navigate("Sermons")}
                 style={{ justifyContent: "center", alignItems: "center" }}
               >
                 <FontAwesome6 color="#1a6363" name="book-bible" size={25} />
-                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Sermons</Text>
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#1a6363",
+                  }}
+                >
+                  Sermons
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => navigation.navigate("Contributions")}
                 style={{ justifyContent: "center", alignItems: "center" }}
               >
-                <FontAwesome6
-                  color="#1a6363"
-                  name="money-check"
-                  size={25}
-                />
-                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Contributions</Text>
+                <FontAwesome6 color="#1a6363" name="money-check" size={25} />
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#1a6363",
+                  }}
+                >
+                  Contributions
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -526,14 +622,30 @@ const Home = ({ navigation }) => {
                 style={{ justifyContent: "center", alignItems: "center" }}
               >
                 <FontAwesome6 color="#1a6363" name="building-user" size={22} />
-                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>Events</Text>
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#1a6363",
+                  }}
+                >
+                  Events
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => navigation.navigate("More")}
                 style={{ justifyContent: "center", alignItems: "center" }}
               >
                 <AntDesign color="#1a6363" name="appstore1" size={25} />
-                <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>More</Text>
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#1a6363",
+                  }}
+                >
+                  More
+                </Text>
               </TouchableOpacity>
             </View>
           </>
@@ -564,7 +676,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   imgLogo: {
-    width: '98%',
+    width: "98%",
     height: 35,
     alignSelf: "flex-start",
     resizeMode: "cover",
@@ -597,7 +709,7 @@ const styles = StyleSheet.create({
     height: 55,
     borderWidth: 1,
     borderColor: "#ffffff",
-    borderRadius: 8
+    borderRadius: 8,
   },
   viewIcon: {
     justifyContent: "center",

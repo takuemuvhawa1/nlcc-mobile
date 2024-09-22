@@ -14,6 +14,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { SimpleLineIcons, FontAwesome } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Apilink from "../constants/Links";
 
 const SetPassword = ({ navigation }) => {
 
@@ -25,11 +26,17 @@ const SetPassword = ({ navigation }) => {
     PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
   });
 
-  const [hidepin, setHidepin] = React.useState(true);
   const [inputs, setInputs] = React.useState({
+    otp: "",
     email: "",
     password: "",
+    cnpassword: "",
   });
+  
+  const [hideotp, setHideotp] = React.useState(true);
+  const [successfull, setSuccessfull] = React.useState(false);
+  const [hidepin, setHidepin] = React.useState(true);
+  const [hidecnpin, setHidecnpin] = React.useState(true);
 
   const [isactive, setIsactive] = React.useState(false);
   const [showAlert, setShowAlert] = React.useState(false);
@@ -48,21 +55,61 @@ const SetPassword = ({ navigation }) => {
     );
   };
 
-  const handleBtnPress = (email) => {
-    navigation.navigate('Home');
+  const handleBtnPress = async () => {
+    
+    if (inputs.otp == "") {
+      doAlert("Provide the OTP before you proceed", "Submission Error");
+      return;
+    }
+    if (inputs.password == "") {
+      doAlert("Provide the password before you proceed", "Submission Error");
+      return;
+    }
+    if (inputs.password != inputs.cnpassword) {
+      doAlert("Password confirmation is wrong", "Submission Error");
+      return;
+    }
+    const receivedOTP = await AsyncStorage.getItem("ReceivedOTP");
+    if (inputs.otp != receivedOTP) {
+      doAlert("Provided OTP is wrong", "Submission Error");
+      return;
+    }
+
+    setIsactive(true);
+
+    const asyncEmail = await AsyncStorage.getItem("TypedEmail");
+    console.log("email"+asyncEmail)
+    const apiLink = Apilink.getLink();
+
+    let signinresponse = await fetch(`${apiLink}onboarding/setpassword`, {
+      method: "post",
+      body: JSON.stringify({
+        email: asyncEmail,
+        otp: inputs.otp,
+        password: inputs.password,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    let resJson = await signinresponse.json();
+
+    console.log(resJson);
+
+    if (resJson.message == "Password set successfully") {
+      doAlert("Password saved successfully", "Saving Succssful");
+      setInputs({
+        email: "",
+        otp: "",
+        password: "",
+      });
+
+      setIsactive(false);
+      setSuccessfull(true);
+      return;
+    }
   };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const unloadScreen = () => {
-        console.log('SignIn');
-      };
-      setTimeout(() => {
-        unloadScreen();
-      }, 5000);
-    }, [])
-  );
-
 
   if (!fontsLoaded) {
     return null;
@@ -87,7 +134,7 @@ const SetPassword = ({ navigation }) => {
         showConfirmButton={true}
         cancelText="No, cancel"
         confirmText="Ok"
-        confirmButtonColor="#F47920"
+        confirmButtonColor="#1a6363"
         onCancelPressed={() => {
           console.log("cancelled");
           setShowAlert(false);
@@ -99,6 +146,9 @@ const SetPassword = ({ navigation }) => {
           setShowAlert(false);
           setAlerttext("");
           setAlerttitle("");
+          if (successfull == true){
+            navigation.navigate("SignIn");
+          }
         }}
       />
       {/* <StatusBar hidden={true} /> */}
@@ -125,20 +175,20 @@ const SetPassword = ({ navigation }) => {
             <View style={styles.viewTextInput}>
               <TextInput
                 autoCorrect={false}
-                value={inputs.password}
-                secureTextEntry={hidepin}
+                value={inputs.otp}
+                secureTextEntry={hideotp}
                 onChangeText={(text) =>
-                  setInputs({ ...inputs, password: text })
+                  setInputs({ ...inputs, otp: text })
                 }
                 style={styles.inputTextInput}
                 placeholder="Enter OTP you received on email"
               />
             </View>
             <TouchableOpacity
-              onPress={() => setHidepin(!hidepin)}
+              onPress={() => setHideotp(!hideotp)}
               style={styles.viewToggler}
             >
-              {hidepin && (
+              {hideotp && (
                 <>
                   <FontAwesome
                     name="eye-slash"
@@ -147,7 +197,7 @@ const SetPassword = ({ navigation }) => {
                   />
                 </>
               )}
-              {hidepin == false && (
+              {hideotp == false && (
                 <>
                   <FontAwesome
                     name="eye"
@@ -213,20 +263,20 @@ const SetPassword = ({ navigation }) => {
             <View style={styles.viewTextInput}>
               <TextInput
                 autoCorrect={false}
-                value={inputs.password}
-                secureTextEntry={hidepin}
+                value={inputs.cnpassword}
+                secureTextEntry={hidecnpin}
                 onChangeText={(text) =>
-                  setInputs({ ...inputs, password: text })
+                  setInputs({ ...inputs, cnpassword: text })
                 }
                 style={styles.inputTextInput}
                 placeholder="Enter your password confirmation"
               />
             </View>
             <TouchableOpacity
-              onPress={() => setHidepin(!hidepin)}
+              onPress={() => setHidecnpin(!hidecnpin)}
               style={styles.viewToggler}
             >
-              {hidepin && (
+              {hidecnpin && (
                 <>
                   <FontAwesome
                     name="eye-slash"
@@ -235,7 +285,7 @@ const SetPassword = ({ navigation }) => {
                   />
                 </>
               )}
-              {hidepin == false && (
+              {hidecnpin == false && (
                 <>
                   <FontAwesome
                     name="eye"

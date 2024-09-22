@@ -14,6 +14,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { SimpleLineIcons, FontAwesome } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Apilink from "../constants/Links";
 
 const SignIn = ({ navigation }) => {
 
@@ -48,8 +49,65 @@ const SignIn = ({ navigation }) => {
     );
   };
 
-  const handleSignIn = (email) => {
-    navigation.navigate('Home');
+  const handleSignIn = async () => {
+
+    if (inputs.email == "") {
+      doAlert("Fill in your email before you proceed", "Submission Error");
+      return;
+    }
+    if (inputs.password == "") {
+      doAlert("Fill in your password before you proceed", "Submission Error");
+      return;
+    }
+
+    if (!validateEmail(inputs.email)) {
+      doAlert("Email is not in correct format", "Submission Error");
+      return;
+    }
+   
+    setIsactive(true);
+    const apiLink = Apilink.getLink();
+
+    let signinresponse = await fetch(`${apiLink}onboarding/signin`, {
+      method: "post",
+      body: JSON.stringify({
+        email: inputs.email,
+        password: inputs.password,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    let resJson = await signinresponse.json();
+
+    console.log(resJson);
+
+    if (resJson.message == "Invalid email or password") {
+      doAlert("Invalid email or password", "Login Failed");
+      setIsactive(false);
+      return;
+    }
+
+    if (resJson.message == "Login successful") {
+      setInputs({
+        email: "",
+        password: "",
+      });
+
+      setIsactive(false);
+      //Set Async Data
+      await AsyncStorage.setItem("Tkn", "No token");
+      await AsyncStorage.setItem("UserID", resJson.member.MemberID.toString());
+      await AsyncStorage.setItem("UserAlias", resJson.member.Name+" "+resJson.member.Surname);
+      await AsyncStorage.setItem("UserGender", resJson.member.Gender);
+      await AsyncStorage.setItem("UserEmail", resJson.member.Email);
+      await AsyncStorage.setItem("UserPhone", resJson.member.Phone);
+      await AsyncStorage.setItem("UserAddress", resJson.member.Address);
+      await AsyncStorage.setItem("UserZone", resJson.member.Zone);
+      //await AsyncStorage.setItem("UserImg", resJson.member.ProfilePicture);
+      navigation.navigate("Home");
+    }
   };
 
   useFocusEffect(
@@ -127,7 +185,7 @@ const SignIn = ({ navigation }) => {
                 value={inputs.email}
                 onChangeText={(text) => setInputs({ ...inputs, email: text })}
                 style={styles.inputTextInput}
-                placeholder="Enter your email: example@gmail.com"
+                placeholder="Enter your email"
               />
             </View>
           </View>

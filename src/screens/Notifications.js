@@ -15,49 +15,40 @@ import {
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect } from "@react-navigation/native";
-import {
-  MaterialIcons
-} from "react-native-vector-icons";
+import { MaterialIcons } from "react-native-vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const apiData = [
   {
     id: "1",
-    type: "Easter Monday",
-    theme:
-      "The death of Jesus",
+    header: "Easter Monday",
+    content: "The death of Jesus",
+    sender: "Taurai Shoko",
     date: "12/12/2000",
-    time: "12:34 Pm"
+    time: "12:34 Pm",
   },
   {
     id: "2",
-    type: "Church Service",
-    theme:
-      "The power of giving",
+    header: "Church Service",
+    content: "The power of giving",
+    sender: "Taurai Shoko",
     date: "12/12/2000",
-    time: "12:34 Pm"
+    time: "12:34 Pm",
   },
   {
     id: "3",
-    type: "Harare Gardens Miracles",
-    theme:
-      "The power of giving",
+    header: "Harare Gardens Miracles",
+    content: "The power of giving",
+    sender: "Taurai Shoko",
     date: "12/12/2000",
-    time: "12:34 Pm"
-  }
+    time: "12:34 Pm",
+  },
 ];
 
 const Notifications = ({ navigation }) => {
-
   const [data, setData] = useState([]);
 
-  const SingleItem = ({
-    id,
-    type,
-    theme,
-    date,
-    time
-  }) => (
+  const SingleItem = ({ id, header, content, sender,date, time }) => (
     <TouchableOpacity style={{ marginTop: 10 }}>
       <View
         style={{
@@ -81,7 +72,7 @@ const Notifications = ({ navigation }) => {
               marginTop: 10,
             }}
           >
-            Subject: {type}
+            Subject: {header}
           </Text>
           <Text
             style={{
@@ -92,7 +83,7 @@ const Notifications = ({ navigation }) => {
               marginTop: 7,
             }}
           >
-            Notice: {theme}
+            Notice: {content}
           </Text>
           <Text
             style={{
@@ -103,7 +94,7 @@ const Notifications = ({ navigation }) => {
               marginTop: 5,
             }}
           >
-            Sent On: {date}{" "}{time}
+            Sent On: {date} {time}
           </Text>
         </View>
         <View style={{ width: "20%" }}>
@@ -121,8 +112,9 @@ const Notifications = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <SingleItem
       id={item.id}
-      type={item.type}
-      theme={item.theme}
+      header={item.header}
+      content={item.content}
+      sender={item.sender}
       date={item.date}
       time={item.time}
     />
