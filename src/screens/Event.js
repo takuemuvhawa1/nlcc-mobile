@@ -14,6 +14,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { FontAwesome, Ionicons } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import moment from 'moment';
 
 const Event = ({ navigation, props }) => {
   const [fontsLoaded] = useFonts({
@@ -233,7 +234,6 @@ const Event = ({ navigation, props }) => {
             color: "#000000",
             marginTop: 20,
             marginBottom: 30,
-            alignSelf: "center",
             textAlign: "justify",
           }}
         >
@@ -274,7 +274,7 @@ const Event = ({ navigation, props }) => {
                 alignSelf: "flex-end",
               }}
             >
-              {record.date} {record.time}
+              { moment(record.date).format('DD-MM-YYYY')} {record.time.slice(0, -3)}
             </Text>
           </View>
         </View>
@@ -312,7 +312,7 @@ const Event = ({ navigation, props }) => {
                 alignSelf: "flex-end",
               }}
             >
-              {record.enddate} {record.endtime}
+              { moment(record.enddate).format('DD-MM-YYYY')} {record.endtime.slice(0, -3)}
             </Text>
           </View>
         </View>

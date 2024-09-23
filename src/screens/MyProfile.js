@@ -27,6 +27,18 @@ const MyProfile = ({ navigation }) => {
     PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
   });
 
+  const [userdata, setUserdata] = React.useState({
+    Tkn: "",
+    UserID: "",
+    UserAlias: "",
+    UserGender: "",
+    UserEmail: "",
+    UserPhone: "",
+    UserAddress: "",
+    UserZone: "",
+    UserImg: "",
+  });
+
   const [isactive, setIsactive] = React.useState(false);
   const [showAlert, setShowAlert] = React.useState(false);
   const [alerttext, setAlerttext] = React.useState("");
@@ -116,8 +128,30 @@ const MyProfile = ({ navigation }) => {
   );
 
   useEffect(() => {
-    const asyncFetch = () => {
-      console.log("first");
+    const asyncFetch = async () => {
+      const Tkn = await AsyncStorage.getItem("Tkn");
+      const UserID = await AsyncStorage.getItem("UserID");
+      const UserAlias = await AsyncStorage.getItem("UserAlias");
+      const UserGender = await AsyncStorage.getItem("UserGender");
+      const UserEmail = await AsyncStorage.getItem("UserEmail");
+      const UserPhone = await AsyncStorage.getItem("UserPhone");
+      const UserAddress = await AsyncStorage.getItem("UserAddress");
+      const UserZone = await AsyncStorage.getItem("UserZone");
+      const UserImg = await AsyncStorage.getItem("UserImg");
+
+      if (UserID) {
+        setUserdata({
+          Tkn,
+          UserID,
+          UserAlias,
+          UserGender,
+          UserEmail,
+          UserPhone,
+          UserAddress,
+          UserZone,
+          UserImg
+        });
+      }
     };
     asyncFetch();
   }, []);
@@ -187,7 +221,7 @@ const MyProfile = ({ navigation }) => {
         <RenderItem title={"My Profile"} />
         <Image
           style={styles.imgUsr}
-          source={require("../../assets/user.png")}
+          source={userdata.UserImg ? {uri: `${userdata.UserImg}` } : null}
         />
         <Text
           style={{
@@ -198,7 +232,7 @@ const MyProfile = ({ navigation }) => {
             alignSelf: "center",
           }}
         >
-          Hi! Gemma Griffins
+          Hi! {userdata.UserAlias}
         </Text>
 
         <View
@@ -220,7 +254,7 @@ const MyProfile = ({ navigation }) => {
                 marginTop: 40,
               }}
             >
-              Date Joined
+              Zone
             </Text>
           </View>
           <View style={{ width: "60%" }}>
@@ -233,7 +267,7 @@ const MyProfile = ({ navigation }) => {
                 alignSelf: "flex-end",
               }}
             >
-              12-12-2000
+              {userdata.UserZone}
             </Text>
           </View>
         </View>

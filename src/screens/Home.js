@@ -260,7 +260,7 @@ const Home = ({ navigation }) => {
       const UserPhone = await AsyncStorage.getItem("UserPhone");
       const UserAddress = await AsyncStorage.getItem("UserAddress");
       const UserZone = await AsyncStorage.getItem("UserZone");
-      //const UserImg = await AsyncStorage.getItem("UserImg");
+      const UserImg = await AsyncStorage.getItem("UserImg");
 
       if (UserID) {
         setUserdata({
@@ -272,7 +272,7 @@ const Home = ({ navigation }) => {
           UserPhone,
           UserAddress,
           UserZone,
-          UserImg: "",
+          UserImg
         });
       }
     };
@@ -349,7 +349,10 @@ const Home = ({ navigation }) => {
             >
               <Image
                 style={styles.imgUsr}
-                source={require("../../assets/user.png")}
+                source={userdata.UserImg ? {uri: `${userdata.UserImg}` } : null}
+                // source={{
+                //   uri: `${userdata.UserImg}`,
+                // }}
               />
             </View>
             <View

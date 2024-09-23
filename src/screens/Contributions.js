@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-
+import moment from 'moment';
 import {
   FontAwesome6,
   Octicons,
@@ -19,6 +19,8 @@ import {
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
+import Apilink from "../constants/Links";
 
 const apiData = [
   {
@@ -95,7 +97,7 @@ const apiData = [
   },
 ];
 
-const Contributions = ({ navigation }) => {
+const Contributions = ({ navigation,props }) => {
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
     GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
@@ -110,6 +112,7 @@ const Contributions = ({ navigation }) => {
   const [showAlert, setShowAlert] = React.useState(false);
   const [alerttext, setAlerttext] = React.useState("");
   const [alerttitle, setAlerttitle] = React.useState("");
+  const isFocused = useIsFocused();
 
   const doAlert = (txt, ttl) => {
     setShowAlert(!showAlert);
@@ -132,7 +135,7 @@ const Contributions = ({ navigation }) => {
         
          onPress={() => showGroup(id)}>
       
-        <View style={{ width: "80%" }}>
+        <View style={{ width: "100%" }}>
           <Text
             style={{
               fontSize: 14,
@@ -173,19 +176,43 @@ const Contributions = ({ navigation }) => {
 
   const renderItem = ({ item }) => (
     <SingleItem
-      id={item.id}
-      name={item.name}
-      amount={item.amount}
-      date={item.date}
+      id={item.ContributionID}
+      name={item.ProjectName}
+      amount={item.Amount}
+      date={moment(item.Date).format('DD-MM-YYYY')}
     />
   );
 
+  // useEffect(() => {
+  //   const asyncFetch = () => {
+  //     setData(apiData);
+  //   };
+  //   asyncFetch();
+  // }, []);
+
   useEffect(() => {
-    const asyncFetch = () => {
-      setData(apiData);
+    const asyncFetch = async () => {
+      //Call API HERE
+      const apiLink = Apilink.getLink();
+
+      const asynctoken = await AsyncStorage.getItem("Tkn");
+      const userId = await AsyncStorage.getItem("UserID");
+
+      let res = await fetch(`${apiLink}contributions/with-projects/${userId}`, {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let responseJson = await res.json();
+      setData(responseJson);
     };
-    asyncFetch();
-  }, []);
+
+    if (isFocused) {
+      asyncFetch();
+    }
+  }, [props, isFocused]);
 
   if (!fontsLoaded) {
     return null;

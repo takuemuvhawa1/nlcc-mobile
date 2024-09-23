@@ -28,8 +28,8 @@ const SignIn = ({ navigation }) => {
 
   const [hidepin, setHidepin] = React.useState(true);
   const [inputs, setInputs] = React.useState({
-    email: "",
-    password: "",
+    email: "tanyaradzwasaukira@gmail.com",
+    password: "8899",
   });
 
   const [isactive, setIsactive] = React.useState(false);
@@ -105,7 +105,7 @@ const SignIn = ({ navigation }) => {
       await AsyncStorage.setItem("UserPhone", resJson.member.Phone);
       await AsyncStorage.setItem("UserAddress", resJson.member.Address);
       await AsyncStorage.setItem("UserZone", resJson.member.Zone);
-      //await AsyncStorage.setItem("UserImg", resJson.member.ProfilePicture);
+      await AsyncStorage.setItem("UserImg", resJson.member.ProfilePicture);
       navigation.navigate("Home");
     }
   };

@@ -12,12 +12,12 @@ import {
   FlatList,
   Keyboard,
 } from "react-native";
-import { useFonts } from "expo-font";
-import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "@react-navigation/native";
+
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "react-native-vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
+import Apilink from "../constants/Links";
 
 const apiData = [
   {
@@ -89,9 +89,11 @@ const apiData = [
   },
 ];
 
-const Calender = () => {
+const Calender = ({props}) => {
+
   const [data, setData] = useState([]);
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const showEvent = async (id) => {
     let result = data.find((obj) => obj.id === id);
     console.log(id);
@@ -170,12 +172,35 @@ const Calender = () => {
     />
   );
 
+  // useEffect(() => {
+  //   const asyncFetch = () => {
+  //     setData(apiData);
+  //   };
+  //   asyncFetch();
+  // }, []);
+
   useEffect(() => {
-    const asyncFetch = () => {
-      setData(apiData);
+    const asyncFetch = async () => {
+      //Call API HERE
+      const apiLink = Apilink.getLink();
+
+      const asynctoken = await AsyncStorage.getItem("Tkn");
+
+      let res = await fetch(`${apiLink}events-tasks`, {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let responseJson = await res.json();
+      setData(responseJson);
     };
-    asyncFetch();
-  }, []);
+
+    if (isFocused) {
+      asyncFetch();
+    }
+  }, [props, isFocused]);
 
   return (
     <View>

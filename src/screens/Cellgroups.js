@@ -18,6 +18,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import { MaterialIcons } from "react-native-vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from '@react-navigation/native';
+import { useIsFocused } from "@react-navigation/native";
+import Apilink from "../constants/Links";
 
 const apiData = [
   {
@@ -58,7 +60,8 @@ const apiData = [
   },
 ];
 
-const Cellgroups = () => {
+const Cellgroups = ({props}) => {
+
   const [data, setData] = useState([]);
   const navigation = useNavigation();
 
@@ -70,7 +73,9 @@ const Cellgroups = () => {
     navigation.navigate("CellGroup");
   };
 
-  const SingleItem = ({ id, name, description, admin, adminphone, joined }) => (
+  const isFocused = useIsFocused();
+
+  const SingleItem = ({ id, name, location,description, admin, adminphone, joined }) => (
     <TouchableOpacity
       style={{ marginTop: 10 }}
       onPress={() => showGroup(id)}
@@ -97,7 +102,7 @@ const Cellgroups = () => {
               marginTop: 10,
             }}
           >
-            {name}
+            {name} - {location}
           </Text>
           <Text
             style={{
@@ -127,6 +132,7 @@ const Cellgroups = () => {
     <SingleItem
       id={item.id}
       name={item.name}
+      location={item.location}
       description={item.description}
       admin={item.admin}
       adminphone={item.adminphone}
@@ -134,12 +140,36 @@ const Cellgroups = () => {
     />
   );
 
+  // useEffect(() => {
+  //   const asyncFetch = () => {
+  //     setData(apiData);
+  //   };
+  //   asyncFetch();
+  // }, []);
+
   useEffect(() => {
-    const asyncFetch = () => {
-      setData(apiData);
+    const asyncFetch = async () => {
+      //Call API HERE
+      const apiLink = Apilink.getLink();
+
+      const asynctoken = await AsyncStorage.getItem("Tkn");
+      const userId = await AsyncStorage.getItem("UserID");
+
+      let res = await fetch(`${apiLink}smallgroups/small-groups/${userId}`, {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let responseJson = await res.json();
+      setData(responseJson);
     };
-    asyncFetch();
-  }, []);
+
+    if (isFocused) {
+      asyncFetch();
+    }
+  }, [props, isFocused]);
 
   return (
     <View>

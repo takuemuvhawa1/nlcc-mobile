@@ -10,6 +10,7 @@ import {
   ScrollView,
   TextInput,
   FlatList,
+  Linking
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
@@ -27,6 +28,8 @@ import {
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
+import Apilink from "../constants/Links";
 
 const apiData = [
   {
@@ -103,7 +106,7 @@ const apiData = [
   },
 ];
 
-const Sermons = ({ navigation }) => {
+const Sermons = ({ navigation, props }) => {
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
     GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
@@ -118,7 +121,7 @@ const Sermons = ({ navigation }) => {
   const [showAlert, setShowAlert] = React.useState(false);
   const [alerttext, setAlerttext] = React.useState("");
   const [alerttitle, setAlerttitle] = React.useState("");
-
+  const isFocused = useIsFocused();
   const doAlert = (txt, ttl) => {
     setShowAlert(!showAlert);
     setAlerttext(txt);
@@ -126,11 +129,11 @@ const Sermons = ({ navigation }) => {
   };
 
   const SingleItem = ({ id, name, weblink, date }) => (
-    <TouchableOpacity style={{ marginTop: 10 }}>
+    <TouchableOpacity style={{ marginTop: 10 }} onPress={() => Linking.openURL(`${weblink}`)}>
       <View
         style={{
           flexDirection: "row",
-          width:'100%',
+          width: "100%",
           height: 100,
           backgroundColor: "white",
           borderColor: "#1a636340",
@@ -174,8 +177,14 @@ const Sermons = ({ navigation }) => {
             {weblink}
           </Text>
         </View>
-        <View style={{ width: "30%", justifyContent: 'center', alignItems: 'center' }}>
-        <Image
+        <View
+          style={{
+            width: "30%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Image
             style={styles.imgYouTube}
             source={require("../../assets/youtube5.png")}
           />
@@ -193,12 +202,35 @@ const Sermons = ({ navigation }) => {
     />
   );
 
+  // useEffect(() => {
+  //   const asyncFetch = () => {
+  //     setData(apiData);
+  //   };
+  //   asyncFetch();
+  // }, []);
+
   useEffect(() => {
-    const asyncFetch = () => {
-      setData(apiData);
+    const asyncFetch = async () => {
+      //Call API HERE
+      const apiLink = Apilink.getLink();
+
+      const asynctoken = await AsyncStorage.getItem("Tkn");
+
+      let res = await fetch(`${apiLink}sermons`, {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let responseJson = await res.json();
+      setData(responseJson);
     };
-    asyncFetch();
-  }, []);
+
+    if (isFocused) {
+      asyncFetch();
+    }
+  }, [props, isFocused]);
 
   if (!fontsLoaded) {
     return null;
@@ -293,20 +325,19 @@ const Sermons = ({ navigation }) => {
               />
             </View>
           </View>
-          <View style={{paddingBottom: 20, height: '94%'}}>
-          {data && (
-            <>
-            <FlatList
-              vertical
-              data={data}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{paddingBottom:100}} 
-            />
-            </>
-          )}
-
+          <View style={{ paddingBottom: 20, height: "94%" }}>
+            {data && (
+              <>
+                <FlatList
+                  vertical
+                  data={data}
+                  renderItem={renderItem}
+                  keyExtractor={(item) => item.id}
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{ paddingBottom: 100 }}
+                />
+              </>
+            )}
           </View>
         </View>
       </View>
@@ -346,11 +377,7 @@ const Sermons = ({ navigation }) => {
             style={{ justifyContent: "center", alignItems: "center" }}
             onPress={() => navigation.navigate("Contributions")}
           >
-            <FontAwesome6
-              color="#1a6363"
-              name="money-check"
-              size={25}
-            />
+            <FontAwesome6 color="#1a6363" name="money-check" size={25} />
             <Text
               style={{
                 fontFamily: "GeneralSansRegular",

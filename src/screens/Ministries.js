@@ -18,6 +18,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import { MaterialIcons } from "react-native-vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
+import Apilink from "../constants/Links";
 
 const apiData = [
   {
@@ -94,7 +96,7 @@ const apiData = [
   },
 ];
 
-const Ministries = () => {
+const Ministries = ({props}) => {
   const [data, setData] = useState([]);
   const navigation = useNavigation();
 
@@ -105,6 +107,8 @@ const Ministries = () => {
     await AsyncStorage.setItem("SelectedMinistry", JSON.stringify(result));
     navigation.navigate("Ministry");
   };
+
+  const isFocused = useIsFocused();
 
   const SingleItem = ({ id, name, description, admin, adminphone, joined }) => (
     <TouchableOpacity
@@ -170,12 +174,36 @@ const Ministries = () => {
     />
   );
 
+  // useEffect(() => {
+  //   const asyncFetch = () => {
+  //     setData(apiData);
+  //   };
+  //   asyncFetch();
+  // }, []);
+
   useEffect(() => {
-    const asyncFetch = () => {
-      setData(apiData);
+    const asyncFetch = async () => {
+      //Call API HERE
+      const apiLink = Apilink.getLink();
+
+      const asynctoken = await AsyncStorage.getItem("Tkn");
+      const userId = await AsyncStorage.getItem("UserID");
+
+      let res = await fetch(`${apiLink}ministries/ministry/${userId}`, {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let responseJson = await res.json();
+      setData(responseJson);
     };
-    asyncFetch();
-  }, []);
+
+    if (isFocused) {
+      asyncFetch();
+    }
+  }, [props, isFocused]);
 
   return (
     <View>
