@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -75,6 +75,11 @@ const Home = ({ navigation }) => {
     PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
   });
 
+  const ministryRef = useRef();
+  const calenderRef = useRef();
+  const cellgroupRef = useRef();
+  const notificationRef = useRef();
+
   const [userdata, setUserdata] = React.useState({
     Tkn: "",
     UserID: "",
@@ -121,6 +126,22 @@ const Home = ({ navigation }) => {
     setPrevbtn(id);
     setBtns(markers);
   };
+
+  const findSearched = (text)=>{
+    setSearchtext(text);
+    if (prevbtn == 1){
+      ministryRef.current.getFilterValue(text);
+    }
+    if (prevbtn == 2){
+      calenderRef.current.getFilterValue(text);
+    }
+    if (prevbtn == 3){
+      cellgroupRef.current.getFilterValue(text);
+    }
+    if (prevbtn == 5){
+      notificationRef.current.getFilterValue(text);
+    }
+  }
 
   const OneItem = ({ id, title, vectoricon, icon, selected }) => (
     <TouchableOpacity
@@ -436,7 +457,7 @@ const Home = ({ navigation }) => {
             <TextInput
               autoCorrect={false}
               value={searchtext}
-              onChangeText={(text) => setSearchtext(text)}
+              onChangeText={(text) => findSearched(text)}
               style={styles.inputTextInput}
               placeholder="Search here for church . . ."
             />
@@ -473,7 +494,7 @@ const Home = ({ navigation }) => {
               Be part of diffrent ministries available
             </Text>
             <View style={{ height: "75%" }}>
-              <Ministries />
+              <Ministries ref={ministryRef}/>
             </View>
           </>
         )}
@@ -490,7 +511,7 @@ const Home = ({ navigation }) => {
               View events and church services as part of our calender
             </Text>
             <View style={{ height: "75%" }}>
-              <Calender />
+              <Calender ref={calenderRef}/>
             </View>
           </>
         )}
@@ -507,7 +528,7 @@ const Home = ({ navigation }) => {
               Be part of a Cell Group
             </Text>
             <View style={{ height: "75%" }}>
-              <Cellgroups />
+              <Cellgroups ref={cellgroupRef}/>
             </View>
           </>
         )}
@@ -566,7 +587,7 @@ const Home = ({ navigation }) => {
               </View>
             </View>
             <View style={{ height: "41%" }}>
-              <Notifications />
+              <Notifications ref={notificationRef}/>
             </View>
           </>
         )}

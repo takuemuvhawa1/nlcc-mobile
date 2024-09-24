@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef,
+  useImperativeHandle } from "react";
 import {
   StyleSheet,
   View,
@@ -21,48 +22,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useIsFocused } from "@react-navigation/native";
 import Apilink from "../constants/Links";
 
-const apiData = [
-  {
-    id: "1",
-    name: "Belvedere West",
-    description:
-      "This is a group for laddies of all ages from adult and above and we discuss all matters...",
-    admin: "Christabel Mwanza",
-    adminphone: "+263778476",
-    joined: true,
-  },
-  {
-    id: "2",
-    name: "Kuwadzana Extension",
-    description:
-      "This is a group for man of all ages from adult and above and we discuss all matters...",
-    admin: "Jonnah Kavaza",
-    adminphone: "+263778476",
-    joined: false,
-  },
-  {
-    id: "3",
-    name: "Harare Central",
-    description:
-      "This is a group for kids and we discuss all matters that affect them biblically assisting to mould...",
-    admin: "Chris Chibwe",
-    adminphone: "+263778476",
-    joined: false,
-  },
-  {
-    id: "4",
-    name: "Chisipite Claster",
-    description:
-      "This is a group for all age grups from adult and above and we discuss all matters...",
-    admin: "Abigail Kurai",
-    adminphone: "+263778476",
-    joined: true,
-  },
-];
-
-const Cellgroups = ({props}) => {
+const Cellgroups = forwardRef((props, ref) =>  {
 
   const [data, setData] = useState([]);
+  const [filtereddata, setFilteredData] = useState([]);
   const navigation = useNavigation();
 
   const showGroup = async (id) => {
@@ -74,6 +37,16 @@ const Cellgroups = ({props}) => {
   };
 
   const isFocused = useIsFocused();
+
+  useImperativeHandle(ref, () => ({
+    getFilterValue(val) {
+      console.log(val);
+      const filtered = data.filter((item) =>
+        item.name.toLowerCase().includes(val.toLowerCase()) || item.location.toLowerCase().includes(val.toLowerCase())
+      );
+      setFilteredData(filtered);
+    },
+  }));
 
   const SingleItem = ({ id, name, location,description, admin, adminphone, joined }) => (
     <TouchableOpacity
@@ -164,19 +137,20 @@ const Cellgroups = ({props}) => {
 
       let responseJson = await res.json();
       setData(responseJson);
+      setFilteredData(responseJson);
     };
 
-    if (isFocused) {
+
       asyncFetch();
-    }
-  }, [props, isFocused]);
+
+  }, []);
 
   return (
     <View>
-      {data && (
+      {filtereddata && (
         <FlatList
           vertical
-          data={data}
+          data={filtereddata}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={() => <View style={{ width: 7 }} />}
@@ -185,6 +159,6 @@ const Cellgroups = ({props}) => {
       )}
     </View>
   );
-};
+});
 
 export default Cellgroups;

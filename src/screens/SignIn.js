@@ -6,18 +6,17 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 import { SimpleLineIcons, FontAwesome } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Apilink from "../constants/Links";
 
 const SignIn = ({ navigation }) => {
-
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
     GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
@@ -50,7 +49,6 @@ const SignIn = ({ navigation }) => {
   };
 
   const handleSignIn = async () => {
-
     if (inputs.email == "") {
       doAlert("Fill in your email before you proceed", "Submission Error");
       return;
@@ -64,7 +62,7 @@ const SignIn = ({ navigation }) => {
       doAlert("Email is not in correct format", "Submission Error");
       return;
     }
-   
+
     setIsactive(true);
     const apiLink = Apilink.getLink();
 
@@ -99,28 +97,43 @@ const SignIn = ({ navigation }) => {
       //Set Async Data
       await AsyncStorage.setItem("Tkn", "No token");
       await AsyncStorage.setItem("UserID", resJson.member.MemberID.toString());
-      await AsyncStorage.setItem("UserAlias", resJson.member.Name+" "+resJson.member.Surname);
+      await AsyncStorage.setItem(
+        "UserAlias",
+        resJson.member.Name + " " + resJson.member.Surname
+      );
       await AsyncStorage.setItem("UserGender", resJson.member.Gender);
       await AsyncStorage.setItem("UserEmail", resJson.member.Email);
       await AsyncStorage.setItem("UserPhone", resJson.member.Phone);
       await AsyncStorage.setItem("UserAddress", resJson.member.Address);
       await AsyncStorage.setItem("UserZone", resJson.member.Zone);
       await AsyncStorage.setItem("UserImg", resJson.member.ProfilePicture);
+
+      if (resJson.member.ministries.length) {
+        await AsyncStorage.setItem(
+          "UserMinistries",
+          JSON.stringify(resJson.member.ministries)
+        );
+      }
+      if (resJson.member.cellgroups.length) {
+        await AsyncStorage.setItem(
+          "UserCellGroups",
+          JSON.stringify(resJson.member.cellgroups)
+        );
+      }
       navigation.navigate("Home");
     }
   };
 
   useFocusEffect(
     React.useCallback(() => {
-      const unloadScreen = () => {
-        console.log('SignIn');
+      const clearAsyncStorage = async () => {
+        AsyncStorage.clear();
+        console.log("Cleared");
       };
-      setTimeout(() => {
-        unloadScreen();
-      }, 5000);
+
+      clearAsyncStorage();
     }, [])
   );
-
 
   if (!fontsLoaded) {
     return null;
@@ -133,7 +146,7 @@ const SignIn = ({ navigation }) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
-        <AwesomeAlert
+      <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
         showProgress={false}
@@ -170,102 +183,96 @@ const SignIn = ({ navigation }) => {
           Provide your account details and press login button
         </Text> */}
 
-        <View style={styles.viewInputs}>
-          <View style={styles.viewInput}>
-            <View style={styles.viewIcon}>
-              <SimpleLineIcons
-                name="envelope"
-                size={25}
-                style={styles.icoInputIcon}
-              />
-            </View>
-            <View style={styles.viewTextInput}>
-              <TextInput
-                autoCorrect={false}
-                value={inputs.email}
-                onChangeText={(text) => setInputs({ ...inputs, email: text })}
-                style={styles.inputTextInput}
-                placeholder="Enter your email"
-              />
-            </View>
+      <View style={styles.viewInputs}>
+        <View style={styles.viewInput}>
+          <View style={styles.viewIcon}>
+            <SimpleLineIcons
+              name="envelope"
+              size={25}
+              style={styles.icoInputIcon}
+            />
           </View>
-          <View style={[styles.viewInput, { marginTop: 20 }]}>
-            <View style={styles.viewIcon}>
-              <SimpleLineIcons
-                name="lock"
-                size={25}
-                style={styles.icoInputIcon}
-              />
-            </View>
-            <View style={styles.viewTextInput}>
-              <TextInput
-                autoCorrect={false}
-                value={inputs.password}
-                secureTextEntry={hidepin}
-                onChangeText={(text) =>
-                  setInputs({ ...inputs, password: text })
-                }
-                style={styles.inputTextInput}
-                placeholder="Enter your password"
-              />
-            </View>
-            <TouchableOpacity
-              onPress={() => setHidepin(!hidepin)}
-              style={styles.viewToggler}
-            >
-              {hidepin && (
-                <>
-                  <FontAwesome
-                    name="eye-slash"
-                    size={25}
-                    style={styles.icoInputIcon}
-                  />
-                </>
-              )}
-              {hidepin == false && (
-                <>
-                  <FontAwesome
-                    name="eye"
-                    size={25}
-                    style={styles.icoInputIcon}
-                  />
-                </>
-              )}
-            </TouchableOpacity>
+          <View style={styles.viewTextInput}>
+            <TextInput
+              autoCorrect={false}
+              value={inputs.email}
+              onChangeText={(text) => setInputs({ ...inputs, email: text })}
+              style={styles.inputTextInput}
+              placeholder="Enter your email"
+            />
           </View>
         </View>
-        <View style={styles.viewBtns}>
+        <View style={[styles.viewInput, { marginTop: 20 }]}>
+          <View style={styles.viewIcon}>
+            <SimpleLineIcons
+              name="lock"
+              size={25}
+              style={styles.icoInputIcon}
+            />
+          </View>
+          <View style={styles.viewTextInput}>
+            <TextInput
+              autoCorrect={false}
+              value={inputs.password}
+              secureTextEntry={hidepin}
+              onChangeText={(text) => setInputs({ ...inputs, password: text })}
+              style={styles.inputTextInput}
+              placeholder="Enter your password"
+            />
+          </View>
           <TouchableOpacity
-            onPress={() => handleSignIn()}
-            style={styles.btnBtns1}
+            onPress={() => setHidepin(!hidepin)}
+            style={styles.viewToggler}
           >
-            {isactive && (
+            {hidepin && (
               <>
-                <ActivityIndicator size="large" color="#ffffff" />
+                <FontAwesome
+                  name="eye-slash"
+                  size={25}
+                  style={styles.icoInputIcon}
+                />
               </>
             )}
-            {isactive == false && (
+            {hidepin == false && (
               <>
-                <Text style={styles.txtBtnTxt1}>Log In</Text>
+                <FontAwesome name="eye" size={25} style={styles.icoInputIcon} />
               </>
             )}
           </TouchableOpacity>
-          <Text
-            onPress={() => navigation.navigate("ForgotPassword")}
-            style={styles.txtForgotPin}
-          >
-            Forgot password?
-          </Text>
-          <Text
-            onPress={() => navigation.navigate("Register")}
-            style={styles.txtDontHave}
-          >
-            Not yet registered?{"  "}
-            <Text style={{ color: "#FFFFF0", fontFamily: "GeneralSansMedium" }}>
-              Register
-            </Text>
-          </Text>
         </View>
+      </View>
+      <View style={styles.viewBtns}>
+        <TouchableOpacity
+          onPress={() => handleSignIn()}
+          style={styles.btnBtns1}
+        >
+          {isactive && (
+            <>
+              <ActivityIndicator size="large" color="#ffffff" />
+            </>
+          )}
+          {isactive == false && (
+            <>
+              <Text style={styles.txtBtnTxt1}>Log In</Text>
+            </>
+          )}
+        </TouchableOpacity>
+        <Text
+          onPress={() => navigation.navigate("ForgotPassword")}
+          style={styles.txtForgotPin}
+        >
+          Forgot password?
+        </Text>
+        <Text
+          onPress={() => navigation.navigate("Register")}
+          style={styles.txtDontHave}
+        >
+          Not yet registered?{"  "}
+          <Text style={{ color: "#FFFFF0", fontFamily: "GeneralSansMedium" }}>
+            Register
+          </Text>
+        </Text>
+      </View>
     </LinearGradient>
   );
 };
@@ -273,36 +280,36 @@ const SignIn = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center"
+    alignItems: "center",
   },
   imgLogo: {
     width: 150,
     height: 45,
     alignSelf: "center",
     resizeMode: "cover",
-    marginTop: 63
+    marginTop: 63,
   },
   txtTagline: {
     fontSize: 14,
-    fontFamily: 'PlayfairDisplayRegular',
-    textAlign: 'center',
+    fontFamily: "PlayfairDisplayRegular",
+    textAlign: "center",
     //color: '#FFFFFF',
-    color: '#1a6363',
-    marginTop: 15
+    color: "#1a6363",
+    marginTop: 15,
   },
   txtFormName: {
     fontSize: 20,
-    fontFamily: 'GeneralSansRegular',
-    textAlign: 'center',
-    color: '#FFFFF0',
+    fontFamily: "GeneralSansRegular",
+    textAlign: "center",
+    color: "#FFFFF0",
     marginTop: 35,
-    lineHeight: 36
+    lineHeight: 36,
   },
   viewInputs: {
     flexDirection: "column",
     width: "100%",
     marginTop: 60,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   viewInput: {
     flexDirection: "row",
@@ -316,7 +323,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     marginTop: 40,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   viewIcon: {
     justifyContent: "center",
@@ -339,7 +346,7 @@ const styles = StyleSheet.create({
   inputTextInput: {
     width: "98%",
     height: 45,
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
     fontFamily: "GeneralSansMedium",
   },

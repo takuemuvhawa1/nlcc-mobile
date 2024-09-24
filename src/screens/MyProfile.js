@@ -1,11 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Image
-} from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -37,6 +31,8 @@ const MyProfile = ({ navigation }) => {
     UserAddress: "",
     UserZone: "",
     UserImg: "",
+    UserMinistries: [],
+    UserCellGroups: [],
   });
 
   const [isactive, setIsactive] = React.useState(false);
@@ -138,6 +134,34 @@ const MyProfile = ({ navigation }) => {
       const UserAddress = await AsyncStorage.getItem("UserAddress");
       const UserZone = await AsyncStorage.getItem("UserZone");
       const UserImg = await AsyncStorage.getItem("UserImg");
+      let UserMinistries = [];
+      let UserCellGroups = [];
+      try {
+        let value = await AsyncStorage.getItem("UserMinistries");
+        if (value != null) {
+          // do something
+          const AsyncUserMinistries = await AsyncStorage.getItem(
+            "UserMinistries"
+          );
+          UserMinistries = JSON.parse(AsyncUserMinistries);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      try {
+        let value = await AsyncStorage.getItem("UserCellGroups");
+        if (value != null) {
+          // do something
+          const AsyncUserCellGroups = await AsyncStorage.getItem(
+            "UserCellGroups"
+          );
+          UserCellGroups = JSON.parse(AsyncUserCellGroups);
+        } else {
+          UserCellGroups = [];
+        }
+      } catch (error) {
+        console.log(error);
+      }
 
       if (UserID) {
         setUserdata({
@@ -149,8 +173,11 @@ const MyProfile = ({ navigation }) => {
           UserPhone,
           UserAddress,
           UserZone,
-          UserImg
+          UserImg,
+          UserMinistries,
+          UserCellGroups,
         });
+        console.log("Set done");
       }
     };
     asyncFetch();
@@ -221,7 +248,7 @@ const MyProfile = ({ navigation }) => {
         <RenderItem title={"My Profile"} />
         <Image
           style={styles.imgUsr}
-          source={userdata.UserImg ? {uri: `${userdata.UserImg}` } : null}
+          source={userdata.UserImg ? { uri: `${userdata.UserImg}` } : null}
         />
         <Text
           style={{
@@ -240,9 +267,9 @@ const MyProfile = ({ navigation }) => {
             flexDirection: "row",
             justifyContent: "space-evenly",
             width: "100%",
-            borderBottomColor: '#1a636350',
+            borderBottomColor: "#1a636350",
             borderBottomWidth: 0.5,
-            paddingBottom: 10
+            paddingBottom: 10,
           }}
         >
           <View style={{ width: "40%" }}>
@@ -272,51 +299,55 @@ const MyProfile = ({ navigation }) => {
           </View>
         </View>
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            width: "100%",
-            borderBottomColor: '#1a636350',
-            borderBottomWidth: 0.5,
-            paddingBottom: 10
-          }}
-        >
-          <View style={{ width: "40%" }}>
-            <Text
+        {userdata.UserCellGroups.length > 0 && (
+          <>
+            <View
               style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#000000",
-                marginTop: 10,
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                width: "100%",
+                borderBottomColor: "#1a636350",
+                borderBottomWidth: 0.5,
+                paddingBottom: 10,
               }}
             >
-              Cell Group
-            </Text>
-          </View>
-          <View style={{ width: "60%" }}>
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#1a6363",
-                marginTop: 15,
-                alignSelf: "flex-end",
-              }}
-            >
-              Belevedere North  Harare
-            </Text>
-          </View>
-        </View>
+              <View style={{ width: "40%" }}>
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansMedium",
+                    fontSize: 18,
+                    color: "#000000",
+                    marginTop: 20,
+                  }}
+                >
+                  Cell Group
+                </Text>
+              </View>
+              <View style={{ width: "60%" }}>
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansMedium",
+                    fontSize: 18,
+                    color: "#1a6363",
+                    marginTop: 20,
+                    alignSelf: "flex-end",
+                  }}
+                >
+                  {userdata.UserCellGroups[0].SmallGroupName}
+                </Text>
+              </View>
+            </View>
+          </>
+        )}
 
         <View
           style={{
             flexDirection: "row",
             justifyContent: "space-evenly",
             width: "100%",
-            borderBottomColor: '#1a636350',
+            borderBottomColor: "#1a636350",
             borderBottomWidth: 0.5,
-            paddingBottom: 15
+            paddingBottom: 10,
           }}
         >
           <View style={{ width: "40%" }}>
@@ -331,29 +362,39 @@ const MyProfile = ({ navigation }) => {
               Ministries
             </Text>
           </View>
-          <View style={{ width: "60%", flexDirection: 'column' }}>
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#1a6363",
-                marginTop: 15,
-                alignSelf: "flex-end",
-              }}
-            >
-              Ladies Ministry
-            </Text>
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#1a6363",
-                marginTop: 20,
-                alignSelf: "flex-end",
-              }}
-            >
-              Covenant Care Ministry
-            </Text>
+          <View style={{ width: "60%", flexDirection: "column" }}>
+            {userdata.UserMinistries.length == 0 ? (
+              <>
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansMedium",
+                    fontSize: 18,
+                    color: "#00000050",
+                    marginTop: 15,
+                    alignSelf: "flex-end",
+                  }}
+                >
+                  None Joined
+                </Text>
+              </>
+            ) : (
+              <>
+                {userdata.UserMinistries.map((item, index) => (
+                  <Text
+                    style={{
+                      fontFamily: "GeneralSansMedium",
+                      fontSize: 18,
+                      color: "#1a6363",
+                      marginTop: 20,
+                      alignSelf: "flex-end",
+                    }}
+                    key={index}
+                  >
+                    {item.SmallGroupName}
+                  </Text>
+                ))}
+              </>
+            )}
           </View>
         </View>
       </View>
@@ -395,7 +436,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     marginTop: 10,
-  }
+  },
 });
 
 export default MyProfile;

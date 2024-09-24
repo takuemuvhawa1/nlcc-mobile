@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle
+} from "react";
 import {
   StyleSheet,
   View,
   ImageBackground,
   Text,
   TouchableOpacity,
-  Image,
-  StatusBar,
-  ScrollView,
-  TextInput,
   FlatList,
   Keyboard,
 } from "react-native";
@@ -21,84 +22,30 @@ import { useNavigation } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
 import Apilink from "../constants/Links";
 
-const apiData = [
-  {
-    id: "1",
-    name: "Ladies Ministry",
-    description:
-      "This is a ministry for laddies of all ages from adult and above and we discuss all matters...",
-    admin: "Christabel Mwanza",
-    adminphone: "+263778476234",
-    joined: true,
-  },
-  {
-    id: "2",
-    name: "Mens Ministry",
-    description:
-      "This is a ministry for man of all ages from adult and above and we discuss all matters...",
-    admin: "Jonnah Kavaza",
-    adminphone: "+263778476654",
-    joined: false,
-  },
-  {
-    id: "3",
-    name: "Covenant Kids Ministry",
-    description:
-      "This is a ministry for kids and we discuss all matters that affect them biblically assisting to mould...",
-    admin: "Chris Chibwe",
-    adminphone: "+263778476122",
-    joined: false,
-  },
-  {
-    id: "4",
-    name: "Covenant Care Ministry",
-    description:
-      "This is a ministry for all age grups from adult and above and we discuss all matters...",
-    admin: "Abigail Kurai",
-    adminphone: "+263778476000",
-    joined: true,
-  },
-  {
-    id: "5",
-    name: "Ladies Ministry",
-    description:
-      "This is a ministry for laddies of all ages from adult and above and we discuss all matters...",
-    admin: "Christabel Mwanza",
-    adminphone: "+263778476234",
-    joined: true,
-  },
-  {
-    id: "6",
-    name: "Mens Ministry",
-    description:
-      "This is a ministry for man of all ages from adult and above and we discuss all matters...",
-    admin: "Jonnah Kavaza",
-    adminphone: "+263778476654",
-    joined: false,
-  },
-  {
-    id: "7",
-    name: "Covenant Kids Ministry",
-    description:
-      "This is a ministry for kids and we discuss all matters that affect them biblically assisting to mould...",
-    admin: "Chris Chibwe",
-    adminphone: "+263778476122",
-    joined: false,
-  },
-  {
-    id: "8",
-    name: "Covenant Care Ministry",
-    description:
-      "This is a ministry for all age grups from adult and above and we discuss all matters...",
-    admin: "Abigail Kurai",
-    adminphone: "+263778476000",
-    joined: true,
-  },
-];
-
-const Ministries = ({props}) => {
+const Ministries = forwardRef((props, ref) => {
   const [data, setData] = useState([]);
+  const [filtereddata, setFilteredData] = useState([]);
   const navigation = useNavigation();
+
+  useImperativeHandle(ref, () => ({
+    getFilterValue(val) {
+      console.log(val);
+      const filtered = data.filter((item) =>
+        item.name.toLowerCase().includes(val.toLowerCase())
+      );
+      setFilteredData(filtered);
+
+      // const filteredData = data.filter((item) => {
+      //   const searchTextLowerCase = val.toLowerCase();
+      //   return (
+      //     item.name.toLowerCase().includes(searchTextLowerCase) ||
+      //     item.description.includes(searchText)
+      //   );
+      // });
+
+      // setFilteredData(filteredData);
+    },
+  }));
 
   const showMinistry = async (id) => {
     let result = data.find((obj) => obj.id === id);
@@ -198,19 +145,19 @@ const Ministries = ({props}) => {
 
       let responseJson = await res.json();
       setData(responseJson);
+      setFilteredData(responseJson);
     };
 
-    if (isFocused) {
-      asyncFetch();
-    }
-  }, [props, isFocused]);
+    asyncFetch();
+    console.log("first");
+  }, []);
 
   return (
     <View>
-      {data && (
+      {filtereddata && (
         <FlatList
           vertical
-          data={data}
+          data={filtereddata}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={() => <View style={{ width: 7 }} />}
@@ -219,6 +166,6 @@ const Ministries = ({props}) => {
       )}
     </View>
   );
-};
+});
 
 export default Ministries;

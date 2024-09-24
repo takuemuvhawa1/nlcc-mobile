@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, forwardRef,
+  useImperativeHandle } from "react";
 import {
   StyleSheet,
   View,
@@ -13,8 +14,7 @@ import {
   Keyboard,
 } from "react-native";
 import { useFonts } from "expo-font";
-import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from "react-native-vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -45,9 +45,19 @@ const apiData = [
   },
 ];
 
-const Notifications = ({ navigation }) => {
+const Notifications = forwardRef((props, ref) =>  {
   const [data, setData] = useState([]);
+  const [filtereddata, setFilteredData] = useState([]);
 
+  useImperativeHandle(ref, () => ({
+    getFilterValue(val) {
+      console.log(val);
+      const filtered = data.filter((item) =>
+        item.header.toLowerCase().includes(val.toLowerCase()) || item.content.toLowerCase().includes(val.toLowerCase())
+      );
+      setFilteredData(filtered);
+    },
+  }));
   const SingleItem = ({ id, header, content, sender,date, time }) => (
     <TouchableOpacity style={{ marginTop: 10 }}>
       <View
@@ -123,16 +133,17 @@ const Notifications = ({ navigation }) => {
   useEffect(() => {
     const asyncFetch = () => {
       setData(apiData);
+      setFilteredData(apiData);
     };
     asyncFetch();
   }, []);
 
   return (
     <View>
-      {data && (
+      {filtereddata && (
         <FlatList
           vertical
-          data={data}
+          data={filtereddata}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={() => <View style={{ width: 7 }} />}
@@ -141,6 +152,6 @@ const Notifications = ({ navigation }) => {
       )}
     </View>
   );
-};
+});
 
 export default Notifications;

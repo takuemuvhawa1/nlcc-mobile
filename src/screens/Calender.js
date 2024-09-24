@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import {
   StyleSheet,
   View,
@@ -19,87 +24,30 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import Apilink from "../constants/Links";
 
-const apiData = [
-  {
-    id: "1",
-    type: "Easter Monday",
-    theme: "The death of Jesus",
-    description:
-      "Easter Monday is the second day of Eastertide and a public holiday in some countries. In Western Christianity it marks the second day of the Octave of Easter; in Eastern Christianity it marks the second day of Bright Week",
-    date: "12/12/2000",
-    time: "12:34 Pm",
-    enddate: "14/12/2000",
-    endtime: "14:00 Pm",
-    volunteertasks: [
-      {
-        id: 1,
-        task: "Ushering",
-        requirements: "Black trousers and white shirt",
-      },
-      { id: 2, task: "Security2", requirements: null },
-      { id: 3, task: "Security3", requirements: null },
-      { id: 4, task: "Security4", requirements: null },
-      { id: 5, task: "Security5", requirements: null },
-      { id: 6, task: "Security6", requirements: null },
-      { id: 7, task: "Security7", requirements: null },
-      { id: 8, task: "Security8", requirements: null },
-      { id: 9, task: "Security9", requirements: null },
-      { id: 10, task: "Security10", requirements: null },
-      { id: 11, task: "Security11", requirements: null },
-      { id: 12, task: "Security12", requirements: null },
-      { id: 13, task: "Security13", requirements: null },
-      { id: 14, task: "Security14", requirements: null },
-    ],
-  },
-  {
-    id: "2",
-    type: "Church Service",
-    theme: "The power of giving",
-    description:
-      "When you give to someone else, it can create a sense of connection and gratitude that can improve your relationship and bring you closer together. Giving to others doesn't have to be about spending money or buying someone a super expensive gift, there are plenty of free acts of kindness and giving you can do.",
-    date: "12/12/2000",
-    time: "12:34 Pm",
-    enddate: null,
-    endtime: "14:34 Pm",
-    volunteertasks: [],
-  },
-  {
-    id: "3",
-    type: "Harare Gardens Miracles",
-    theme: "Salvation through worship",
-    description:
-      "If you are sick and afflicted, you must know that God's love heals; and you can be healed right now. He sent his word, and healed them (Psalm 107:20). He is ...",
-    date: "12/12/2000",
-    time: "12:34 Pm",
-    enddate: "16/12/2000",
-    endtime: "14:00 Pm",
-    volunteertasks: [],
-  },
-  {
-    id: "4",
-    type: "Church Service",
-    theme: "The power of giving",
-    description:
-      "When you give tithes and offerings, it helps your local church actively be the church by helping others. Giving encourages a grateful and generous spirit and can help steer us away from greed and discontent. Plus, I always say that being outrageously generous is the most fun you'll ever have with money!",
-    date: "12/12/2000",
-    time: "12:34 Pm",
-    enddate: null,
-    endtime: "13:34 Pm",
-    volunteertasks: [],
-  },
-];
-
-const Calender = ({props}) => {
-
+const Calender = forwardRef((props, ref) => {
   const [data, setData] = useState([]);
+  const [filtereddata, setFilteredData] = useState([]);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+
   const showEvent = async (id) => {
     let result = data.find((obj) => obj.id === id);
     console.log(id);
     await AsyncStorage.setItem("SelectedEvent", JSON.stringify(result));
     navigation.navigate("Event");
   };
+
+  useImperativeHandle(ref, () => ({
+    getFilterValue(val) {
+      console.log(val);
+      const filtered = data.filter(
+        (item) =>
+          item.type.toLowerCase().includes(val.toLowerCase()) ||
+          item.theme.toLowerCase().includes(val.toLowerCase())
+      );
+      setFilteredData(filtered);
+    },
+  }));
 
   const SingleItem = ({ id, type, theme, date, time }) => (
     <TouchableOpacity style={{ marginTop: 10 }} onPress={() => showEvent(id)}>
@@ -195,19 +143,18 @@ const Calender = ({props}) => {
 
       let responseJson = await res.json();
       setData(responseJson);
+      setFilteredData(responseJson);
     };
 
-    if (isFocused) {
-      asyncFetch();
-    }
-  }, [props, isFocused]);
+    asyncFetch();
+  }, []);
 
   return (
     <View>
-      {data && (
+      {filtereddata && (
         <FlatList
           vertical
-          data={data}
+          data={filtereddata}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={() => <View style={{ width: 7 }} />}
@@ -216,6 +163,6 @@ const Calender = ({props}) => {
       )}
     </View>
   );
-};
+});
 
 export default Calender;
