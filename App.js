@@ -23,11 +23,15 @@ import Register from './src/screens/Register';
 import SetPassword from './src/screens/SetPassword';
 import SelectMinistry from './src/screens/SelectMinistry';
 import AdminMinistry from './src/screens/AdminMinistry';
+import NewPassword from './src/screens/NewPassword';
+import SelectCellgroup from './src/screens/SelectCellgroup';
+import CellgroupMinistry from './src/screens/CellgroupMinistry';
 
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [initialRouteName, setInitialRouteName] = React.useState('More');
+  
+  const [initialRouteName, setInitialRouteName] = React.useState('NewPassword');
   
   // React.useEffect(() => {
   //   setTimeout(() => {
@@ -78,6 +82,9 @@ const App = () => {
             <Stack.Screen name="SetPassword" component={SetPassword} />
             <Stack.Screen name="SelectMinistry" component={SelectMinistry} />
             <Stack.Screen name="AdminMinistry" component={AdminMinistry} />
+            <Stack.Screen name="NewPassword" component={NewPassword} />
+            <Stack.Screen name="SelectCellgroup" component={SelectCellgroup} />
+            <Stack.Screen name="CellgroupMinistry" component={CellgroupMinistry} />
           </Stack.Navigator>
     </NavigationContainer>
   );
