@@ -6,13 +6,14 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  ActivityIndicator,
+  ActivityIndicator
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect } from "@react-navigation/native";
 import { SimpleLineIcons, FontAwesome } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Apilink from "../constants/Links";
 
@@ -43,9 +44,7 @@ const SignIn = ({ navigation }) => {
   };
 
   const validateEmail = (email) => {
-    return email.match(
-      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
+    return email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
   };
 
   const handleSignIn = async () => {
@@ -58,10 +57,10 @@ const SignIn = ({ navigation }) => {
       return;
     }
 
-    if (!validateEmail(inputs.email)) {
-      doAlert("Email is not in correct format", "Submission Error");
-      return;
-    }
+    // if (!validateEmail(inputs.email)) {
+    //   doAlert("Email is not in correct format", "Submission Error");
+    //   return;
+    // }
 
     setIsactive(true);
     const apiLink = Apilink.getLink();
@@ -128,7 +127,7 @@ const SignIn = ({ navigation }) => {
     React.useCallback(() => {
       const clearAsyncStorage = async () => {
         AsyncStorage.clear();
-        console.log("Cleared");
+        console.log("Async Cleared");
       };
 
       clearAsyncStorage();
@@ -146,6 +145,7 @@ const SignIn = ({ navigation }) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
+      <StatusBar style="dark" translucent={true} hidden={false} />
       <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
@@ -172,7 +172,6 @@ const SignIn = ({ navigation }) => {
           setAlerttitle("");
         }}
       />
-      {/* <StatusBar hidden={true} /> */}
       <Image
         style={styles.imgLogo}
         source={require("../../assets/nlcc-logo-1.png")}

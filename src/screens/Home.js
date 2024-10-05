@@ -11,9 +11,11 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
+import { StatusBar } from "expo-status-bar";
 
 import {
   FontAwesome6,
+  FontAwesome5,
   Octicons,
   FontAwesome,
   Ionicons,
@@ -25,7 +27,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ministries from "./Ministries";
 import Calender from "./Calender";
 import Cellgroups from "./Cellgroups";
-import Forums from "./Forums";
+import PrayerRequests from "./PrayerRequests";
 import Notifications from "./Notifications";
 
 const BtnsData = [
@@ -52,9 +54,9 @@ const BtnsData = [
   },
   {
     id: "4",
-    title: "Feeds",
+    title: "Prayer Requests",
     vectoricon: "FontAwesome5",
-    icon: "church",
+    icon: "pray",
     selected: false,
   },
   {
@@ -78,6 +80,7 @@ const Home = ({ navigation }) => {
   const ministryRef = useRef();
   const calenderRef = useRef();
   const cellgroupRef = useRef();
+  const prayerrequestRef = useRef();
   const notificationRef = useRef();
 
   const [userdata, setUserdata] = React.useState({
@@ -127,21 +130,24 @@ const Home = ({ navigation }) => {
     setBtns(markers);
   };
 
-  const findSearched = (text)=>{
+  const findSearched = (text) => {
     setSearchtext(text);
-    if (prevbtn == 1){
+    if (prevbtn == 1) {
       ministryRef.current.getFilterValue(text);
     }
-    if (prevbtn == 2){
+    if (prevbtn == 2) {
       calenderRef.current.getFilterValue(text);
     }
-    if (prevbtn == 3){
+    if (prevbtn == 3) {
       cellgroupRef.current.getFilterValue(text);
     }
-    if (prevbtn == 5){
+    if (prevbtn == 4) {
+      prayerrequestRef.current.getFilterValue(text);
+    }
+    if (prevbtn == 5) {
       notificationRef.current.getFilterValue(text);
     }
-  }
+  };
 
   const OneItem = ({ id, title, vectoricon, icon, selected }) => (
     <TouchableOpacity
@@ -214,8 +220,8 @@ const Home = ({ navigation }) => {
 
       {id == 4 && (
         <>
-          <FontAwesome6
-            name="users-rays"
+          <FontAwesome5
+            name="pray"
             size={17}
             style={
               selected == true
@@ -293,7 +299,7 @@ const Home = ({ navigation }) => {
           UserPhone,
           UserAddress,
           UserZone,
-          UserImg
+          UserImg,
         });
       }
     };
@@ -319,6 +325,7 @@ const Home = ({ navigation }) => {
     const date = new Date();
     const hour = date.getHours();
     setDayhour(hour);
+    console.log(hour);
   };
 
   if (!fontsLoaded) {
@@ -332,6 +339,7 @@ const Home = ({ navigation }) => {
       start={{ x: 1, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
+      <StatusBar style="dark" translucent={true} hidden={false} />
       <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
@@ -370,7 +378,9 @@ const Home = ({ navigation }) => {
             >
               <Image
                 style={styles.imgUsr}
-                source={userdata.UserImg ? {uri: `${userdata.UserImg}` } : null}
+                source={
+                  userdata.UserImg ? { uri: `${userdata.UserImg}` } : null
+                }
                 // source={{
                 //   uri: `${userdata.UserImg}`,
                 // }}
@@ -402,7 +412,7 @@ const Home = ({ navigation }) => {
                       lineHeight: 24,
                     }}
                   >
-                    Good Afternoon
+                    Good Morning
                   </Text>
                 </>
               )}
@@ -415,7 +425,7 @@ const Home = ({ navigation }) => {
                       lineHeight: 24,
                     }}
                   >
-                    Good Morning
+                    Good Afternoon
                   </Text>
                 </>
               )}
@@ -494,7 +504,7 @@ const Home = ({ navigation }) => {
               Be part of diffrent ministries available
             </Text>
             <View style={{ height: "75%" }}>
-              <Ministries ref={ministryRef}/>
+              <Ministries ref={ministryRef} />
             </View>
           </>
         )}
@@ -511,7 +521,7 @@ const Home = ({ navigation }) => {
               View events and church services as part of our calender
             </Text>
             <View style={{ height: "75%" }}>
-              <Calender ref={calenderRef}/>
+              <Calender ref={calenderRef} />
             </View>
           </>
         )}
@@ -528,7 +538,7 @@ const Home = ({ navigation }) => {
               Be part of a Cell Group
             </Text>
             <View style={{ height: "75%" }}>
-              <Cellgroups ref={cellgroupRef}/>
+              <Cellgroups ref={cellgroupRef} />
             </View>
           </>
         )}
@@ -542,10 +552,10 @@ const Home = ({ navigation }) => {
                 marginTop: 20,
               }}
             >
-              Be part of the discussion forums on the listed topics
+              Here is a list of prayer requests from your colleagues. The Bible commands us to pray for one another, “Therefore, confess your sins to one another and pray for one another, that you may be healed. Again, prayer lightens burdens, therefore praying for one another is a powerful way for us to bear one another's burdens. It is a loving act to pray for someone.
             </Text>
             <View style={{ height: "75%" }}>
-              <Forums />
+              <PrayerRequests ref={prayerrequestRef}/>
             </View>
           </>
         )}
@@ -587,7 +597,7 @@ const Home = ({ navigation }) => {
               </View>
             </View>
             <View style={{ height: "41%" }}>
-              <Notifications ref={notificationRef}/>
+              <Notifications ref={notificationRef} />
             </View>
           </>
         )}

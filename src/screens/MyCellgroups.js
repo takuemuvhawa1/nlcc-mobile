@@ -9,7 +9,7 @@ import {
   ScrollView,
   TextInput,
   FlatList,
-  Keyboard
+  Keyboard,
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
@@ -79,7 +79,7 @@ const apiData = [
   },
 ];
 
-const MyMinistries = ({props}) => {
+const MyCellgroups = ({props}) => {
   const [data, setData] = useState([]);
   const navigation = useNavigation();
 
@@ -88,8 +88,9 @@ const MyMinistries = ({props}) => {
     console.log(id);
     console.log(result.admin);
     await AsyncStorage.setItem("SelectedMinistry", JSON.stringify(result));
-    navigation.navigate("AdminMinistry");
+    navigation.navigate("CellgroupMinistry");
   };
+
   const isFocused = useIsFocused();
   const SingleItem = ({
     id,
@@ -204,7 +205,7 @@ const MyMinistries = ({props}) => {
       const memberId = await AsyncStorage.getItem("UserID");
 
       let res = await fetch(
-        `${apiLink}ministries/ministry-leaders/${memberId}`,
+        `${apiLink}smallgroups/smallgroups-leaders/${memberId}`,
         {
           method: "get",
           headers: {
@@ -223,7 +224,7 @@ const MyMinistries = ({props}) => {
           description: item.description,
           admin: item.admin,
           adminphone: item.adminphone,
-          members: item.ToatlMembers,
+          members: item.Totalembers,
           membersdata: item.members,
           joinrequesting: item.joinrequesting,
           requestingdata: item.requestingdata,
@@ -258,4 +259,4 @@ const MyMinistries = ({props}) => {
   );
 };
 
-export default MyMinistries;
+export default MyCellgroups;

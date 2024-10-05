@@ -13,6 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect } from '@react-navigation/native';
 import { SimpleLineIcons } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { StatusBar } from "expo-status-bar";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ForgotPassword = ({ navigation }) => {
@@ -75,6 +76,7 @@ const ForgotPassword = ({ navigation }) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
+      <StatusBar style="dark" translucent={true} hidden={false} />
         <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
@@ -101,7 +103,6 @@ const ForgotPassword = ({ navigation }) => {
           setAlerttitle("");
         }}
       />
-      {/* <StatusBar hidden={true} /> */}
       <Image
         style={styles.imgLogo}
         source={require("../../assets/nlcc-logo-1.png")}

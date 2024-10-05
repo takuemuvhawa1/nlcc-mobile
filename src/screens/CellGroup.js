@@ -1,23 +1,22 @@
-import React, {  useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
-  Image
+  Image,
+  ActivityIndicator
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { useIsFocused } from "@react-navigation/native";
-import {
-  FontAwesome6,
-  Ionicons,
-} from "react-native-vector-icons";
+import { FontAwesome6, Ionicons } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
+import Apilink from "../constants/Links";
 
 const CellGroup = ({ navigation, props }) => {
-
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
     GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
@@ -46,6 +45,56 @@ const CellGroup = ({ navigation, props }) => {
     setShowAlert(!showAlert);
     setAlerttext(txt);
     setAlerttitle(ttl);
+  };
+
+  const requestTojoin = async () => {
+    console.log("ggg")
+    const memberId = await AsyncStorage.getItem("UserID");
+    const ministryId = record.id;
+    const apiLink = Apilink.getLink();
+    setIsactive(true);
+
+    let joinResponse = await fetch(
+      `${apiLink}ministrymembers/join`,
+      {
+        method: "post",
+        body: JSON.stringify({
+          MemberID: memberId,
+          MinistryID: ministryId,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    let approveResJson = await joinResponse.json();
+    console.log(approveResJson);
+
+    setIsactive(false);
+    navigation.navigate("Home");
+  };
+  const requestToleave = async () => {
+    const memberId = await AsyncStorage.getItem("UserID");
+    const ministryId = record.id;
+    const apiLink = Apilink.getLink();
+    setIsactive(true);
+
+    let joinResponse = await fetch(
+      `${apiLink}ministrymembers/approve/${memberId}/${ministryId}`,
+      {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    let approveResJson = await joinResponse.json();
+    console.log(approveResJson);
+
+    setIsactive(false);
+    navigation.navigate("Home");
   };
 
   useEffect(() => {
@@ -89,6 +138,7 @@ const CellGroup = ({ navigation, props }) => {
       start={{ x: 1, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
+      <StatusBar style="dark" translucent={true} hidden={false} />
       <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
@@ -175,7 +225,7 @@ const CellGroup = ({ navigation, props }) => {
               {record.name}
             </Text>
             <FontAwesome6
-            name="users-viewfinder"
+              name="users-viewfinder"
               size={20}
               style={{ marginRight: 5, color: "#ffffff" }}
             />
@@ -299,6 +349,7 @@ const CellGroup = ({ navigation, props }) => {
               <View style={{ width: "40%" }}></View>
               <View style={{ width: "60%" }}>
                 <TouchableOpacity
+                  onPress={() => requestTojoin()}
                   style={{
                     width: "100%",
                     height: 55,
@@ -309,15 +360,24 @@ const CellGroup = ({ navigation, props }) => {
                     backgroundColor: "#1a6363",
                   }}
                 >
-                  <Text
-                    style={{
-                      fontFamily: "GeneralSansMedium",
-                      fontSize: 18,
-                      color: "#ffffff",
-                    }}
-                  >
-                    Join Cell Group
-                  </Text>
+                  {isactive && (
+                    <>
+                      <ActivityIndicator size="large" color="#ffffff" />
+                    </>
+                  )}
+                  {isactive == false && (
+                    <>
+                      <Text
+                        style={{
+                          fontFamily: "GeneralSansMedium",
+                          fontSize: 18,
+                          color: "#ffffff",
+                        }}
+                      >
+                        Join Cell Group
+                      </Text>
+                    </>
+                  )}
                 </TouchableOpacity>
               </View>
             </View>
@@ -338,6 +398,7 @@ const CellGroup = ({ navigation, props }) => {
               <View style={{ width: "40%" }}></View>
               <View style={{ width: "60%" }}>
                 <TouchableOpacity
+                onPress={() => requestToleave()}
                   style={{
                     width: "100%",
                     height: 55,
@@ -348,15 +409,24 @@ const CellGroup = ({ navigation, props }) => {
                     backgroundColor: "#1a6363",
                   }}
                 >
-                  <Text
-                    style={{
-                      fontFamily: "GeneralSansMedium",
-                      fontSize: 18,
-                      color: "#ffffff",
-                    }}
-                  >
-                    Leave Cell Group
-                  </Text>
+                 {isactive && (
+                    <>
+                      <ActivityIndicator size="large" color="#ffffff" />
+                    </>
+                  )}
+                  {isactive == false && (
+                    <>
+                      <Text
+                        style={{
+                          fontFamily: "GeneralSansMedium",
+                          fontSize: 18,
+                          color: "#ffffff",
+                        }}
+                      >
+                        Leave Cell Group
+                      </Text>
+                    </>
+                  )}
                 </TouchableOpacity>
               </View>
             </View>
@@ -393,7 +463,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     marginTop: 10,
-  }
+  },
 });
 
 export default CellGroup;

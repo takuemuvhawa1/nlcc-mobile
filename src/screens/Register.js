@@ -10,14 +10,14 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 import { SimpleLineIcons } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
 import Apilink from "../constants/Links";
 
 const Register = ({ navigation }) => {
-
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
     GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
@@ -28,7 +28,7 @@ const Register = ({ navigation }) => {
 
   const [hidepin, setHidepin] = React.useState(true);
   const [inputs, setInputs] = React.useState({
-    email: ""
+    email: "",
   });
 
   const [isactive, setIsactive] = React.useState(false);
@@ -49,7 +49,6 @@ const Register = ({ navigation }) => {
   };
 
   const handleProceed = async () => {
-    
     if (inputs.email == "") {
       doAlert("Fill in your email before you proceed", "Submission Error");
       return;
@@ -78,13 +77,14 @@ const Register = ({ navigation }) => {
 
     console.log(resJson);
 
-    if (resJson.message=="Email found") {
+    if (resJson.message == "Email found") {
       setInputs({
-        email: ""
+        email: "",
       });
       setIsactive(false);
-      await AsyncStorage.setItem("TypedEmail",inputs.email);
-      await AsyncStorage.setItem("ReceivedOTP",resJson.randNum);
+      await AsyncStorage.setItem("TypedEmail", inputs.email);
+      await AsyncStorage.setItem("ReceivedOTP", resJson.randNum);
+      await AsyncStorage.setItem("ReceivedName", resJson.member.Name +" "+resJson.member.Surname);
       navigation.navigate("SetPassword");
       return;
     }
@@ -101,7 +101,8 @@ const Register = ({ navigation }) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
-        <AwesomeAlert
+      <StatusBar style="dark" translucent={true} hidden={false} />
+      <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
         showProgress={false}
@@ -127,7 +128,6 @@ const Register = ({ navigation }) => {
           setAlerttitle("");
         }}
       />
-      {/* <StatusBar hidden={true} /> */}
       <Image
         style={styles.imgLogo}
         source={require("../../assets/nlcc-logo-1.png")}
@@ -136,49 +136,48 @@ const Register = ({ navigation }) => {
       <Text style={styles.txtFormName}>Register</Text>
 
       <Text style={styles.txtFormInstruction}>
-          Provide your email address to confirm you are registered. You will receive an OTP and further instructions to set a new password and proceed into the application.
+        Provide your email address to confirm you are registered. You will
+        receive an OTP and further instructions to set a new password and
+        proceed into the application.
       </Text>
 
-        <View style={styles.viewInputs}>
-          <View style={styles.viewInput}>
-            <View style={styles.viewIcon}>
-              <SimpleLineIcons
-                name="envelope"
-                size={25}
-                style={styles.icoInputIcon}
-              />
-            </View>
-            <View style={styles.viewTextInput}>
-              <TextInput
-                autoCorrect={false}
-                value={inputs.email}
-                onChangeText={(text) => setInputs({ ...inputs, email: text })}
-                style={styles.inputTextInput}
-                placeholder="Email address"
-              />
-            </View>
+      <View style={styles.viewInputs}>
+        <View style={styles.viewInput}>
+          <View style={styles.viewIcon}>
+            <SimpleLineIcons
+              name="envelope"
+              size={25}
+              style={styles.icoInputIcon}
+            />
           </View>
-         
+          <View style={styles.viewTextInput}>
+            <TextInput
+              autoCorrect={false}
+              value={inputs.email}
+              onChangeText={(text) => setInputs({ ...inputs, email: text })}
+              style={styles.inputTextInput}
+              placeholder="Email address"
+            />
+          </View>
         </View>
-        <View style={styles.viewBtns}>
-          <TouchableOpacity
-            onPress={() => handleProceed()}
-            style={styles.btnBtns1}
-          >
-            {isactive && (
-              <>
-                <ActivityIndicator size="large" color="#ffffff" />
-              </>
-            )}
-            {isactive == false && (
-              <>
-                <Text style={styles.txtBtnTxt1}>Proceed</Text>
-              </>
-            )}
-          </TouchableOpacity>
-       
-          
-        </View>
+      </View>
+      <View style={styles.viewBtns}>
+        <TouchableOpacity
+          onPress={() => handleProceed()}
+          style={styles.btnBtns1}
+        >
+          {isactive && (
+            <>
+              <ActivityIndicator size="large" color="#ffffff" />
+            </>
+          )}
+          {isactive == false && (
+            <>
+              <Text style={styles.txtBtnTxt1}>Proceed</Text>
+            </>
+          )}
+        </TouchableOpacity>
+      </View>
     </LinearGradient>
   );
 };
@@ -187,44 +186,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    paddingHorizontal: 7
+    paddingHorizontal: 7,
   },
   imgLogo: {
     width: 150,
     height: 45,
     alignSelf: "center",
     resizeMode: "cover",
-    marginTop: 63
+    marginTop: 63,
   },
   txtTagline: {
     fontSize: 14,
-    fontFamily: 'PlayfairDisplayRegular',
-    textAlign: 'center',
-    color: '#1a6363',
-    marginTop: 15
+    fontFamily: "PlayfairDisplayRegular",
+    textAlign: "center",
+    color: "#1a6363",
+    marginTop: 15,
   },
   txtFormName: {
     fontSize: 20,
-    fontFamily: 'GeneralSansRegular',
-    textAlign: 'center',
-    color: '#FFFFF0',
+    fontFamily: "GeneralSansRegular",
+    textAlign: "center",
+    color: "#FFFFF0",
     marginTop: 35,
-    lineHeight: 36
+    lineHeight: 36,
   },
   txtFormInstruction: {
     fontSize: 14,
-    fontFamily: 'GeneralSansRegular',
-    textAlign: 'center',
-    color: '#000000',
+    fontFamily: "GeneralSansRegular",
+    textAlign: "center",
+    color: "#000000",
     marginTop: 15,
     lineHeight: 20,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   viewInputs: {
     flexDirection: "column",
     width: "100%",
     marginTop: 60,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   viewInput: {
     flexDirection: "row",
@@ -238,7 +237,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     marginTop: 40,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   viewIcon: {
     justifyContent: "center",
@@ -256,7 +255,7 @@ const styles = StyleSheet.create({
   inputTextInput: {
     width: "98%",
     height: 45,
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
     fontFamily: "GeneralSansMedium",
   },
@@ -273,7 +272,7 @@ const styles = StyleSheet.create({
     fontFamily: "GeneralSansMedium",
     textAlign: "center",
     color: "#FFFFF0",
-  }
+  },
 });
 
 export default Register;

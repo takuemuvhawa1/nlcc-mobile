@@ -11,16 +11,17 @@ import {
 import { useFonts } from "expo-font";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
 
 const Otp = ({ navigation }) => {
-    const [fontsLoaded] = useFonts({
-        GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
-        GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
-        SFProTextRegular: require("../../assets/font/GeneralSans/SF-Pro-Text-Regular.otf"),
-        PlayfairDisplayRegular: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Regular.otf"),
-        PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
-      });
+  const [fontsLoaded] = useFonts({
+    GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
+    GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
+    SFProTextRegular: require("../../assets/font/GeneralSans/SF-Pro-Text-Regular.otf"),
+    PlayfairDisplayRegular: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Regular.otf"),
+    PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
+  });
 
   const inputElement = useRef();
   const [isactive, setIsactive] = React.useState(false);
@@ -64,7 +65,6 @@ const Otp = ({ navigation }) => {
 
   const resendCodeHandler = async () => {
     setIsactive(true);
-
   };
 
   useEffect(() => {
@@ -77,11 +77,12 @@ const Otp = ({ navigation }) => {
 
   return (
     <LinearGradient
-    colors={["#ffffff", "#303030"]}
-    style={styles.container}
-    start={{ x: 0, y: 0 }}
-    end={{ x: 1, y: 1 }}
-  >
+      colors={["#ffffff", "#303030"]}
+      style={styles.container}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+    >
+      <StatusBar style="dark" translucent={true} hidden={false} />
       <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
@@ -108,7 +109,7 @@ const Otp = ({ navigation }) => {
           setAlerttitle("");
         }}
       />
-       <Image
+      <Image
         style={styles.imgLogo}
         source={require("../../assets/nlcc-logo-1.png")}
       />
@@ -149,9 +150,8 @@ const Otp = ({ navigation }) => {
 
         <View style={styles.viewBtns}>
           <TouchableOpacity onPress={() => checkOtp()} style={styles.btnBtns1}>
-          {isactive && (
+            {isactive && (
               <>
-
                 <ActivityIndicator size="large" color="#ffffff" />
                 <Text style={styles.txtBtnTxt1}>Resending ... </Text>
               </>
@@ -185,10 +185,9 @@ const Otp = ({ navigation }) => {
               </Text>
             )}
           </Text>
-
         </View>
       </View>
-      </LinearGradient>
+    </LinearGradient>
   );
 };
 
@@ -203,7 +202,7 @@ const styles = StyleSheet.create({
     height: 45,
     alignSelf: "center",
     resizeMode: "cover",
-    marginTop: 63
+    marginTop: 63,
   },
   viewInner: {
     width: "100%",

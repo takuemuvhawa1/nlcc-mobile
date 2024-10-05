@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {
   StyleSheet,
   View,
@@ -14,6 +14,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { SimpleLineIcons, FontAwesome } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StatusBar } from "expo-status-bar";
 import Apilink from "../constants/Links";
 
 const SetPassword = ({ navigation }) => {
@@ -27,6 +28,7 @@ const SetPassword = ({ navigation }) => {
   });
 
   const [inputs, setInputs] = React.useState({
+    nam: "",
     otp: "",
     email: "",
     password: "",
@@ -111,6 +113,17 @@ const SetPassword = ({ navigation }) => {
     }
   };
 
+  useEffect(()=>{
+    const findData = async()=>{
+      const asyncNam = await AsyncStorage.getItem("ReceivedName");
+      setInputs({
+        ...inputs,
+        nam: asyncNam
+      })
+    }
+    findData();
+  },[])
+
   if (!fontsLoaded) {
     return null;
   }
@@ -122,6 +135,7 @@ const SetPassword = ({ navigation }) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
+      <StatusBar style="dark" translucent={true} hidden={false} />
         <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
@@ -151,13 +165,12 @@ const SetPassword = ({ navigation }) => {
           }
         }}
       />
-      {/* <StatusBar hidden={true} /> */}
       <Image
         style={styles.imgLogo}
         source={require("../../assets/nlcc-logo-1.png")}
       />
       <Text style={styles.txtTagline}>NEW LIFE COVENANT CHURCH</Text>
-      <Text style={styles.txtFormName}>Welcome: Gemma Griffins</Text>
+      <Text style={styles.txtFormName}>Welcome: {inputs.nam}</Text>
         <Text style={styles.txtFormInstruction}>
           Enter the OTP you received on your email and set your password to proceed
         </Text>

@@ -1,23 +1,19 @@
 import React, { useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-
+import Apilink from "../constants/Links";
 import {
   FontAwesome6,
   FontAwesome,
   Ionicons,
   AntDesign,
   Feather,
-  SimpleLineIcons
+  SimpleLineIcons,
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { StatusBar } from "expo-status-bar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const More = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
@@ -28,6 +24,8 @@ const More = ({ navigation }) => {
     PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
   });
 
+  const [isMinistryAdmin, setIsMinistryAdmin] = React.useState(false);
+  const [isCellGrpAdmin, setIsCellGrpAdmin] = React.useState(false);
   const [isactive, setIsactive] = React.useState(false);
   const [showAlert, setShowAlert] = React.useState(false);
   const [alerttext, setAlerttext] = React.useState("");
@@ -41,33 +39,31 @@ const More = ({ navigation }) => {
 
   const RenderItem = ({ title }) => (
     <TouchableOpacity
-
-      onPress={()=>{
-        {title == "My Profile" && (
-          navigation.navigate('MyProfile')
-        )}
-
-        {title == "Ministry Admin" && (
-          navigation.navigate('SelectMinistry')
-        )}
-
-        {title == "Cell Group Admin" && (
-          navigation.navigate('Home')
-        )}
-        {title == "Events Admin" && (
-          navigation.navigate('Home')
-        )}
-        {title == "Settings" && (
-          navigation.navigate('MyProfile')
-        )}
-        {title == "About NLCC" && (
-          navigation.navigate('About')
-        )}
-        {title == "Sign Out" && (
-          navigation.navigate('SignIn')
-        )}
+      onPress={() => {
+        {
+          title == "My Profile" && navigation.navigate("MyProfile");
         }
-      }
+
+        {
+          title == "Ministry Admin" && navigation.navigate("SelectMinistry");
+        }
+
+        {
+          title == "Cell Group Admin" && navigation.navigate("SelectCellgroup");
+        }
+        {
+          title == "Events Admin" && navigation.navigate("Home");
+        }
+        {
+          title == "Settings" && navigation.navigate("NewPassword");
+        }
+        {
+          title == "About NLCC" && navigation.navigate("About");
+        }
+        {
+          title == "Sign Out" && navigation.navigate("SignIn");
+        }
+      }}
       style={{
         flexDirection: "row",
         justifyContent: "center",
@@ -145,8 +141,42 @@ const More = ({ navigation }) => {
   );
 
   useEffect(() => {
-    const asyncFetch = () => {
-      console.log("first");
+    const asyncFetch = async () => {
+      console.log("Checking if you are ministry or cell grp admin");
+      const apiLink = Apilink.getLink();
+
+      const asynctoken = await AsyncStorage.getItem("Tkn");
+      const memberId = await AsyncStorage.getItem("UserID");
+
+      let res1 = await fetch(
+        `${apiLink}ministries/ministry-leaders/${memberId}`,
+        {
+          method: "get",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      let responseJson1 = await res1.json();
+      if (responseJson1.length != 0) {
+        setIsMinistryAdmin(true);
+      }
+
+      let res2 = await fetch(
+        `${apiLink}smallgroups/smallgroups-leaders/${memberId}`,
+        {
+          method: "get",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      let responseJson2 = await res2.json();
+      if (responseJson2.length != 0) {
+        setIsCellGrpAdmin(true);
+      }
     };
     asyncFetch();
   }, []);
@@ -162,6 +192,7 @@ const More = ({ navigation }) => {
       start={{ x: 1, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
+      <StatusBar style="dark" translucent={true} hidden={false} />
       <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
@@ -222,9 +253,16 @@ const More = ({ navigation }) => {
       </View>
       <View style={styles.viewMiddle}>
         <RenderItem title={"My Profile"} />
-        <RenderItem title={"Ministry Admin"} />
-        <RenderItem title={"Cell Group Admin"} />
-        <RenderItem title={"Events Admin"} />
+        {isMinistryAdmin && (
+          <>
+            <RenderItem title={"Ministry Admin"} />
+          </>
+        )}
+        {isCellGrpAdmin && (
+          <>
+            <RenderItem title={"Cell Group Admin"} />
+          </>
+        )}
         <RenderItem title={"Settings"} />
         <RenderItem title={"About NLCC"} />
         <RenderItem title={"Sign Out"} />
@@ -265,11 +303,7 @@ const More = ({ navigation }) => {
             onPress={() => navigation.navigate("Contributions")}
             style={{ justifyContent: "center", alignItems: "center" }}
           >
-            <FontAwesome6
-              color="#1a6363"
-              name="money-check"
-              size={25}
-            />
+            <FontAwesome6 color="#1a6363" name="money-check" size={25} />
             <Text
               style={{
                 fontFamily: "GeneralSansRegular",

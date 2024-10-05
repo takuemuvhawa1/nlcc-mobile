@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   Image,
+  ActivityIndicator
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
@@ -15,6 +16,8 @@ import {
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
+import Apilink from "../constants/Links";
 
 const Ministry = ({ navigation, props }) => {
   const [fontsLoaded] = useFonts({
@@ -45,6 +48,57 @@ const Ministry = ({ navigation, props }) => {
     setShowAlert(!showAlert);
     setAlerttext(txt);
     setAlerttitle(ttl);
+  };
+
+  const requestTojoin = async () => {
+    console.log("ggg")
+    const memberId = await AsyncStorage.getItem("UserID");
+    const ministryId = record.id;
+    const apiLink = Apilink.getLink();
+    setIsactive(true);
+
+    let joinResponse = await fetch(
+      `${apiLink}ministrymembers/join`,
+      {
+        method: "post",
+        body: JSON.stringify({
+          MemberID: memberId,
+          MinistryID: ministryId,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    let approveResJson = await joinResponse.json();
+    console.log(approveResJson);
+
+    setIsactive(false);
+    navigation.navigate("Home");
+  };
+
+  const requestToleave = async () => {
+    const memberId = await AsyncStorage.getItem("UserID");
+    const ministryId = record.id;
+    const apiLink = Apilink.getLink();
+    setIsactive(true);
+
+    let joinResponse = await fetch(
+      `${apiLink}ministrymembers/reqleave/${memberId}/${ministryId}`,
+      {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    let approveResJson = await joinResponse.json();
+    console.log(approveResJson);
+
+    setIsactive(false);
+    navigation.navigate("Home");
   };
 
   useEffect(() => {
@@ -88,6 +142,7 @@ const Ministry = ({ navigation, props }) => {
       start={{ x: 1, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
+      <StatusBar style="dark" translucent={true} hidden={false} />
       <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
@@ -298,6 +353,7 @@ const Ministry = ({ navigation, props }) => {
               <View style={{ width: "40%" }}></View>
               <View style={{ width: "60%" }}>
                 <TouchableOpacity
+                onPress={() => requestTojoin()}
                   style={{
                     width: "100%",
                     height: 55,
@@ -308,15 +364,24 @@ const Ministry = ({ navigation, props }) => {
                     backgroundColor: "#1a6363",
                   }}
                 >
-                  <Text
-                    style={{
-                      fontFamily: "GeneralSansMedium",
-                      fontSize: 18,
-                      color: "#ffffff",
-                    }}
-                  >
-                    Join Ministry
-                  </Text>
+                  {isactive && (
+                    <>
+                      <ActivityIndicator size="large" color="#ffffff" />
+                    </>
+                  )}
+                  {isactive == false && (
+                    <>
+                      <Text
+                        style={{
+                          fontFamily: "GeneralSansMedium",
+                          fontSize: 18,
+                          color: "#ffffff",
+                        }}
+                      >
+                        Join Ministry
+                      </Text>
+                    </>
+                  )}
                 </TouchableOpacity>
               </View>
             </View>
@@ -337,6 +402,7 @@ const Ministry = ({ navigation, props }) => {
               <View style={{ width: "40%" }}></View>
               <View style={{ width: "60%" }}>
                 <TouchableOpacity
+                onPress={()=>requestToleave()}
                   style={{
                     width: "100%",
                     height: 55,
@@ -347,15 +413,24 @@ const Ministry = ({ navigation, props }) => {
                     backgroundColor: "#1a6363",
                   }}
                 >
-                  <Text
-                    style={{
-                      fontFamily: "GeneralSansMedium",
-                      fontSize: 18,
-                      color: "#ffffff",
-                    }}
-                  >
-                    Leave Ministry
-                  </Text>
+                  {isactive && (
+                    <>
+                      <ActivityIndicator size="large" color="#ffffff" />
+                    </>
+                  )}
+                  {isactive == false && (
+                    <>
+                      <Text
+                        style={{
+                          fontFamily: "GeneralSansMedium",
+                          fontSize: 18,
+                          color: "#ffffff",
+                        }}
+                      >
+                        Leave Ministry
+                      </Text>
+                    </>
+                  )}
                 </TouchableOpacity>
               </View>
             </View>

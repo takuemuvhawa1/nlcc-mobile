@@ -6,7 +6,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  StatusBar,
   ScrollView,
   TextInput,
   FlatList,
@@ -26,6 +25,7 @@ import {
   AntDesign,
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Services = ({ navigation }) => {
@@ -67,6 +67,7 @@ const Services = ({ navigation }) => {
       start={{ x: 1, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
+      <StatusBar style="dark" translucent={true} hidden={false} />
       <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}

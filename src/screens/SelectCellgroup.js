@@ -13,10 +13,11 @@ import {
 import { useIsFocused } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { StatusBar } from "expo-status-bar";
-import MyMinistries from "./MyMinistries";
+import MyCellgroups from "./MyCellgroups";
 import Apilink from "../constants/Links";
 
-const SelectMinistry = ({ navigation }) => {
+const SelectCellgroup = ({ navigation }) => {
+  
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
     GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
@@ -111,16 +112,16 @@ const SelectMinistry = ({ navigation }) => {
           </View>
         </View>
         <Text
-            style={{
-              fontFamily: "GeneralSansRegular",
-              fontSize: 22,
-              lineHeight: 24,
-              marginTop: 10,
-              alignSelf: 'flex-start'
-            }}
-          >
-            Ministry Admin
-          </Text>
+          style={{
+            fontFamily: "GeneralSansRegular",
+            fontSize: 22,
+            lineHeight: 24,
+            marginTop: 10,
+            alignSelf: "flex-start",
+          }}
+        >
+          Cell Group Admin
+        </Text>
       </View>
       <View style={styles.viewMiddle}>
         <Text
@@ -132,10 +133,10 @@ const SelectMinistry = ({ navigation }) => {
             marginBottom: 10,
           }}
         >
-          Here is the list of ministries that you are an admin. Click to select
+          Here is the list of cell groups that you are an admin. Click to select
           the one you want to proceed to.
         </Text>
-        <MyMinistries />
+        <MyCellgroups />
       </View>
     </LinearGradient>
   );
@@ -170,4 +171,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SelectMinistry;
+export default SelectCellgroup;

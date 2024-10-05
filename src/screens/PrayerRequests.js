@@ -1,5 +1,9 @@
-import React, { useState, useEffect, forwardRef,
-  useImperativeHandle } from "react";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import {
   StyleSheet,
   View,
@@ -13,59 +17,74 @@ import {
   Keyboard,
 } from "react-native";
 import { useFonts } from "expo-font";
-import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from "expo-linear-gradient";
+import { useFocusEffect } from "@react-navigation/native";
 import { MaterialIcons } from "react-native-vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import Apilink from "../constants/Links";
-import moment from 'moment';
+import moment from "moment";
 
-const apiData = [
+const jsonData = [
   {
     id: "1",
-    header: "Easter Monday",
-    content: "The death of Jesus",
-    sender: "Taurai Shoko",
-    date: "12/12/2000",
-    time: "12:34 Pm",
+    requestnotes: "Got cheating husband",
+    memberid: "10",
+    membername: "Sekai",
+    membersurname: "Chiramwiwa",
+    requestedon: "12-12-2000 13:30",
   },
   {
     id: "2",
-    header: "Church Service",
-    content: "The power of giving",
-    sender: "Taurai Shoko",
-    date: "12/12/2000",
-    time: "12:34 Pm",
-  },
-  {
-    id: "3",
-    header: "Harare Gardens Miracles",
-    content: "The power of giving",
-    sender: "Taurai Shoko",
-    date: "12/12/2000",
-    time: "12:34 Pm",
+    requestnotes: "Got Sore Throat",
+    memberid: "10",
+    membername: "Sekai",
+    membersurname: "Chiramwiwa",
+    requestedon: "15-12-2000 13:30",
   },
 ];
 
-const Notifications = forwardRef((props, ref) =>  {
+const PrayerRequests = forwardRef((props, ref) => {
   const [data, setData] = useState([]);
   const [filtereddata, setFilteredData] = useState([]);
+  const navigation = useNavigation();
+
+  const showGroup = async (id) => {
+    let result = data.find((obj) => obj.id === id);
+    console.log(id);
+    console.log(result.admin);
+    await AsyncStorage.setItem("SelectedGroup", JSON.stringify(result));
+    navigation.navigate("CellGroup");
+  };
+
+  const isFocused = useIsFocused();
 
   useImperativeHandle(ref, () => ({
     getFilterValue(val) {
       console.log(val);
-      const filtered = data.filter((item) =>
-        item.header.toLowerCase().includes(val.toLowerCase()) || item.content.toLowerCase().includes(val.toLowerCase())
+      const filtered = data.filter(
+        (item) =>
+          item.name.toLowerCase().includes(val.toLowerCase()) ||
+          item.surname.toLowerCase().includes(val.toLowerCase()) ||
+          item.requestnotes.toLowerCase().includes(val.toLowerCase())
       );
       setFilteredData(filtered);
     },
-    
   }));
 
-  const SingleItem = ({ id, header, content, sender,date, time }) => (
+  const SingleItem = ({
+    id,
+    requestnotes,
+    memberid,
+    membername,
+    membersurname,
+    requestedon,
+  }) => (
     <TouchableOpacity style={{ marginTop: 10 }}>
       <View
         style={{
-          flexDirection: "row",
+          flexDirection: "column",
           width: "100%",
           backgroundColor: "white",
           borderColor: "#1a636340",
@@ -74,7 +93,13 @@ const Notifications = forwardRef((props, ref) =>  {
           paddingHorizontal: 15,
         }}
       >
-        <View style={{ width: "80%" }}>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
           <Text
             style={{
               fontSize: 14,
@@ -84,8 +109,21 @@ const Notifications = forwardRef((props, ref) =>  {
               marginTop: 10,
             }}
           >
-            Subject: {header}
+            {membername} {membersurname}
           </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: "GeneralSansMedium",
+              textAlign: "flex-end",
+              color: "#000000",
+              marginTop: 10,
+            }}
+          >
+            {moment(requestedon).format("DD-MMM-YYYY")}
+          </Text>
+        </View>
+        <View style={{ width: "100%" }}>
           <Text
             style={{
               fontSize: 14,
@@ -93,30 +131,11 @@ const Notifications = forwardRef((props, ref) =>  {
               textAlign: "flex-start",
               color: "#000000",
               marginTop: 7,
+              marginBottom: 10,
             }}
           >
-            Notice: {content}
+            {requestnotes}
           </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: "GeneralSansRegular",
-              textAlign: "flex-start",
-              color: "#bd7925",
-              marginTop: 5,
-              marginBottom: 5,
-            }}
-          >
-            Sent On: { moment(date).format('DD-MM-YYYY')} {time}
-          </Text>
-        </View>
-        <View style={{ width: "20%" }}>
-          <MaterialIcons
-            color="#000000"
-            name="navigate-next"
-            size={25}
-            style={{ alignSelf: "flex-end", marginTop: 10 }}
-          />
         </View>
       </View>
     </TouchableOpacity>
@@ -125,21 +144,21 @@ const Notifications = forwardRef((props, ref) =>  {
   const renderItem = ({ item }) => (
     <SingleItem
       id={item.id}
-      header={item.header}
-      content={item.content}
-      sender={item.sender}
-      date={item.date}
-      time={item.time}
+      requestnotes={item.requestnotes}
+      memberid={item.MemberID}
+      membername={item.name}
+      membersurname={item.surname}
+      requestedon={item.requestedon}
     />
   );
 
   // useEffect(() => {
   //   const asyncFetch = () => {
-  //     setData(apiData);
-  //     setFilteredData(apiData);
+  //     setData(jsonData);
   //   };
   //   asyncFetch();
   // }, []);
+
   useEffect(() => {
     const asyncFetch = async () => {
       //Call API HERE
@@ -148,7 +167,7 @@ const Notifications = forwardRef((props, ref) =>  {
       const asynctoken = await AsyncStorage.getItem("Tkn");
       const userId = await AsyncStorage.getItem("UserID");
 
-      let res = await fetch(`${apiLink}notifications`, {
+      let res = await fetch(`${apiLink}prayer-req`, {
         method: "get",
         headers: {
           "Content-Type": "application/json",
@@ -161,7 +180,6 @@ const Notifications = forwardRef((props, ref) =>  {
     };
 
     asyncFetch();
-    console.log("first");
   }, []);
 
   return (
@@ -173,11 +191,11 @@ const Notifications = forwardRef((props, ref) =>  {
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={() => <View style={{ width: 7 }} />}
-          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
         />
       )}
     </View>
   );
 });
 
-export default Notifications;
+export default PrayerRequests;

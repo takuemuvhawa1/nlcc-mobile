@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -6,10 +6,8 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  StatusBar,
-  ScrollView,
   TextInput,
-  FlatList,
+  Keyboard
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
@@ -27,6 +25,7 @@ import {
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
 import Calender from "./Calender";
 
 const Events = ({ navigation }) => {
@@ -43,6 +42,11 @@ const Events = ({ navigation }) => {
   const [showAlert, setShowAlert] = React.useState(false);
   const [alerttext, setAlerttext] = React.useState("");
   const [alerttitle, setAlerttitle] = React.useState("");
+  const [filtereddata, setFilteredData] = useState([]);
+  const [showTabs, setShowTabs] = useState(true);
+  const [searchtext, setSearchtext] = React.useState("");
+
+  const calenderRef = useRef();
 
   const doAlert = (txt, ttl) => {
     setShowAlert(!showAlert);
@@ -51,11 +55,23 @@ const Events = ({ navigation }) => {
   };
 
   useEffect(() => {
-    const asyncFetch = () => {
-      console.log("first");
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setShowTabs(false);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setShowTabs(true);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
     };
-    asyncFetch();
   }, []);
+
+  const findSearched = (text)=>{
+    setSearchtext(text);
+    calenderRef.current.getFilterValue(text);
+  }
 
   if (!fontsLoaded) {
     return null;
@@ -68,6 +84,7 @@ const Events = ({ navigation }) => {
       start={{ x: 1, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
+      <StatusBar style="dark" translucent={true} hidden={false} />
       <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
@@ -134,10 +151,25 @@ const Events = ({ navigation }) => {
             marginTop: 20,
           }}
         >
-          <Calender/>
+          <View style={styles.viewInput}>
+            <View style={styles.viewIcon}>
+              <Octicons name="search" size={25} style={styles.icoInputIcon} />
+            </View>
+            <View style={styles.viewTextInput}>
+              <TextInput
+                autoCorrect={false}
+                value={searchtext}
+                onChangeText={(text) => findSearched(text)}
+                style={styles.inputTextInput}
+                placeholder="Search contribution . . ."
+              />
+            </View>
+          </View>
+          <Calender ref={calenderRef}/>
         </View>
       </View>
       <View style={styles.viewBottom}>
+        {showTabs && <>
         <View style={styles.viewInTabs}>
           <TouchableOpacity
           onPress={() => navigation.navigate("Home")}
@@ -179,6 +211,8 @@ const Events = ({ navigation }) => {
             <Text style={{ fontFamily: 'GeneralSansRegular', fontSize: 14, color: "#1a6363" }}>More</Text>
           </TouchableOpacity>
         </View>
+        
+        </>}
       </View>
     </LinearGradient>
   );
@@ -231,6 +265,34 @@ const styles = StyleSheet.create({
     paddingBottom: 3,
     borderRadius: 10,
     marginBottom: 5,
+  },
+  viewInput: {
+    flexDirection: "row",
+    width: "100%",
+    height: 55,
+    borderWidth: 1,
+    borderColor: "#ffffff",
+    borderRadius: 8,
+  },
+  viewIcon: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "15%",
+  },
+  icoInputIcon: {
+    color: "grey",
+  },
+  viewTextInput: {
+    width: "70%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  inputTextInput: {
+    width: "98%",
+    height: 45,
+    color: "#000000",
+    fontSize: 16,
+    fontFamily: "GeneralSansMedium",
   },
 });
 

@@ -6,11 +6,11 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  StatusBar,
   ScrollView,
   TextInput,
   FlatList,
-  Linking
+  Linking,
+  Keyboard
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
@@ -24,11 +24,12 @@ import {
   MaterialCommunityIcons,
   Ionicons,
   Foundation,
-  AntDesign,
+  AntDesign
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 import Apilink from "../constants/Links";
 
 const apiData = [
@@ -116,6 +117,9 @@ const Sermons = ({ navigation, props }) => {
   });
 
   const [data, setData] = useState([]);
+  const [filtereddata, setFilteredData] = useState([]);
+  const [showTabs, setShowTabs] = useState(true);
+
   const [searchtext, setSearchtext] = React.useState("");
   const [isactive, setIsactive] = React.useState(false);
   const [showAlert, setShowAlert] = React.useState(false);
@@ -129,7 +133,10 @@ const Sermons = ({ navigation, props }) => {
   };
 
   const SingleItem = ({ id, name, weblink, date }) => (
-    <TouchableOpacity style={{ marginTop: 10 }} onPress={() => Linking.openURL(`${weblink}`)}>
+    <TouchableOpacity
+      style={{ marginTop: 10 }}
+      onPress={() => Linking.openURL(`${weblink}`)}
+    >
       <View
         style={{
           flexDirection: "row",
@@ -225,12 +232,35 @@ const Sermons = ({ navigation, props }) => {
 
       let responseJson = await res.json();
       setData(responseJson);
+      setFilteredData(responseJson);
     };
 
     if (isFocused) {
       asyncFetch();
     }
   }, [props, isFocused]);
+
+  const findSearched = (text) => {
+    setSearchtext(text);
+    const filtered = data.filter((item) =>
+      item.name.toLowerCase().includes(text.toLowerCase())
+    );
+    setFilteredData(filtered);
+  };
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setShowTabs(false);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setShowTabs(true);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   if (!fontsLoaded) {
     return null;
@@ -243,6 +273,7 @@ const Sermons = ({ navigation, props }) => {
       start={{ x: 1, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
+      <StatusBar style="dark" translucent={true} hidden={false} />
       <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
@@ -319,18 +350,18 @@ const Sermons = ({ navigation, props }) => {
               <TextInput
                 autoCorrect={false}
                 value={searchtext}
-                onChangeText={(text) => setSearchtext(text)}
+                onChangeText={(text) => findSearched(text)}
                 style={styles.inputTextInput}
                 placeholder="Search sermon . . ."
               />
             </View>
           </View>
           <View style={{ paddingBottom: 20, height: "94%" }}>
-            {data && (
+            {filtereddata && (
               <>
                 <FlatList
                   vertical
-                  data={data}
+                  data={filtereddata}
                   renderItem={renderItem}
                   keyExtractor={(item) => item.id}
                   showsVerticalScrollIndicator={false}
@@ -342,84 +373,88 @@ const Sermons = ({ navigation, props }) => {
         </View>
       </View>
       <View style={styles.viewBottom}>
-        <View style={styles.viewInTabs}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Home")}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <Ionicons color="#1a6363" name="home" size={25} />
-            <Text
-              style={{
-                fontFamily: "GeneralSansRegular",
-                fontSize: 14,
-                color: "#1a6363",
-              }}
-            >
-              Home
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Sermons")}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <FontAwesome6 color="#bd7925" name="book-bible" size={25} />
-            <Text
-              style={{
-                fontFamily: "GeneralSansRegular",
-                fontSize: 14,
-                color: "#bd7925",
-              }}
-            >
-              Sermons
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ justifyContent: "center", alignItems: "center" }}
-            onPress={() => navigation.navigate("Contributions")}
-          >
-            <FontAwesome6 color="#1a6363" name="money-check" size={25} />
-            <Text
-              style={{
-                fontFamily: "GeneralSansRegular",
-                fontSize: 14,
-                color: "#1a6363",
-              }}
-            >
-              Contributions
-            </Text>
-          </TouchableOpacity>
+        {showTabs && (
+          <>
+            <View style={styles.viewInTabs}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Home")}
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <Ionicons color="#1a6363" name="home" size={25} />
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#1a6363",
+                  }}
+                >
+                  Home
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Sermons")}
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <FontAwesome6 color="#bd7925" name="book-bible" size={25} />
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#bd7925",
+                  }}
+                >
+                  Sermons
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ justifyContent: "center", alignItems: "center" }}
+                onPress={() => navigation.navigate("Contributions")}
+              >
+                <FontAwesome6 color="#1a6363" name="money-check" size={25} />
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#1a6363",
+                  }}
+                >
+                  Contributions
+                </Text>
+              </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Events")}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <FontAwesome6 color="#1a6363" name="building-user" size={25} />
-            <Text
-              style={{
-                fontFamily: "GeneralSansRegular",
-                fontSize: 14,
-                color: "#1a6363",
-              }}
-            >
-              Events
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("More")}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <AntDesign color="#1a6363" name="appstore1" size={25} />
-            <Text
-              style={{
-                fontFamily: "GeneralSansRegular",
-                fontSize: 14,
-                color: "#1a6363",
-              }}
-            >
-              More
-            </Text>
-          </TouchableOpacity>
-        </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Events")}
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <FontAwesome6 color="#1a6363" name="building-user" size={25} />
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#1a6363",
+                  }}
+                >
+                  Events
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("More")}
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <AntDesign color="#1a6363" name="appstore1" size={25} />
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#1a6363",
+                  }}
+                >
+                  More
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
     </LinearGradient>
   );

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  FlatList,
+  FlatList
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
@@ -14,6 +14,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { FontAwesome, Ionicons } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
 import moment from 'moment';
 
 const Event = ({ navigation, props }) => {
@@ -123,6 +124,7 @@ const Event = ({ navigation, props }) => {
       start={{ x: 1, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
+      <StatusBar style="dark" translucent={true} hidden={false} />
       <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
@@ -274,7 +276,7 @@ const Event = ({ navigation, props }) => {
                 alignSelf: "flex-end",
               }}
             >
-              { moment(record.date).format('DD-MM-YYYY')} {record.time.slice(0, -3)}
+              { moment(record.date).format('DD-MM-YYYY')} {record.time}
             </Text>
           </View>
         </View>
@@ -312,7 +314,7 @@ const Event = ({ navigation, props }) => {
                 alignSelf: "flex-end",
               }}
             >
-              { moment(record.enddate).format('DD-MM-YYYY')} {record.endtime.slice(0, -3)}
+              { moment(record.enddate).format('DD-MM-YYYY')} {record.endtime}
             </Text>
           </View>
         </View>

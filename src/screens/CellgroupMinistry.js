@@ -23,7 +23,7 @@ import { DataTable } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import Apilink from "../constants/Links";
 
-const AdminMinistry = ({ navigation, props }) => {
+const CellgroupMinistry = ({ navigation, props }) => {
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
     GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
@@ -156,7 +156,7 @@ const AdminMinistry = ({ navigation, props }) => {
     //Request To Join
     if (currenttab == 1) {
       let approveResponse = await fetch(
-        `${apiLink}ministrymembers/approve/${memberId}/${ministryId}`,
+        `${apiLink}membersmallgrp/approve/${memberId}/${ministryId}`,
         {
           method: "put",
           headers: {
@@ -179,14 +179,14 @@ const AdminMinistry = ({ navigation, props }) => {
       //   return;
       // }
       setIsactive(false);
-      navigation.navigate("SelectMinistry");
+      navigation.navigate("SelectCellgroup");
     }
 
     //Request To Leave
     if (currenttab == 2) {
       console.log("2nd");
       let disapResponse = await fetch(
-        `${apiLink}ministrymembers/leave/${memberId}/${ministryId}`,
+        `${apiLink}membersmallgrp/leave/${memberId}/${ministryId}`,
         {
           method: "put",
           headers: {
@@ -208,7 +208,7 @@ const AdminMinistry = ({ navigation, props }) => {
       //   return;
       // }
       setIsactive(false);
-      navigation.navigate("SelectMinistry");
+      navigation.navigate("SelectCellgroup");
     }
 
     // //Member Data Is Set To Leaving Only Because They Are There Already
@@ -481,35 +481,35 @@ const AdminMinistry = ({ navigation, props }) => {
             </View>
 
             <View style={styles.viewBtns}>
-              {currenttab != "3" && <>
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(false);
-                  handleAccept();
-                }}
-                style={styles.btnBtns1}
-              >
-               {isactive && (
-                  <>
-                    <ActivityIndicator size="large" color="#ffffff" />
-                  </>
-                )}
-                {isactive == false && (
-                  <>
-                    <Text style={styles.txtBtnTxt1}>Accept</Text>
-                  </>
-                )}
-              </TouchableOpacity>
-              
-              </>}
-             
+              {currenttab != "3" && (
+                <>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisible(false);
+                      handleAccept();
+                    }}
+                    style={styles.btnBtns1}
+                  >
+                    {isactive && (
+                      <>
+                        <ActivityIndicator size="large" color="#ffffff" />
+                      </>
+                    )}
+                    {isactive == false && (
+                      <>
+                        <Text style={styles.txtBtnTxt1}>Accept</Text>
+                      </>
+                    )}
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
           </View>
         </View>
       </Modal>
       <View style={styles.viewTop}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("SelectMinistry")}
+          onPress={() => navigation.navigate("SelectCellgroup")}
           style={{
             width: "70%",
             flexDirection: "column",
@@ -896,4 +896,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AdminMinistry;
+export default CellgroupMinistry;

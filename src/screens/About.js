@@ -16,6 +16,7 @@ import {
   SimpleLineIcons
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { StatusBar } from "expo-status-bar";
 
 const About = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
@@ -132,6 +133,7 @@ const About = ({ navigation }) => {
     start={{ x: 1, y: 0 }}
     end={{ x: 1, y: 1 }}
     >
+    <StatusBar style="dark" translucent={true} hidden={false} />
     <ScrollView showsVerticalScrollIndicator={false}>
       <AwesomeAlert
         show={showAlert}

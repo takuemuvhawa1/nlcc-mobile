@@ -2,7 +2,7 @@ import React, {
   useState,
   useEffect,
   forwardRef,
-  useImperativeHandle,
+  useImperativeHandle
 } from "react";
 import {
   StyleSheet,
@@ -11,7 +11,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  StatusBar,
   ScrollView,
   TextInput,
   FlatList,
@@ -23,6 +22,7 @@ import { MaterialIcons } from "react-native-vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import Apilink from "../constants/Links";
+import moment from 'moment';
 
 const Calender = forwardRef((props, ref) => {
   const [data, setData] = useState([]);
@@ -95,7 +95,7 @@ const Calender = forwardRef((props, ref) => {
               marginTop: 7,
             }}
           >
-            {date} {time}
+            { moment(date).format('DD-MM-YYYY')} {time}
           </Text>
         </View>
         <View style={{ width: "20%" }}>

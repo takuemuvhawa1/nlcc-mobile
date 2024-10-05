@@ -7,6 +7,7 @@ import {
   Image,
   TextInput,
   FlatList,
+  Keyboard
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
@@ -20,6 +21,7 @@ import {
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 import Apilink from "../constants/Links";
 
 const apiData = [
@@ -107,6 +109,9 @@ const Contributions = ({ navigation,props }) => {
   });
 
   const [data, setData] = useState([]);
+  const [filtereddata, setFilteredData] = useState([]);
+  const [showTabs, setShowTabs] = useState(true);
+
   const [searchtext, setSearchtext] = React.useState("");
   const [isactive, setIsactive] = React.useState(false);
   const [showAlert, setShowAlert] = React.useState(false);
@@ -207,12 +212,33 @@ const Contributions = ({ navigation,props }) => {
 
       let responseJson = await res.json();
       setData(responseJson);
+      setFilteredData(responseJson);
     };
 
     if (isFocused) {
       asyncFetch();
     }
   }, [props, isFocused]);
+
+  const findSearched = (text) => {
+    setSearchtext(text);
+    const filtered = data.filter((item) =>item.ProjectName.toLowerCase().includes(text.toLowerCase()));
+    setFilteredData(filtered);
+  };
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setShowTabs(false);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setShowTabs(true);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   if (!fontsLoaded) {
     return null;
@@ -225,6 +251,7 @@ const Contributions = ({ navigation,props }) => {
       start={{ x: 1, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
+      <StatusBar style="dark" translucent={true} hidden={false} />
       <AwesomeAlert
         show={showAlert}
         contentContainerStyle={{ width: 307 }}
@@ -301,18 +328,18 @@ const Contributions = ({ navigation,props }) => {
               <TextInput
                 autoCorrect={false}
                 value={searchtext}
-                onChangeText={(text) => setSearchtext(text)}
+                onChangeText={(text) => findSearched(text)}
                 style={styles.inputTextInput}
                 placeholder="Search contribution . . ."
               />
             </View>
           </View>
           <View style={{paddingBottom: 20, height: '94%'}}>
-          {data && (
+          {filtereddata && (
             <>
             <FlatList
               vertical
-              data={data}
+              data={filtereddata}
               renderItem={renderItem}
               keyExtractor={(item) => item.id}
               showsVerticalScrollIndicator={false}
@@ -327,6 +354,7 @@ const Contributions = ({ navigation,props }) => {
         </View>
       </View>
       <View style={styles.viewBottom}>
+        {showTabs && <>
         <View style={styles.viewInTabs}>
           <TouchableOpacity
             onPress={() => navigation.navigate("Home")}
@@ -408,6 +436,8 @@ const Contributions = ({ navigation,props }) => {
             </Text>
           </TouchableOpacity>
         </View>
+        
+        </>}
       </View>
     </LinearGradient>
   );
