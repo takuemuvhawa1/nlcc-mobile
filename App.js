@@ -20,18 +20,22 @@ import Event from './src/screens/Event';
 import CellGroup from './src/screens/CellGroup';
 import Sermons from './src/screens/Sermons';
 import Register from './src/screens/Register';
+import EmailRegister from './src/screens/EmailRegister';
+import PhoneRegister from './src/screens/PhoneRegister';
 import SetPassword from './src/screens/SetPassword';
 import SelectMinistry from './src/screens/SelectMinistry';
 import AdminMinistry from './src/screens/AdminMinistry';
-import NewPassword from './src/screens/NewPassword';
+import Settings from './src/screens/Settings';
 import SelectCellgroup from './src/screens/SelectCellgroup';
 import CellgroupMinistry from './src/screens/CellgroupMinistry';
+import Kids from './src/screens/Kids';
+import Donations from './src/screens/Donations';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   
-  const [initialRouteName, setInitialRouteName] = React.useState('NewPassword');
+  const [initialRouteName, setInitialRouteName] = React.useState('Ministry');
   
   // React.useEffect(() => {
   //   setTimeout(() => {
@@ -78,13 +82,17 @@ const App = () => {
             <Stack.Screen name="Event" component={Event} />
             <Stack.Screen name="CellGroup" component={CellGroup} />
             <Stack.Screen name="Sermons" component={Sermons} />
+            <Stack.Screen name="EmailRegister" component={EmailRegister} />
+            <Stack.Screen name="PhoneRegister" component={PhoneRegister} />
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="SetPassword" component={SetPassword} />
             <Stack.Screen name="SelectMinistry" component={SelectMinistry} />
             <Stack.Screen name="AdminMinistry" component={AdminMinistry} />
-            <Stack.Screen name="NewPassword" component={NewPassword} />
+            <Stack.Screen name="Settings" component={Settings} />
             <Stack.Screen name="SelectCellgroup" component={SelectCellgroup} />
             <Stack.Screen name="CellgroupMinistry" component={CellgroupMinistry} />
+            <Stack.Screen name="Kids" component={Kids} />
+            <Stack.Screen name="Donations" component={Donations} />
           </Stack.Navigator>
     </NavigationContainer>
   );
