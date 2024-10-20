@@ -77,8 +77,6 @@ const PrayerRequests = forwardRef((props, ref) => {
     id,
     requestnotes,
     memberid,
-    membername,
-    membersurname,
     requestedon,
   }) => (
     <TouchableOpacity style={{ marginTop: 10 }}>
@@ -100,17 +98,6 @@ const PrayerRequests = forwardRef((props, ref) => {
             justifyContent: "space-between",
           }}
         >
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: "GeneralSansMedium",
-              textAlign: "flex-start",
-              color: "#000000",
-              marginTop: 10,
-            }}
-          >
-            {membername} {membersurname}
-          </Text>
           <Text
             style={{
               fontSize: 14,
@@ -146,8 +133,6 @@ const PrayerRequests = forwardRef((props, ref) => {
       id={item.id}
       requestnotes={item.requestnotes}
       memberid={item.MemberID}
-      membername={item.name}
-      membersurname={item.surname}
       requestedon={item.requestedon}
     />
   );
@@ -167,7 +152,7 @@ const PrayerRequests = forwardRef((props, ref) => {
       const asynctoken = await AsyncStorage.getItem("Tkn");
       const userId = await AsyncStorage.getItem("UserID");
 
-      let res = await fetch(`${apiLink}prayer-req`, {
+      let res = await fetch(`${apiLink}prayer-req/${userId}`, {
         method: "get",
         headers: {
           "Content-Type": "application/json",

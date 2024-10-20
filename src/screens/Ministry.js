@@ -5,15 +5,12 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { useIsFocused } from "@react-navigation/native";
-import {
-  FontAwesome6,
-  Ionicons
-} from "react-native-vector-icons";
+import { FontAwesome6, Ionicons } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
@@ -32,8 +29,7 @@ const Ministry = ({ navigation, props }) => {
     id: "",
     name: "",
     description: "",
-    admin: "",
-    adminphone: "",
+    leaders: [],
     joined: null,
   });
 
@@ -51,25 +47,22 @@ const Ministry = ({ navigation, props }) => {
   };
 
   const requestTojoin = async () => {
-    console.log("ggg")
+    console.log("ggg");
     const memberId = await AsyncStorage.getItem("UserID");
     const ministryId = record.id;
     const apiLink = Apilink.getLink();
     setIsactive(true);
 
-    let joinResponse = await fetch(
-      `${apiLink}ministrymembers/join`,
-      {
-        method: "post",
-        body: JSON.stringify({
-          MemberID: memberId,
-          MinistryID: ministryId,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    let joinResponse = await fetch(`${apiLink}ministrymembers/join`, {
+      method: "post",
+      body: JSON.stringify({
+        MemberID: memberId,
+        MinistryID: ministryId,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     let approveResJson = await joinResponse.json();
     console.log(approveResJson);
@@ -112,8 +105,7 @@ const Ministry = ({ navigation, props }) => {
             id: ministryObj.id,
             name: ministryObj.name,
             description: ministryObj.description,
-            admin: ministryObj.admin,
-            adminphone: ministryObj.adminphone,
+            leaders: ministryObj.leaders,
             joined: ministryObj.joined,
           });
 
@@ -155,7 +147,8 @@ const Ministry = ({ navigation, props }) => {
         showConfirmButton={true}
         cancelText="No, cancel"
         confirmText="Ok"
-        confirmButtonColor="#F47920"
+        confirmButtonColor="#1a6363"
+        confirmButtonStyle={{ width: "40%", alignItems: "center" }}
         onCancelPressed={() => {
           console.log("cancelled");
           setShowAlert(false);
@@ -261,7 +254,7 @@ const Ministry = ({ navigation, props }) => {
             paddingBottom: 15,
           }}
         >
-          <View style={{ width: "40%" }}>
+          <View style={{ width: "25%" }}>
             <Text
               style={{
                 fontFamily: "GeneralSansMedium",
@@ -270,32 +263,53 @@ const Ministry = ({ navigation, props }) => {
                 marginTop: 15,
               }}
             >
-              Leader:
+              Leader(s)
             </Text>
           </View>
-          <View style={{ width: "60%", flexDirection: "column" }}>
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#1a6363",
-                marginTop: 15,
-                alignSelf: "flex-end",
-              }}
-            >
-              {record.admin}
-            </Text>
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#1a6363",
-                marginTop: 20,
-                alignSelf: "flex-end",
-              }}
-            >
-              {record.adminphone}
-            </Text>
+          <View style={{ width: "75%", flexDirection: "column" }}>
+            {record.leaders.map((item) => (
+              <View key={item.leaderID} style={{ flexDirection: "column" }}>
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansMedium",
+                    fontSize: 18,
+                    color: "#1a6363",
+                    marginTop: 15,
+                    alignSelf: "flex-end",
+                  }}
+                >
+                  {item.admin}
+                </Text>
+                {item.email_comm != null && item.email_comm == 1 &&<>
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansMedium",
+                    fontSize: 16,
+                    color: "#000000",
+                    marginTop: 20,
+                    alignSelf: "flex-end",
+                  }}
+                >
+                  {item.adminphone}
+                </Text>
+                
+                </>}
+                {item.phone_comm != null && item.phone_comm == 1 &&<>
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansMedium",
+                    fontSize: 16,
+                    color: "#000000",
+                    marginTop: 20,
+                    alignSelf: "flex-end",
+                  }}
+                >
+                  {item.adminemail}
+                </Text>
+                
+                </>}
+              </View>
+            ))}
           </View>
         </View>
         {record.joined && (
@@ -353,7 +367,7 @@ const Ministry = ({ navigation, props }) => {
               <View style={{ width: "40%" }}></View>
               <View style={{ width: "60%" }}>
                 <TouchableOpacity
-                onPress={() => requestTojoin()}
+                  onPress={() => requestTojoin()}
                   style={{
                     width: "100%",
                     height: 55,
@@ -402,7 +416,7 @@ const Ministry = ({ navigation, props }) => {
               <View style={{ width: "40%" }}></View>
               <View style={{ width: "60%" }}>
                 <TouchableOpacity
-                onPress={()=>requestToleave()}
+                  onPress={() => requestToleave()}
                   style={{
                     width: "100%",
                     height: 55,
@@ -467,7 +481,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     marginTop: 10,
-  }
+  },
 });
 
 export default Ministry;

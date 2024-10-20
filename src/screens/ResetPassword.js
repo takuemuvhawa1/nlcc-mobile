@@ -15,6 +15,7 @@ import { SimpleLineIcons, FontAwesome } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Apilink from "../constants/Links";
 
 const ResetPassword = ({ navigation }) => {
 
@@ -27,9 +28,12 @@ const ResetPassword = ({ navigation }) => {
   });
 
   const [hidepin, setHidepin] = React.useState(true);
+  const [hidepin2, setHidepin2] = React.useState(true);
   const [inputs, setInputs] = React.useState({
     email: "",
+    otp: "",
     password: "",
+    cnpassword: ""
   });
 
   const [isactive, setIsactive] = React.useState(false);
@@ -49,21 +53,56 @@ const ResetPassword = ({ navigation }) => {
     );
   };
 
-  const handleBtnPress = (email) => {
-    navigation.navigate('Home');
+  const handleBtnPress = async () => {
+    if (inputs.password == "") {
+      doAlert(
+        "Fill in your new password before you proceed",
+        "Submission Error"
+      );
+      return;
+    }
+    if (inputs.password != inputs.cnpassword) {
+      doAlert(
+        "Correctly confirm the new password before you proceed",
+        "Submission Error"
+      );
+      return;
+    }
+
+    setIsactive(true);
+    const apiLink = Apilink.getLink();
+    const otp = await AsyncStorage.getItem("ForgotOTP");
+    const email = await AsyncStorage.getItem("ForgotEmail");
+
+    let signinresponse = await fetch(`${apiLink}onboarding/setpassword`, {
+      method: "post",
+      body: JSON.stringify({
+        email,
+        otp,
+        password: inputs.password,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    let resJson = await signinresponse.json();
+    setIsactive(false);
+
+    console.log(resJson);
+
+    if (resJson.message == "Password set successfully") {
+      setInputs({
+        email: "",
+        otp: "",
+        password: "",
+        cnpassword: "",
+      });
+      doAlert("Password successfully changed", "Success");
+    }else{
+      doAlert("Invalid email or password", "Failed");
+    }
   };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const unloadScreen = () => {
-        console.log('SignIn');
-      };
-      setTimeout(() => {
-        unloadScreen();
-      }, 5000);
-    }, [])
-  );
-
 
   if (!fontsLoaded) {
     return null;
@@ -89,7 +128,8 @@ const ResetPassword = ({ navigation }) => {
         showConfirmButton={true}
         cancelText="No, cancel"
         confirmText="Ok"
-        confirmButtonColor="#F47920"
+        confirmButtonColor="#1a6363"
+        confirmButtonStyle={{width: "40%", alignItems: "center"}}
         onCancelPressed={() => {
           console.log("cancelled");
           setShowAlert(false);
@@ -97,10 +137,18 @@ const ResetPassword = ({ navigation }) => {
           setAlerttitle("");
         }}
         onConfirmPressed={() => {
-          console.log("closed");
-          setShowAlert(false);
-          setAlerttext("");
-          setAlerttitle("");
+          if (alerttitle == "Success"){
+            console.log("closed");
+            setShowAlert(false);
+            setAlerttext("");
+            setAlerttitle("");
+            navigation.navigate("SignIn");
+          }else{
+            console.log("closed");
+            setShowAlert(false);
+            setAlerttext("");
+            setAlerttitle("");
+          }
         }}
       />
       <Image
@@ -170,20 +218,20 @@ const ResetPassword = ({ navigation }) => {
             <View style={styles.viewTextInput}>
               <TextInput
                 autoCorrect={false}
-                value={inputs.password}
-                secureTextEntry={hidepin}
+                value={inputs.cnpassword}
+                secureTextEntry={hidepin2}
                 onChangeText={(text) =>
-                  setInputs({ ...inputs, password: text })
+                  setInputs({ ...inputs, cnpassword: text })
                 }
                 style={styles.inputTextInput}
                 placeholder="Enter your password confirmation"
               />
             </View>
             <TouchableOpacity
-              onPress={() => setHidepin(!hidepin)}
+              onPress={() => setHidepin2(!hidepin2)}
               style={styles.viewToggler}
             >
-              {hidepin && (
+              {hidepin2 && (
                 <>
                   <FontAwesome
                     name="eye-slash"
@@ -192,7 +240,7 @@ const ResetPassword = ({ navigation }) => {
                   />
                 </>
               )}
-              {hidepin == false && (
+              {hidepin2 == false && (
                 <>
                   <FontAwesome
                     name="eye"

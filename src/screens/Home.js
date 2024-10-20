@@ -8,11 +8,12 @@ import {
   TextInput,
   FlatList,
   Keyboard,
+  ScrollView,
+  ActivityIndicator
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
-
 import {
   FontAwesome6,
   FontAwesome5,
@@ -29,8 +30,16 @@ import Calender from "./Calender";
 import Cellgroups from "./Cellgroups";
 import PrayerRequests from "./PrayerRequests";
 import Notifications from "./Notifications";
+import Apilink from "../constants/Links";
 
 const BtnsData = [
+  {
+    id: "6",
+    title: "About",
+    vectoricon: "SimpleLineIcons",
+    icon: "info",
+    selected: false,
+  },
   {
     id: "1",
     title: "Ministries",
@@ -97,6 +106,8 @@ const Home = ({ navigation }) => {
 
   const [dayhour, setDayhour] = React.useState("");
   const [searchtext, setSearchtext] = React.useState("");
+  const [prequest, setPrequest] = React.useState("");
+  const [newrequest, setNewrequest] = React.useState(true);
   const [isactive, setIsactive] = React.useState(false);
   const [showAlert, setShowAlert] = React.useState(false);
   const [alerttext, setAlerttext] = React.useState("");
@@ -112,8 +123,37 @@ const Home = ({ navigation }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [btns, setBtns] = useState([]);
   const [prevbtn, setPrevbtn] = useState("5");
-  const [page, setPage] = useState("5");
+  const [page, setPage] = useState("6");
 
+  const handleSendPraRequest = async() => {
+    if (prequest==""){
+      doAlert("You can not send an empty prayer request","Submission Error");
+    }
+    setIsactive(true)
+    const apiLink = Apilink.getLink();
+    let response = await fetch(`${apiLink}prayer-req`, {
+      method: "post",
+      body: JSON.stringify({
+        MemberID: userdata.UserID,
+        requestnotes: prequest
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    let resJson = await response.json();
+    setIsactive(false);
+
+    console.log(resJson);
+
+    if (resJson.message == "Prayer request added successfully") {
+      setPrequest("")
+      doAlert("Prayer request sent successfully", "Success");
+    }else{
+      doAlert("Sending failed. Contact system admin", "Failed");
+    }
+  }
   const changeState = (id) => {
     setPage(id);
     let markers = [...btns];
@@ -177,6 +217,19 @@ const Home = ({ navigation }) => {
       }
       onPress={() => changeState(id.toString())}
     >
+      {id == 6 && (
+        <>
+          <SimpleLineIcons
+            name="info"
+            size={17}
+            style={
+              selected == true
+                ? { marginRight: 5, color: "#ffffff", marginTop: 3 }
+                : { marginRight: 5, color: "#000000", marginTop: 3 }
+            }
+          />
+        </>
+      )}
       {id == 1 && (
         <>
           <FontAwesome6
@@ -352,7 +405,8 @@ const Home = ({ navigation }) => {
         showConfirmButton={true}
         cancelText="No, cancel"
         confirmText="Ok"
-        confirmButtonColor="#F47920"
+        confirmButtonColor="#1a6363"
+        confirmButtonStyle={{width: "40%", alignItems: "center"}}
         onCancelPressed={() => {
           console.log("cancelled");
           setShowAlert(false);
@@ -491,6 +545,80 @@ const Home = ({ navigation }) => {
             />
           )}
         </View>
+        {page == 6 && (
+          <>
+            <Text
+              style={{
+                fontFamily: "GeneralSansMedium",
+                fontSize: 18,
+                color: "#1a6363",
+                marginTop: 40,
+              }}
+            >
+              About New Life Covenant Church
+            </Text>
+            <ScrollView
+              style={{ height: "75%" }}
+              showsVerticalScrollIndicator={false}
+            >
+              <Text
+                style={{
+                  fontFamily: "GeneralSansMedium",
+                  fontSize: 18,
+                  color: "#000000",
+                  marginTop: 40,
+                }}
+              >
+                Who we are and what we believe in
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "GeneralSansRegular",
+                  fontSize: 18,
+                  color: "#000000",
+                  marginTop: 10,
+                  textAlign: "justify",
+                }}
+              >
+                New Life Covenant Church is a Pentecostal, Charismatic and
+                Evangelical church with a dominant gift and anointing of
+                Revelation Knowledge. We have and believe in fundamental
+                doctrines that constitute our spiritual DNA and define us as
+                well as distinguish us as a ministry with a God given mandate
+                and purpose. These are our Non-Negotiables. Essentially they are
+                at the centre of everything we do, unite us as a ministry
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "GeneralSansMedium",
+                  fontSize: 18,
+                  color: "#000000",
+                  marginTop: 40,
+                }}
+              >
+                A place to belong
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "GeneralSansRegular",
+                  fontSize: 18,
+                  color: "#000000",
+                  marginTop: 10,
+                  textAlign: "justify",
+                }}
+              >
+                Welcome to New Life Covenant Church! Whether you’ve attended
+                church since your infancy days or are just beginning to explore
+                the idea, we’re here to give support to you through biblical
+                teaching, inspiring worship and fellowship which we are certain
+                will draw you incredibly close to Christ that your life will be
+                transformed. The transformation approach at NLCC is holistic:
+                spirit, body, mind and heart, and our values, beliefs and
+                culture reflect that.
+              </Text>
+            </ScrollView>
+          </>
+        )}
         {page == 1 && (
           <>
             <Text
@@ -544,6 +672,44 @@ const Home = ({ navigation }) => {
         )}
         {page == 4 && (
           <>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 20, alignItems: " center" }}
+            >
+              <Text
+                style={{
+                  fontFamily: "GeneralSansMedium",
+                  fontSize: 18,
+                  color: "#000000", marginTop: 20
+                }}
+              >
+                Prayer Requests
+              </Text>
+              <TouchableOpacity
+                onPress={() => setNewrequest(!newrequest)}
+                style={{
+                  width: "45%",
+                  height: 35,
+                  marginTop: 15,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 7,
+                  backgroundColor: "#ffffff",
+                  borderColor: "#1a6363",
+                  borderWidth: 1,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: "GeneralSansMedium",
+                    textAlign: "center",
+                    color: "#000000",
+                  }}
+                >
+                  {newrequest == false? "New Prayer Request":"Sent Prayer Requests"}
+                </Text>
+              </TouchableOpacity>
+            </View>
             <Text
               style={{
                 fontFamily: "GeneralSansRegular",
@@ -552,10 +718,72 @@ const Home = ({ navigation }) => {
                 marginTop: 20,
               }}
             >
-              Here is a list of prayer requests from your colleagues. The Bible commands us to pray for one another, “Therefore, confess your sins to one another and pray for one another, that you may be healed. Again, prayer lightens burdens, therefore praying for one another is a powerful way for us to bear one another's burdens. It is a loving act to pray for someone.
+              The Bible commands us to pray for one another, “Therefore, confess
+              your sins to one another and pray for one another, that you may be
+              healed. Again, prayer lightens burdens, therefore praying for one
+              another is a powerful way for us to bear one another's burdens. It
+              is a loving act to pray for someone.
             </Text>
             <View style={{ height: "75%" }}>
-              <PrayerRequests ref={prayerrequestRef}/>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+               
+              </View>
+              {newrequest ? (
+                <>
+                  <View
+                    style={{
+                      width: "100%",
+                      marginTop: 20,
+                    }}
+                  >
+                    <TextInput
+                      autoCorrect={false}
+                      value={prequest}
+                      multiline={true}
+                      onChangeText={(text) => setPrequest(text)}
+                      style={{
+                        width: "100%",
+                        height: 145,
+                        color: "#000000",
+                        fontSize: 16,
+                        fontFamily: "GeneralSansMedium",
+                        textAlignVertical: "top",
+                        borderWidth: 1,
+                        borderColor: "#1a6363",
+                        borderRadius: 8,
+                        paddingHorizontal: 7,
+                      }}
+                      placeholder="Type your prayer request here . . ."
+                    />
+                    <TouchableOpacity
+                      onPress={() => handleSendPraRequest()}
+                      style={styles.btnBtns1}
+                    >
+                      {isactive && (
+                        <>
+                          <ActivityIndicator size="large" color="#ffffff" />
+                        </>
+                      )}
+                      {isactive == false && (
+                        <>
+                          <Text style={styles.txtBtnTxt1}>
+                            Send Prayer Request
+                          </Text>
+                        </>
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                </>
+              ) : (
+                <View style={{height: "60%"}}>
+                  <PrayerRequests ref={prayerrequestRef} />
+                </View>
+              )}
             </View>
           </>
         )}
@@ -563,7 +791,7 @@ const Home = ({ navigation }) => {
           <>
             <Image
               style={styles.imgChurch}
-              source={require("../../assets/church.png")}
+              source={require("../../assets/logoup.png")}
             />
 
             <View
@@ -596,7 +824,7 @@ const Home = ({ navigation }) => {
                 </Text>
               </View>
             </View>
-            <View style={{ height: "41%" }}>
+            <View style={{ height: "33%" }}>
               <Notifications ref={notificationRef} />
             </View>
           </>
@@ -717,11 +945,11 @@ const styles = StyleSheet.create({
   },
   imgChurch: {
     marginTop: 20,
-    width: "100%",
+    width: "90%",
     alignSelf: "center",
-    height: "30%",
+    height: "40%",
     borderRadius: 5,
-    resizeMode: "cover",
+    resizeMode: "stretch",
   },
   viewMiddle: {
     flex: 8,
@@ -764,6 +992,21 @@ const styles = StyleSheet.create({
     color: "#000000",
     fontSize: 16,
     fontFamily: "GeneralSansMedium",
+  },
+  btnBtns1: {
+    width: "100%",
+    height: 55,
+    marginTop: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 7,
+    backgroundColor: "#1a6363",
+  },
+  txtBtnTxt1: {
+    fontSize: 14,
+    fontFamily: "GeneralSansMedium",
+    textAlign: "center",
+    color: "#FFFFF0",
   },
   viewInTabs: {
     width: "100%",

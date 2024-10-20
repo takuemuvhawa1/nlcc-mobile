@@ -45,6 +45,10 @@ const More = ({ navigation }) => {
         }
 
         {
+          title == "Family Members (Kids)" && navigation.navigate("Kids");
+        }
+
+        {
           title == "Ministry Admin" && navigation.navigate("SelectMinistry");
         }
 
@@ -55,7 +59,7 @@ const More = ({ navigation }) => {
           title == "Events Admin" && navigation.navigate("Home");
         }
         {
-          title == "Settings" && navigation.navigate("NewPassword");
+          title == "Profile Settings" && navigation.navigate("Settings");
         }
         {
           title == "About NLCC" && navigation.navigate("About");
@@ -105,6 +109,12 @@ const More = ({ navigation }) => {
           </>
         )}
 
+        {title == "Family Members (Kids)" && (
+          <>
+            <FontAwesome color="#ffffff" name="users" size={20} />
+          </>
+        )}
+
         {title == "Ministry Admin" && (
           <>
             <FontAwesome color="#ffffff" name="user-circle" size={20} />
@@ -121,7 +131,7 @@ const More = ({ navigation }) => {
             <FontAwesome color="#ffffff" name="user-circle" size={20} />
           </>
         )}
-        {title == "Settings" && (
+        {title == "Profile Settings" && (
           <>
             <Feather color="#ffffff" name="settings" size={20} />
           </>
@@ -205,7 +215,8 @@ const More = ({ navigation }) => {
         showConfirmButton={true}
         cancelText="No, cancel"
         confirmText="Ok"
-        confirmButtonColor="#F47920"
+        confirmButtonColor="#1a6363"
+        confirmButtonStyle={{width: "40%", alignItems: "center"}}
         onCancelPressed={() => {
           console.log("cancelled");
           setShowAlert(false);
@@ -253,6 +264,8 @@ const More = ({ navigation }) => {
       </View>
       <View style={styles.viewMiddle}>
         <RenderItem title={"My Profile"} />
+        <RenderItem title={"Profile Settings"} />
+        <RenderItem title={"Family Members (Kids)"} />
         {isMinistryAdmin && (
           <>
             <RenderItem title={"Ministry Admin"} />
@@ -263,7 +276,6 @@ const More = ({ navigation }) => {
             <RenderItem title={"Cell Group Admin"} />
           </>
         )}
-        <RenderItem title={"Settings"} />
         <RenderItem title={"About NLCC"} />
         <RenderItem title={"Sign Out"} />
       </View>

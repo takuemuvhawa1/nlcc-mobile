@@ -208,7 +208,8 @@ const MyProfile = ({ navigation }) => {
         showConfirmButton={true}
         cancelText="No, cancel"
         confirmText="Ok"
-        confirmButtonColor="#F47920"
+        confirmButtonColor="#1a6363"
+        confirmButtonStyle={{width: "40%", alignItems: "center"}}
         onCancelPressed={() => {
           console.log("cancelled");
           setShowAlert(false);
@@ -263,18 +264,28 @@ const MyProfile = ({ navigation }) => {
         >
           Hi! {userdata.UserAlias}
         </Text>
+        <Text
+          style={{
+            fontFamily: "GeneralSansMedium",
+            fontSize: 18,
+            color: "#000000",
+            marginTop: 10,
+            alignSelf: "center",
+          }}
+        >
+          (Church Member)
+        </Text>
 
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "space-evenly",
+            justifyContent: "space-between",
             width: "100%",
             borderBottomColor: "#1a636350",
             borderBottomWidth: 0.5,
             paddingBottom: 10,
           }}
         >
-          <View style={{ width: "40%" }}>
             <Text
               style={{
                 fontFamily: "GeneralSansMedium",
@@ -283,10 +294,8 @@ const MyProfile = ({ navigation }) => {
                 marginTop: 40,
               }}
             >
-              Zone
+              Gender
             </Text>
-          </View>
-          <View style={{ width: "60%" }}>
             <Text
               style={{
                 fontFamily: "GeneralSansMedium",
@@ -296,9 +305,105 @@ const MyProfile = ({ navigation }) => {
                 alignSelf: "flex-end",
               }}
             >
+              {userdata.UserGender}
+            </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            borderBottomColor: "#1a636350",
+            borderBottomWidth: 0.5,
+            paddingBottom: 10,
+            marginTop: 10,
+          }}
+        >
+            <Text
+              style={{
+                fontFamily: "GeneralSansMedium",
+                fontSize: 18,
+                color: "#000000",
+              }}
+            >
+              Email
+            </Text>
+            <Text
+              style={{
+                fontFamily: "GeneralSansMedium",
+                fontSize: 18,
+                color: "#1a6363",
+                alignSelf: "flex-end",
+              }}
+            >
+              {userdata.UserEmail}
+            </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            borderBottomColor: "#1a636350",
+            borderBottomWidth: 0.5,
+            paddingBottom: 10,
+            marginTop: 10,
+          }}
+        >
+         
+            <Text
+              style={{
+                fontFamily: "GeneralSansMedium",
+                fontSize: 18,
+                color: "#000000",
+              }}
+            >
+              Phone
+            </Text>
+       
+         
+            <Text
+              style={{
+                fontFamily: "GeneralSansMedium",
+                fontSize: 18,
+                color: "#1a6363",
+                alignSelf: "flex-end",
+              }}
+            >
+              {userdata.UserPhone}
+            </Text>
+          
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            borderBottomColor: "#1a636350",
+            borderBottomWidth: 0.5,
+            paddingBottom: 10,
+            marginTop: 10,
+          }}
+        >
+            <Text
+              style={{
+                fontFamily: "GeneralSansMedium",
+                fontSize: 18,
+                color: "#000000",
+              }}
+            >
+              Zone
+            </Text>
+            <Text
+              style={{
+                fontFamily: "GeneralSansMedium",
+                fontSize: 18,
+                color: "#1a6363",
+                alignSelf: "flex-end",
+              }}
+            >
               {userdata.UserZone}
             </Text>
-          </View>
         </View>
 
         {userdata.UserCellGroups.length > 0 && (

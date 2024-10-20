@@ -7,11 +7,11 @@ import {
   Image,
   TextInput,
   FlatList,
-  Keyboard
+  Keyboard,
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import moment from 'moment';
+import moment from "moment";
 import {
   FontAwesome6,
   Octicons,
@@ -99,7 +99,7 @@ const apiData = [
   },
 ];
 
-const Contributions = ({ navigation,props }) => {
+const Contributions = ({ navigation, props }) => {
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
     GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
@@ -125,57 +125,56 @@ const Contributions = ({ navigation,props }) => {
     setAlerttitle(ttl);
   };
 
-  const SingleItem = ({ id, name, amount, date }) => (
-    <TouchableOpacity style={{
-          flexDirection: "row",
-          width:'47%',
-          height: 100,
-          backgroundColor: "white",
-          borderColor: "#1a636340",
-          borderWidth: 1,
-          borderRadius: 8,
-          paddingHorizontal: 15,
-          marginTop: 10
-        }}
-        
-         onPress={() => showGroup(id)}>
-      
-        <View style={{ width: "100%" }}>
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: "GeneralSansMedium",
-              textAlign: "flex-start",
-              color: "#000000",
-              marginTop: 10,
-            }}
-          >
-            {name}
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: "GeneralSansRegular",
-              textAlign: "flex-start",
-              color: "#bd7925",
-              marginTop: 7,
-            }}
-          >
-            {date}
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: "GeneralSansRegular",
-              textAlign: "flex-start",
-              color: "#000000",
-              marginTop: 7,
-            }}
-          >
-            ${amount}
-          </Text>
-        </View>
-
+  const SingleItem = ({ id, name, amount, date, currency }) => (
+    <TouchableOpacity
+      style={{
+        flexDirection: "row",
+        width: "47%",
+        height: 100,
+        backgroundColor: "white",
+        borderColor: "#1a636340",
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingHorizontal: 15,
+        marginTop: 10,
+      }}
+      onPress={() => showGroup(id)}
+    >
+      <View style={{ width: "100%" }}>
+        <Text
+          style={{
+            fontSize: 14,
+            fontFamily: "GeneralSansMedium",
+            textAlign: "flex-start",
+            color: "#000000",
+            marginTop: 10,
+          }}
+        >
+          {name}
+        </Text>
+        <Text
+          style={{
+            fontSize: 14,
+            fontFamily: "GeneralSansRegular",
+            textAlign: "flex-start",
+            color: "#bd7925",
+            marginTop: 7,
+          }}
+        >
+          {date}
+        </Text>
+        <Text
+          style={{
+            fontSize: 14,
+            fontFamily: "GeneralSansRegular",
+            textAlign: "flex-start",
+            color: "#000000",
+            marginTop: 7,
+          }}
+        >
+          {amount}{" "}{currency}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 
@@ -184,7 +183,8 @@ const Contributions = ({ navigation,props }) => {
       id={item.ContributionID}
       name={item.ProjectName}
       amount={item.Amount}
-      date={moment(item.Date).format('DD-MM-YYYY')}
+      currency={item.currency}
+      date={moment(item.Date).format("DD-MM-YYYY")}
     />
   );
 
@@ -222,7 +222,9 @@ const Contributions = ({ navigation,props }) => {
 
   const findSearched = (text) => {
     setSearchtext(text);
-    const filtered = data.filter((item) =>item.ProjectName.toLowerCase().includes(text.toLowerCase()));
+    const filtered = data.filter((item) =>
+      item.ProjectName.toLowerCase().includes(text.toLowerCase())
+    );
     setFilteredData(filtered);
   };
 
@@ -264,7 +266,8 @@ const Contributions = ({ navigation,props }) => {
         showConfirmButton={true}
         cancelText="No, cancel"
         confirmText="Ok"
-        confirmButtonColor="#F47920"
+        confirmButtonColor="#1a6363"
+        confirmButtonStyle={{ width: "40%", alignItems: "center" }}
         onCancelPressed={() => {
           console.log("cancelled");
           setShowAlert(false);
@@ -294,7 +297,7 @@ const Contributions = ({ navigation,props }) => {
               marginTop: 10,
             }}
           >
-            Contributions
+            Contributions - Cash
           </Text>
         </View>
         <View
@@ -310,6 +313,30 @@ const Contributions = ({ navigation,props }) => {
           />
         </View>
       </View>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Donations")}
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "50%",
+          backgroundColor: "#1a6363",
+          borderWidth: 0.5,
+          height: 42,
+          borderRadius: 8,
+          alignSelf: "flex-end",
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: "GeneralSansMedium",
+            fontSize: 14,
+            color: "#ffffff",
+          }}
+        >
+         View Donations
+        </Text>
+      </TouchableOpacity>
       <View style={styles.viewMiddle}>
         <View
           style={{
@@ -334,110 +361,106 @@ const Contributions = ({ navigation,props }) => {
               />
             </View>
           </View>
-          <View style={{paddingBottom: 20, height: '94%'}}>
-          {filtereddata && (
-            <>
-            <FlatList
-              vertical
-              data={filtereddata}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              showsVerticalScrollIndicator={false}
-              numColumns={2}
-              columnWrapperStyle={{justifyContent: 'space-between'}}
-              contentContainerStyle={{paddingBottom:100}} 
-            />
-            </>
-          )}
-
+          <View style={{ paddingBottom: 20, height: "94%" }}>
+            {filtereddata && (
+              <>
+                <FlatList
+                  vertical
+                  data={filtereddata}
+                  renderItem={renderItem}
+                  keyExtractor={(item) => item.id}
+                  showsVerticalScrollIndicator={false}
+                  numColumns={2}
+                  columnWrapperStyle={{ justifyContent: "space-between" }}
+                  contentContainerStyle={{ paddingBottom: 100 }}
+                />
+              </>
+            )}
           </View>
         </View>
       </View>
       <View style={styles.viewBottom}>
-        {showTabs && <>
-        <View style={styles.viewInTabs}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Home")}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <Ionicons color="#1a6363" name="home" size={25} />
-            <Text
-              style={{
-                fontFamily: "GeneralSansRegular",
-                fontSize: 14,
-                color: "#1a6363",
-              }}
-            >
-              Home
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Sermons")}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <FontAwesome6 color="#1a6363" name="book-bible" size={25} />
-            <Text
-              style={{
-                fontFamily: "GeneralSansRegular",
-                fontSize: 14,
-                color: "#1a6363",
-              }}
-            >
-              Sermons
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <FontAwesome6
-              color="#bd7925"
-              name="money-check"
-              size={25}
-            />
-            <Text
-              style={{
-                fontFamily: "GeneralSansRegular",
-                fontSize: 14,
-                color: "#bd7925",
-              }}
-            >
-              Contributions
-            </Text>
-          </TouchableOpacity>
+        {showTabs && (
+          <>
+            <View style={styles.viewInTabs}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Home")}
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <Ionicons color="#1a6363" name="home" size={25} />
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#1a6363",
+                  }}
+                >
+                  Home
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Sermons")}
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <FontAwesome6 color="#1a6363" name="book-bible" size={25} />
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#1a6363",
+                  }}
+                >
+                  Sermons
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <FontAwesome6 color="#bd7925" name="money-check" size={25} />
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#bd7925",
+                  }}
+                >
+                  Contributions
+                </Text>
+              </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Events")}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <FontAwesome6 color="#1a6363" name="building-user" size={25} />
-            <Text
-              style={{
-                fontFamily: "GeneralSansRegular",
-                fontSize: 14,
-                color: "#1a6363",
-              }}
-            >
-              Events
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("More")}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <AntDesign color="#1a6363" name="appstore1" size={25} />
-            <Text
-              style={{
-                fontFamily: "GeneralSansRegular",
-                fontSize: 14,
-                color: "#1a6363",
-              }}
-            >
-              More
-            </Text>
-          </TouchableOpacity>
-        </View>
-        
-        </>}
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Events")}
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <FontAwesome6 color="#1a6363" name="building-user" size={25} />
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#1a6363",
+                  }}
+                >
+                  Events
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("More")}
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <AntDesign color="#1a6363" name="appstore1" size={25} />
+                <Text
+                  style={{
+                    fontFamily: "GeneralSansRegular",
+                    fontSize: 14,
+                    color: "#1a6363",
+                  }}
+                >
+                  More
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
     </LinearGradient>
   );
@@ -468,7 +491,6 @@ const styles = StyleSheet.create({
     flex: 8,
     flexDirection: "column",
     width: "100%",
-    marginTop: 10,
   },
   viewBottom: {
     flex: 1,

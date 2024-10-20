@@ -1,30 +1,22 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
-  ImageBackground,
   Text,
   TouchableOpacity,
   Image,
-  ScrollView,
   TextInput,
   FlatList,
-  Linking,
-  Keyboard
+  Keyboard,
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "@react-navigation/native";
+import moment from "moment";
 import {
-  FontAwesome5,
   FontAwesome6,
   Octicons,
-  MaterialIcons,
-  FontAwesome,
-  MaterialCommunityIcons,
   Ionicons,
-  Foundation,
-  AntDesign
+  AntDesign,
 } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -36,78 +28,78 @@ const apiData = [
   {
     id: "1",
     name: "Kingdom Cathedral",
-    weblink: "www.youtube.com",
+    amount: "25.00",
     date: "12-12-2000",
   },
   {
     id: "2",
     name: "Church Renovations",
-    weblink: "www.youtube.com0",
+    amount: "500.00",
     date: "12-12-2000",
   },
   {
     id: "3",
     name: "Special Offering",
-    weblink: "www.youtube.com",
+    amount: "15.00",
     date: "12-12-2000",
   },
   {
     id: "4",
     name: "Kingdom Cathedral",
-    weblink: "www.youtube.com",
+    amount: "25.00",
     date: "12-12-2000",
   },
   {
     id: "5",
     name: "Kingdom Cathedral",
-    weblink: "www.youtube.com",
+    amount: "25.00",
     date: "12-12-2000",
   },
   {
     id: "6",
     name: "Church Renovations",
-    weblink: "www.youtube.com0",
+    amount: "500.00",
     date: "12-12-2000",
   },
   {
     id: "7",
     name: "Special Offering",
-    weblink: "www.youtube.com",
+    amount: "15.00",
     date: "12-12-2000",
   },
   {
     id: "8",
     name: "Kingdom Cathedral",
-    weblink: "www.youtube.com",
+    amount: "25.00",
     date: "12-12-2000",
   },
   {
     id: "9",
     name: "Kingdom Cathedral",
-    weblink: "www.youtube.com",
+    amount: "25.00",
     date: "12-12-2000",
   },
   {
     id: "10",
     name: "Church Renovations",
-    weblink: "www.youtube.com0",
+    amount: "500.00",
     date: "12-12-2000",
   },
   {
     id: "11",
     name: "Special Offering",
-    weblink: "www.youtube.com",
+    amount: "15.00",
     date: "12-12-2000",
   },
   {
     id: "12",
     name: "Kingdom Cathedral",
-    weblink: "www.youtube.com",
+    amount: "25.00",
     date: "12-12-2000",
   },
 ];
 
-const Sermons = ({ navigation, props }) => {
+const Donations = ({ navigation, props }) => {
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
     GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
@@ -126,86 +118,72 @@ const Sermons = ({ navigation, props }) => {
   const [alerttext, setAlerttext] = React.useState("");
   const [alerttitle, setAlerttitle] = React.useState("");
   const isFocused = useIsFocused();
+
   const doAlert = (txt, ttl) => {
     setShowAlert(!showAlert);
     setAlerttext(txt);
     setAlerttitle(ttl);
   };
 
-  const SingleItem = ({ id, name, weblink, date }) => (
+  const SingleItem = ({ id, item, reason, date }) => (
     <TouchableOpacity
-      style={{ marginTop: 10 }}
-      onPress={() => Linking.openURL(`${weblink}`)}
+      style={{
+        flexDirection: "row",
+        width: "47%",
+        height: 100,
+        backgroundColor: "white",
+        borderColor: "#1a636340",
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingHorizontal: 15,
+        marginTop: 10,
+      }}
+      onPress={() => showGroup(id)}
     >
-      <View
-        style={{
-          flexDirection: "row",
-          width: "100%",
-          height: 100,
-          backgroundColor: "white",
-          borderColor: "#1a636340",
-          borderWidth: 1,
-          borderRadius: 8,
-          paddingHorizontal: 15,
-        }}
-      >
-        <View style={{ width: "70%" }}>
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: "GeneralSansMedium",
-              textAlign: "flex-start",
-              color: "#000000",
-              marginTop: 10,
-            }}
-          >
-            {name}
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: "GeneralSansRegular",
-              textAlign: "flex-start",
-              color: "#bd7925",
-              marginTop: 7,
-            }}
-          >
-            {date}
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: "GeneralSansRegular",
-              textAlign: "flex-start",
-              color: "#000000",
-              marginTop: 7,
-            }}
-          >
-            {weblink}
-          </Text>
-        </View>
-        <View
+      <View style={{ width: "100%" }}>
+        <Text
           style={{
-            width: "30%",
-            justifyContent: "center",
-            alignItems: "center",
+            fontSize: 14,
+            fontFamily: "GeneralSansMedium",
+            textAlign: "flex-start",
+            color: "#000000",
+            marginTop: 10,
           }}
         >
-          <Image
-            style={styles.imgYouTube}
-            source={require("../../assets/youtube5.png")}
-          />
-        </View>
+          {date}
+        </Text>
+        <Text
+          style={{
+            fontSize: 14,
+            fontFamily: "GeneralSansRegular",
+            textAlign: "flex-start",
+            color: "#bd7925",
+            marginTop: 7,
+          }}
+        >
+          {item}
+        </Text>
+        <Text
+          style={{
+            fontSize: 14,
+            fontFamily: "GeneralSansRegular",
+            textAlign: "flex-start",
+            color: "#000000",
+            marginTop: 7,
+          }}
+        >
+          {reason}
+        </Text>
       </View>
     </TouchableOpacity>
   );
 
   const renderItem = ({ item }) => (
     <SingleItem
-      id={item.id}
-      name={item.name}
-      weblink={item.weblink}
-      date={item.date}
+      id={item.ContributionID}
+      date={moment(item.Date).format("DD-MM-YYYY")}
+      item={item.item}
+      reason={item.reason}
     />
   );
 
@@ -222,8 +200,8 @@ const Sermons = ({ navigation, props }) => {
       const apiLink = Apilink.getLink();
 
       const asynctoken = await AsyncStorage.getItem("Tkn");
-
-      let res = await fetch(`${apiLink}sermons`, {
+      const userId = await AsyncStorage.getItem("UserID");
+      let res = await fetch(`${apiLink}donations/member/${userId}`, {
         method: "get",
         headers: {
           "Content-Type": "application/json",
@@ -243,7 +221,7 @@ const Sermons = ({ navigation, props }) => {
   const findSearched = (text) => {
     setSearchtext(text);
     const filtered = data.filter((item) =>
-      item.name.toLowerCase().includes(text.toLowerCase())
+      item.item.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredData(filtered);
   };
@@ -287,7 +265,7 @@ const Sermons = ({ navigation, props }) => {
         cancelText="No, cancel"
         confirmText="Ok"
         confirmButtonColor="#1a6363"
-        confirmButtonStyle={{width: "40%", alignItems: "center"}}
+        confirmButtonStyle={{ width: "40%", alignItems: "center" }}
         onCancelPressed={() => {
           console.log("cancelled");
           setShowAlert(false);
@@ -317,7 +295,7 @@ const Sermons = ({ navigation, props }) => {
               marginTop: 10,
             }}
           >
-            Sermons
+            Contributions - Donations
           </Text>
         </View>
         <View
@@ -333,6 +311,30 @@ const Sermons = ({ navigation, props }) => {
           />
         </View>
       </View>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Contributions")}
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "50%",
+          backgroundColor: "#1a6363",
+          borderWidth: 0.5,
+          height: 42,
+          borderRadius: 8,
+          alignSelf: "flex-end",
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: "GeneralSansMedium",
+            fontSize: 14,
+            color: "#ffffff",
+          }}
+        >
+         View Cash Contributions
+        </Text>
+      </TouchableOpacity>
       <View style={styles.viewMiddle}>
         <View
           style={{
@@ -353,7 +355,7 @@ const Sermons = ({ navigation, props }) => {
                 value={searchtext}
                 onChangeText={(text) => findSearched(text)}
                 style={styles.inputTextInput}
-                placeholder="Search sermon . . ."
+                placeholder="Search contribution . . ."
               />
             </View>
           </View>
@@ -366,6 +368,8 @@ const Sermons = ({ navigation, props }) => {
                   renderItem={renderItem}
                   keyExtractor={(item) => item.id}
                   showsVerticalScrollIndicator={false}
+                  numColumns={2}
+                  columnWrapperStyle={{ justifyContent: "space-between" }}
                   contentContainerStyle={{ paddingBottom: 100 }}
                 />
               </>
@@ -396,12 +400,12 @@ const Sermons = ({ navigation, props }) => {
                 onPress={() => navigation.navigate("Sermons")}
                 style={{ justifyContent: "center", alignItems: "center" }}
               >
-                <FontAwesome6 color="#bd7925" name="book-bible" size={25} />
+                <FontAwesome6 color="#1a6363" name="book-bible" size={25} />
                 <Text
                   style={{
                     fontFamily: "GeneralSansRegular",
                     fontSize: 14,
-                    color: "#bd7925",
+                    color: "#1a6363",
                   }}
                 >
                   Sermons
@@ -409,14 +413,13 @@ const Sermons = ({ navigation, props }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={{ justifyContent: "center", alignItems: "center" }}
-                onPress={() => navigation.navigate("Contributions")}
               >
-                <FontAwesome6 color="#1a6363" name="money-check" size={25} />
+                <FontAwesome6 color="#bd7925" name="money-check" size={25} />
                 <Text
                   style={{
                     fontFamily: "GeneralSansRegular",
                     fontSize: 14,
-                    color: "#1a6363",
+                    color: "#bd7925",
                   }}
                 >
                   Contributions
@@ -482,16 +485,10 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     resizeMode: "cover",
   },
-  imgYouTube: {
-    width: "100%",
-    height: 60,
-    resizeMode: "cover",
-  },
   viewMiddle: {
     flex: 8,
     flexDirection: "column",
     width: "100%",
-    marginTop: 10,
   },
   viewBottom: {
     flex: 1,
@@ -544,4 +541,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Sermons;
+export default Donations;

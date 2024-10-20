@@ -54,10 +54,10 @@ const Register = ({ navigation }) => {
       return;
     }
 
-    if (!validateEmail(inputs.email)) {
-      doAlert("Email is not in correct format", "Submission Error");
-      return;
-    }
+    // if (!validateEmail(inputs.email)) {
+    //   doAlert("Email is not in correct format", "Submission Error");
+    //   return;
+    // }
 
     setIsactive(true);
 
@@ -114,7 +114,8 @@ const Register = ({ navigation }) => {
         showConfirmButton={true}
         cancelText="No, cancel"
         confirmText="Ok"
-        confirmButtonColor="#F47920"
+        confirmButtonColor="#1a6363"
+        confirmButtonStyle={{width: "40%", alignItems: "center"}}
         onCancelPressed={() => {
           console.log("cancelled");
           setShowAlert(false);
@@ -136,46 +137,28 @@ const Register = ({ navigation }) => {
       <Text style={styles.txtFormName}>Register</Text>
 
       <Text style={styles.txtFormInstruction}>
-        Provide your email address to confirm you are registered. You will
-        receive an OTP and further instructions to set a new password and
-        proceed into the application.
+        Use a valid and working email or phone number to register your account
       </Text>
 
-      <View style={styles.viewInputs}>
-        <View style={styles.viewInput}>
-          <View style={styles.viewIcon}>
-            <SimpleLineIcons
-              name="envelope"
-              size={25}
-              style={styles.icoInputIcon}
-            />
-          </View>
-          <View style={styles.viewTextInput}>
-            <TextInput
-              autoCorrect={false}
-              value={inputs.email}
-              onChangeText={(text) => setInputs({ ...inputs, email: text })}
-              style={styles.inputTextInput}
-              placeholder="Email address"
-            />
-          </View>
-        </View>
+      
+      <View style={styles.viewBtns}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("EmailRegister")}
+          style={styles.btnBtns1}
+        >
+         
+              <Text style={styles.txtBtnTxt1}>Register With Email</Text>
+         
+        </TouchableOpacity>
       </View>
       <View style={styles.viewBtns}>
         <TouchableOpacity
-          onPress={() => handleProceed()}
+          onPress={() => navigation.navigate("PhoneRegister")}
           style={styles.btnBtns1}
         >
-          {isactive && (
-            <>
-              <ActivityIndicator size="large" color="#ffffff" />
-            </>
-          )}
-          {isactive == false && (
-            <>
-              <Text style={styles.txtBtnTxt1}>Proceed</Text>
-            </>
-          )}
+       
+              <Text style={styles.txtBtnTxt1}>Register With Mobile Number</Text>
+          
         </TouchableOpacity>
       </View>
     </LinearGradient>

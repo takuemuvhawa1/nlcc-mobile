@@ -50,7 +50,7 @@ const Ministries = forwardRef((props, ref) => {
   const showMinistry = async (id) => {
     let result = data.find((obj) => obj.id === id);
     console.log(id);
-    console.log(result.admin);
+    console.log(result.leaders);
     await AsyncStorage.setItem("SelectedMinistry", JSON.stringify(result));
     navigation.navigate("Ministry");
   };
@@ -149,7 +149,7 @@ const Ministries = forwardRef((props, ref) => {
     };
 
     asyncFetch();
-    console.log("first");
+  
   }, []);
 
   return (

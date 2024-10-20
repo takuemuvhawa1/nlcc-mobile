@@ -15,6 +15,7 @@ import { SimpleLineIcons } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Apilink from "../constants/Links";
 
 const ForgotPassword = ({ navigation }) => {
 
@@ -49,20 +50,44 @@ const ForgotPassword = ({ navigation }) => {
     );
   };
 
-  const handleProceed = (email) => {
-    navigation.navigate('Otp');
-  };
+  const handleProceed = async () => {
+    if (inputs.email == "") {
+      doAlert("Fill in your email before you proceed", "Submission Error");
+      return;
+    }
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const unloadScreen = () => {
-        console.log('SignIn');
-      };
-      setTimeout(() => {
-        unloadScreen();
-      }, 5000);
-    }, [])
-  );
+    setIsactive(true);
+
+    const apiLink = Apilink.getLink();
+
+    let response = await fetch(`${apiLink}onboarding/forgotpassword`, {
+      method: "post",
+      body: JSON.stringify({
+        email: inputs.email,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    let resJson = await response.json();
+
+    console.log(resJson);
+    
+    setIsactive(false);
+    if (resJson.message == "Email found") {
+      setInputs({
+        email: "",
+      });
+      await AsyncStorage.setItem("ForgotEmail", inputs.email);
+      await AsyncStorage.setItem("ForgotOTP", resJson.randNum.toString());
+      await AsyncStorage.setItem("ForgotName", resJson.member.Name +" "+resJson.member.Surname);
+      navigation.navigate("Otp");
+      return;
+    }else{
+      doAlert("Proceeding failed, email not found!", "Submission Error");
+    }
+  };
 
 
   if (!fontsLoaded) {
@@ -89,7 +114,8 @@ const ForgotPassword = ({ navigation }) => {
         showConfirmButton={true}
         cancelText="No, cancel"
         confirmText="Ok"
-        confirmButtonColor="#F47920"
+        confirmButtonColor="#1a6363"
+        confirmButtonStyle={{width: "40%", alignItems: "center"}}
         onCancelPressed={() => {
           console.log("cancelled");
           setShowAlert(false);

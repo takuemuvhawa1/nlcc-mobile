@@ -101,12 +101,19 @@ const SignIn = ({ navigation }) => {
         resJson.member.Name + " " + resJson.member.Surname
       );
       await AsyncStorage.setItem("UserGender", resJson.member.Gender);
-      await AsyncStorage.setItem("UserEmail", resJson.member.Email);
-      await AsyncStorage.setItem("UserPhone", resJson.member.Phone);
-      await AsyncStorage.setItem("UserAddress", resJson.member.Address);
-      await AsyncStorage.setItem("UserZone", resJson.member.Zone);
-      await AsyncStorage.setItem("UserImg", resJson.member.ProfilePicture);
-
+      await AsyncStorage.setItem("UserEmail", resJson.member.Email == null ? "---": resJson.member.Email);
+      await AsyncStorage.setItem("UserPhone", resJson.member.Phone == null ? "---": resJson.member.Phone);
+      await AsyncStorage.setItem("UserAddress", resJson.member.Address == null? "---": resJson.member.Address);
+      await AsyncStorage.setItem("UserZone", resJson.member.Zone == null? "---": resJson.member.Zone);
+      await AsyncStorage.setItem("UserImg", resJson.member.ProfilePicture == null ? "https://nlcc-backend-1.onrender.com/file/avator.PNG": resJson.member.ProfilePicture);
+      await AsyncStorage.setItem("UserPrefMail", resJson.member.preferred_email == null ? "0": resJson.member.preferred_email.toString());
+      await AsyncStorage.setItem("UserPrefPhone", resJson.member.preferred_phone == null ? "0": resJson.member.preferred_phone.toString());
+      await AsyncStorage.setItem("UserNok", resJson.member.nxt_of_kin == null? "---": resJson.member.nxt_of_kin);
+      await AsyncStorage.setItem("UserNokPhone", resJson.member.nok_phone == null? "---": resJson.member.nok_phone);
+      await AsyncStorage.setItem("UserNokRel", resJson.member.nok_relationship == null? "---": resJson.member.nok_relationship);
+      await AsyncStorage.setItem("UserMarital", resJson.member.marital_status == 0 ? "---": resJson.member.marital_status);
+      await AsyncStorage.setItem("UserSpouse", resJson.member.sponame == null ? "---": resJson.member.sponame);
+      await AsyncStorage.setItem("UserSpousePhone", resJson.member.spophone == null ? "---": resJson.member.spophone);
       if (resJson.member.ministries.length) {
         await AsyncStorage.setItem(
           "UserMinistries",
@@ -158,7 +165,8 @@ const SignIn = ({ navigation }) => {
         showConfirmButton={true}
         cancelText="No, cancel"
         confirmText="Ok"
-        confirmButtonColor="#F47920"
+        confirmButtonColor="#1a6363"
+        confirmButtonStyle={{width: "40%", alignItems: "center"}}
         onCancelPressed={() => {
           console.log("cancelled");
           setShowAlert(false);

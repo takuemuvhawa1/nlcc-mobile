@@ -58,8 +58,13 @@ const Otp = ({ navigation }) => {
     } else {
       console.log("Token: " + token);
       //Store OTP in async
-      await AsyncStorage.setItem("TypedOtp", token);
-      navigation.navigate("ResetPassword");
+      const receivedOtp =  await AsyncStorage.getItem("ForgotOTP");
+      console.log(receivedOtp);
+      if(token != receivedOtp){
+        doAlert("The provided OTP invalid!", "Submission Error");
+      }else{
+        navigation.navigate("ResetPassword");
+      }
     }
   };
 
@@ -95,7 +100,8 @@ const Otp = ({ navigation }) => {
         showConfirmButton={true}
         cancelText="No, cancel"
         confirmText="Ok"
-        confirmButtonColor="#F47920"
+        confirmButtonColor="#1a6363"
+        confirmButtonStyle={{width: "40%", alignItems: "center"}}
         onCancelPressed={() => {
           console.log("cancelled");
           setShowAlert(false);
