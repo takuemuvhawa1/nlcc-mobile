@@ -1,19 +1,18 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Image , ScrollView} from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-
 import {
   FontAwesome,
   Ionicons,
   Feather,
   SimpleLineIcons,
 } from "react-native-vector-icons";
-import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 
 const MyProfile = ({ navigation }) => {
+
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
     GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
@@ -30,22 +29,17 @@ const MyProfile = ({ navigation }) => {
     UserEmail: "",
     UserPhone: "",
     UserAddress: "",
+    UserNok: "",
+    UserNokPhone: "",
+    UserNokRel: "",
+    UserMariral: "",
+    UserSpouse: "",
+    UserSpousePhone: "",
     UserZone: "",
     UserImg: "",
     UserMinistries: [],
     UserCellGroups: [],
   });
-
-  const [isactive, setIsactive] = React.useState(false);
-  const [showAlert, setShowAlert] = React.useState(false);
-  const [alerttext, setAlerttext] = React.useState("");
-  const [alerttitle, setAlerttitle] = React.useState("");
-
-  const doAlert = (txt, ttl) => {
-    setShowAlert(!showAlert);
-    setAlerttext(txt);
-    setAlerttitle(ttl);
-  };
 
   const RenderItem = ({ title }) => (
     <TouchableOpacity
@@ -135,6 +129,12 @@ const MyProfile = ({ navigation }) => {
       const UserAddress = await AsyncStorage.getItem("UserAddress");
       const UserZone = await AsyncStorage.getItem("UserZone");
       const UserImg = await AsyncStorage.getItem("UserImg");
+      const UserNok = await AsyncStorage.getItem("UserNok");
+      const UserNokPhone = await AsyncStorage.getItem("UserNokPhone");
+      const UserNokRel = await AsyncStorage.getItem("UserNokRel");
+      const UserMariral = await AsyncStorage.getItem("UserMarital");
+      const UserSpouse = await AsyncStorage.getItem("UserSpouse");
+      const UserSpousePhone = await AsyncStorage.getItem("UserSpousePhone");
       let UserMinistries = [];
       let UserCellGroups = [];
       try {
@@ -175,6 +175,12 @@ const MyProfile = ({ navigation }) => {
           UserAddress,
           UserZone,
           UserImg,
+          UserNok,
+          UserNokPhone,
+          UserNokRel,
+          UserMariral,
+          UserSpouse,
+          UserSpousePhone: "",
           UserMinistries,
           UserCellGroups,
         });
@@ -196,33 +202,7 @@ const MyProfile = ({ navigation }) => {
       end={{ x: 1, y: 1 }}
     >
       <StatusBar style="dark" translucent={true} hidden={false} />
-      <AwesomeAlert
-        show={showAlert}
-        contentContainerStyle={{ width: 307 }}
-        showProgress={false}
-        title={alerttitle}
-        message={alerttext}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={false}
-        showConfirmButton={true}
-        cancelText="No, cancel"
-        confirmText="Ok"
-        confirmButtonColor="#1a6363"
-        confirmButtonStyle={{width: "40%", alignItems: "center"}}
-        onCancelPressed={() => {
-          console.log("cancelled");
-          setShowAlert(false);
-          setAlerttext("");
-          setAlerttitle("");
-        }}
-        onConfirmPressed={() => {
-          console.log("closed");
-          setShowAlert(false);
-          setAlerttext("");
-          setAlerttitle("");
-        }}
-      />
+      <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.viewTop}>
         <TouchableOpacity
           onPress={() => navigation.navigate("More")}
@@ -286,27 +266,27 @@ const MyProfile = ({ navigation }) => {
             paddingBottom: 10,
           }}
         >
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#000000",
-                marginTop: 40,
-              }}
-            >
-              Gender
-            </Text>
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#1a6363",
-                marginTop: 40,
-                alignSelf: "flex-end",
-              }}
-            >
-              {userdata.UserGender}
-            </Text>
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#000000",
+              marginTop: 40,
+            }}
+          >
+            Gender
+          </Text>
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#1a6363",
+              marginTop: 40,
+              alignSelf: "flex-end",
+            }}
+          >
+            {userdata.UserGender}
+          </Text>
         </View>
         <View
           style={{
@@ -319,25 +299,25 @@ const MyProfile = ({ navigation }) => {
             marginTop: 10,
           }}
         >
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#000000",
-              }}
-            >
-              Email
-            </Text>
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#1a6363",
-                alignSelf: "flex-end",
-              }}
-            >
-              {userdata.UserEmail}
-            </Text>
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#000000",
+            }}
+          >
+            Email
+          </Text>
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#1a6363",
+              alignSelf: "flex-end",
+            }}
+          >
+            {userdata.UserEmail}
+          </Text>
         </View>
         <View
           style={{
@@ -350,29 +330,26 @@ const MyProfile = ({ navigation }) => {
             marginTop: 10,
           }}
         >
-         
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#000000",
-              }}
-            >
-              Phone
-            </Text>
-       
-         
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#1a6363",
-                alignSelf: "flex-end",
-              }}
-            >
-              {userdata.UserPhone}
-            </Text>
-          
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#000000",
+            }}
+          >
+            Phone
+          </Text>
+
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#1a6363",
+              alignSelf: "flex-end",
+            }}
+          >
+            {userdata.UserPhone}
+          </Text>
         </View>
         <View
           style={{
@@ -385,25 +362,57 @@ const MyProfile = ({ navigation }) => {
             marginTop: 10,
           }}
         >
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#000000",
-              }}
-            >
-              Zone
-            </Text>
-            <Text
-              style={{
-                fontFamily: "GeneralSansMedium",
-                fontSize: 18,
-                color: "#1a6363",
-                alignSelf: "flex-end",
-              }}
-            >
-              {userdata.UserZone}
-            </Text>
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#000000",
+            }}
+          >
+            Address
+          </Text>
+
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#1a6363",
+              alignSelf: "flex-end",
+            }}
+          >
+            {userdata.UserAddress}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            borderBottomColor: "#1a636350",
+            borderBottomWidth: 0.5,
+            paddingBottom: 10,
+            marginTop: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#000000",
+            }}
+          >
+            Zone
+          </Text>
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#1a6363",
+              alignSelf: "flex-end",
+            }}
+          >
+            {userdata.UserZone}
+          </Text>
         </View>
 
         {userdata.UserCellGroups.length > 0 && (
@@ -504,7 +513,202 @@ const MyProfile = ({ navigation }) => {
             )}
           </View>
         </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            borderBottomColor: "#1a636350",
+            borderBottomWidth: 0.5,
+            paddingBottom: 10,
+            marginTop: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#000000",
+            }}
+          >
+            Next Of Keen
+          </Text>
+
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#1a6363",
+              alignSelf: "flex-end",
+            }}
+          >
+            {userdata.UserNok}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            borderBottomColor: "#1a636350",
+            borderBottomWidth: 0.5,
+            paddingBottom: 10,
+            marginTop: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#000000",
+            }}
+          >
+            Next Of Keen Phone
+          </Text>
+
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#1a6363",
+              alignSelf: "flex-end",
+            }}
+          >
+            {userdata.UserNokPhone}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            borderBottomColor: "#1a636350",
+            borderBottomWidth: 0.5,
+            paddingBottom: 10,
+            marginTop: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#000000",
+            }}
+          >
+            Next Of Keen Relationship
+          </Text>
+
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#1a6363",
+              alignSelf: "flex-end",
+            }}
+          >
+            {userdata.UserNokRel}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            borderBottomColor: "#1a636350",
+            borderBottomWidth: 0.5,
+            paddingBottom: 10,
+            marginTop: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#000000",
+            }}
+          >
+            Marital Status
+          </Text>
+
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#1a6363",
+              alignSelf: "flex-end",
+            }}
+          >
+            {userdata.UserMariral}
+          </Text>
+        </View>
+        {userdata.UserMariral == "Married"&&<>
+          <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            borderBottomColor: "#1a636350",
+            borderBottomWidth: 0.5,
+            paddingBottom: 10,
+            marginTop: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#000000",
+            }}
+          >
+            Spouse Name
+          </Text>
+
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#1a6363",
+              alignSelf: "flex-end",
+            }}
+          >
+            {userdata.UserSpouse}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            borderBottomColor: "#1a636350",
+            borderBottomWidth: 0.5,
+            paddingBottom: 10,
+            marginTop: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#000000",
+            }}
+          >
+           Spouse Phone
+          </Text>
+
+          <Text
+            style={{
+              fontFamily: "GeneralSansMedium",
+              fontSize: 18,
+              color: "#1a6363",
+              alignSelf: "flex-end",
+            }}
+          >
+            {userdata.UserSpousePhone}
+          </Text>
+        </View>
+        </>}
       </View>
+      </ScrollView>
     </LinearGradient>
   );
 };
@@ -543,6 +747,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     marginTop: 10,
+    marginBottom: 30,
   },
 });
 

@@ -5,21 +5,14 @@ import React, {
   useImperativeHandle
 } from "react";
 import {
-  StyleSheet,
   View,
-  ImageBackground,
   Text,
   TouchableOpacity,
-  FlatList,
-  Keyboard,
+  FlatList
 } from "react-native";
-import { useFonts } from "expo-font";
-import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "@react-navigation/native";
 import { MaterialIcons } from "react-native-vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { useIsFocused } from "@react-navigation/native";
 import Apilink from "../constants/Links";
 
 const Ministries = forwardRef((props, ref) => {
@@ -55,9 +48,7 @@ const Ministries = forwardRef((props, ref) => {
     navigation.navigate("Ministry");
   };
 
-  const isFocused = useIsFocused();
-
-  const SingleItem = ({ id, name, description, admin, adminphone, joined }) => (
+  const SingleItem = ({ id, name, joined }) => (
     <TouchableOpacity
       style={{ marginTop: 10 }}
       onPress={() => showMinistry(id)}
@@ -114,19 +105,9 @@ const Ministries = forwardRef((props, ref) => {
     <SingleItem
       id={item.id}
       name={item.name}
-      description={item.description}
-      admin={item.admin}
-      adminphone={item.adminphone}
       joined={item.joined}
     />
   );
-
-  // useEffect(() => {
-  //   const asyncFetch = () => {
-  //     setData(apiData);
-  //   };
-  //   asyncFetch();
-  // }, []);
 
   useEffect(() => {
     const asyncFetch = async () => {

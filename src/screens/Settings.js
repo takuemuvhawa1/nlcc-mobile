@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import RNPickerSelect from "react-native-picker-select";
 import Checkbox from "react-native-community-checkbox";
 import {
   FontAwesome,
@@ -32,6 +31,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { Avatar } from "react-native-elements";
 import axios from "axios";
+import { Picker } from "@react-native-picker/picker";
 
 const Settings = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
@@ -79,14 +79,6 @@ const Settings = ({ navigation }) => {
     setAlerttitle(ttl);
   };
 
-  const [uploaddata, setUploaddata] = React.useState({
-    name1: "",
-    type1: "",
-    uri1: "",
-    ext1: "",
-  });
-
-  const [selectedImage, setSelectedImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [profileImage, setProfileimage] = useState("");
 
@@ -301,14 +293,6 @@ const Settings = ({ navigation }) => {
       name: `profile-image.${ext}`,
     });
 
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      transformRequest: () => {
-        return formData;
-      },
-    };
     const apiLink = Apilink.getLink();
     await axios
       .post(`${apiLink}upload/${UserID}`, formData, {
@@ -326,6 +310,7 @@ const Settings = ({ navigation }) => {
           setnewimg();
           setProfileimage("");
           setIsactive2(false);
+          AsyncStorage.setItem("UserImg", response.data.Filename);
           doAlert("Image uploaded successfully", "Successfull");
           return;
         }
@@ -1037,32 +1022,36 @@ const Settings = ({ navigation }) => {
               />
             </View>
             <View style={styles.viewPickerInput}>
-              <RNPickerSelect
-                onValueChange={(text) => setNok({ ...nok, relationship: text })}
-                placeholder={{
-                  label: "Relationship",
-                  value: null,
+              <Picker
+                selectedValue={nok.relationship}
+                onValueChange={(value) => {
+                  setNok({ ...nok, relationship: value });
                 }}
-                style={{
-                  placeholder: { color: "#00000085" },
-                  inputIOS: { color: "#000000" },
-                  inputAndroid: {
-                    color: "#000000",
-                    fontFamily: "GeneralSansMedium",
-                    fontSize: 16,
-                  },
-                }}
-                items={[
-                  { value: "Mother", label: "Mother", key: "1" },
-                  {
-                    value: "Father",
-                    label: "Father",
-                    key: "2",
-                  },
-                  { value: "Sister", label: "Sister", key: "3" },
-                  { value: "Brother", label: "Brother", key: "4" },
-                ]}
-              />
+                style={
+                  nok.relationship == ""
+                    ? {
+                        width: "100%",
+                        height: 55,
+                        color: "#00000090",
+                        fontFamily: "GeneralSansMedium",
+                        fontSize: 16,
+                      }
+                    : {
+                        width: "100%",
+                        height: 55,
+                        color: "#000000",
+                        fontFamily: "GeneralSansMedium",
+                        fontSize: 16,
+                      }
+                }
+              >
+                <Picker.Item value="" label="Relationship" />
+                <Picker.Item value="Mother" label="Mother" />
+                <Picker.Item value="Father" label="Father" />
+                <Picker.Item value="Sister" label="Sister" />
+                <Picker.Item value="Brother" label="Brother" />
+                <Picker.Item value="Aunt" label="Aunt" />
+              </Picker>
             </View>
           </View>
 
@@ -1076,34 +1065,38 @@ const Settings = ({ navigation }) => {
               <Feather name="users" size={25} style={{ color: "#00000050" }} />
             </View>
             <View style={styles.viewPickerInput}>
-              <RNPickerSelect
-                onValueChange={(text) => setNok({ ...nok, marital: text })}
-                placeholder={{
-                  label: "Marital status",
-                  value: null,
+              <Picker
+                selectedValue={nok.marital}
+                onValueChange={(value) => {
+                  setNok({ ...nok, marital: value });
                 }}
-                style={{
-                  placeholder: { color: "#00000085" },
-                  inputIOS: { color: "#000000" },
-                  inputAndroid: {
-                    color: "#000000",
-                    fontFamily: "GeneralSansMedium",
-                    fontSize: 16,
-                  },
-                }}
-                items={[
-                  { value: "Single", label: "Single", key: "1" },
-                  {
-                    value: "Married",
-                    label: "Married",
-                    key: "2",
-                  },
-                  { value: "Divorced", label: "Divorced", key: "3" },
-                  { value: "Engaged", label: "Engaged", key: "4" },
-                  { value: "Widowed", label: "Widowed", key: "5" },
-                ]}
-              />
+                style={
+                  nok.marital == ""
+                    ? {
+                        width: "100%",
+                        height: 55,
+                        color: "#00000090",
+                        fontFamily: "GeneralSansMedium",
+                        fontSize: 16,
+                      }
+                    : {
+                        width: "100%",
+                        height: 55,
+                        color: "#000000",
+                        fontFamily: "GeneralSansMedium",
+                        fontSize: 16,
+                      }
+                }
+              >
+                <Picker.Item value="" label="Marital Status" />
+                <Picker.Item value="Single" label="Single" />
+                <Picker.Item value="Married" label="Married" />
+                <Picker.Item value="Divorced" label="Divorced" />
+                <Picker.Item value="Engaged" label="Engaged" />
+                <Picker.Item value="Widowed" label="Widowed" />
+              </Picker>
             </View>
+            
           </View>
           {nok.marital == "Married" && (
             <>
@@ -1313,27 +1306,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 10,
     marginLeft: 60,
-  },
-  btnUpload: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 7,
-    height: 55,
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    flexDirection: "row",
-    marginTop: 12,
-  },
-  txtUpload: {
-    fontSize: 16,
-    fontFamily: "GeneralSansRegular",
-    textAlign: "center",
-    color: "#F47920",
-  },
-  viewInputs: {
-    flexDirection: "column",
-    width: "100%",
-    marginTop: 10,
-    paddingHorizontal: 20,
   },
   viewPickerInput: {
     width: "89%",

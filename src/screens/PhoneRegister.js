@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "@react-navigation/native";
 import {
   FontAwesome5,
   AntDesign,
@@ -34,7 +33,6 @@ const PhoneRegister = ({ navigation }) => {
     PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
   });
 
-  const [hidepin, setHidepin] = React.useState(true);
   const [inputs, setInputs] = React.useState({
     registerwith: "Email",
     name: "",
@@ -58,12 +56,6 @@ const PhoneRegister = ({ navigation }) => {
     setAlerttitle(ttl);
   };
 
-  const validateEmail = (email) => {
-    return email.match(
-      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
-  };
-
   const dropDown = () => {
     setDrooped(!drooped);
     console.log("first");
@@ -84,11 +76,6 @@ const PhoneRegister = ({ navigation }) => {
       doAlert("Fill in your email before you proceed", "Submission Error");
       return;
     }
-
-    // if (!validateEmail(inputs.email)) {
-    //   doAlert("Email is not in correct format", "Submission Error");
-    //   return;
-    // }
 
     setIsactive(true);
 
@@ -926,13 +913,6 @@ const styles = StyleSheet.create({
     height: 40,
     alignSelf: "flex-end",
     resizeMode: "cover"
-  },
-  txtTagline: {
-    fontSize: 14,
-    fontFamily: "PlayfairDisplayRegular",
-    textAlign: "center",
-    color: "#1a6363",
-    marginTop: 15,
   },
   txtFormName: {
     fontSize: 20,

@@ -1,24 +1,14 @@
-import React, { useState, useEffect, forwardRef,
-  useImperativeHandle } from "react";
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import {
-  StyleSheet,
   View,
-  ImageBackground,
   Text,
   TouchableOpacity,
-  Image,
-  ScrollView,
-  TextInput,
-  FlatList,
-  Keyboard,
+  FlatList
 } from "react-native";
-import { useFonts } from "expo-font";
-import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "@react-navigation/native";
+
 import { MaterialIcons } from "react-native-vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from '@react-navigation/native';
-import { useIsFocused } from "@react-navigation/native";
 import Apilink from "../constants/Links";
 
 const Cellgroups = forwardRef((props, ref) =>  {
@@ -29,13 +19,9 @@ const Cellgroups = forwardRef((props, ref) =>  {
 
   const showGroup = async (id) => {
     let result = data.find((obj) => obj.id === id);
-    console.log(id);
-    console.log(result.admin);
     await AsyncStorage.setItem("SelectedGroup", JSON.stringify(result));
     navigation.navigate("CellGroup");
   };
-
-  const isFocused = useIsFocused();
 
   useImperativeHandle(ref, () => ({
     getFilterValue(val) {
@@ -47,7 +33,7 @@ const Cellgroups = forwardRef((props, ref) =>  {
     },
   }));
 
-  const SingleItem = ({ id, name, location,description, admin, adminphone, joined }) => (
+  const SingleItem = ({ id, name, location, joined }) => (
     <TouchableOpacity
       style={{ marginTop: 10 }}
       onPress={() => showGroup(id)}
@@ -105,19 +91,9 @@ const Cellgroups = forwardRef((props, ref) =>  {
       id={item.id}
       name={item.name}
       location={item.location}
-      description={item.description}
-      admin={item.admin}
-      adminphone={item.adminphone}
       joined={item.joined}
     />
   );
-
-  // useEffect(() => {
-  //   const asyncFetch = () => {
-  //     setData(apiData);
-  //   };
-  //   asyncFetch();
-  // }, []);
 
   useEffect(() => {
     const asyncFetch = async () => {

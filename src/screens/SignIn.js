@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
@@ -16,6 +16,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Apilink from "../constants/Links";
+
 
 const SignIn = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
@@ -28,8 +29,8 @@ const SignIn = ({ navigation }) => {
 
   const [hidepin, setHidepin] = React.useState(true);
   const [inputs, setInputs] = React.useState({
-    email: "tanyaradzwasaukira@gmail.com",
-    password: "8899",
+    email: "",
+    password: "",
   });
 
   const [isactive, setIsactive] = React.useState(false);
@@ -43,10 +44,6 @@ const SignIn = ({ navigation }) => {
     setAlerttitle(ttl);
   };
 
-  const validateEmail = (email) => {
-    return email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-  };
-
   const handleSignIn = async () => {
     if (inputs.email == "") {
       doAlert("Fill in your email before you proceed", "Submission Error");
@@ -56,11 +53,6 @@ const SignIn = ({ navigation }) => {
       doAlert("Fill in your password before you proceed", "Submission Error");
       return;
     }
-
-    // if (!validateEmail(inputs.email)) {
-    //   doAlert("Email is not in correct format", "Submission Error");
-    //   return;
-    // }
 
     setIsactive(true);
     const apiLink = Apilink.getLink();
@@ -101,19 +93,68 @@ const SignIn = ({ navigation }) => {
         resJson.member.Name + " " + resJson.member.Surname
       );
       await AsyncStorage.setItem("UserGender", resJson.member.Gender);
-      await AsyncStorage.setItem("UserEmail", resJson.member.Email == null ? "---": resJson.member.Email);
-      await AsyncStorage.setItem("UserPhone", resJson.member.Phone == null ? "---": resJson.member.Phone);
-      await AsyncStorage.setItem("UserAddress", resJson.member.Address == null? "---": resJson.member.Address);
-      await AsyncStorage.setItem("UserZone", resJson.member.Zone == null? "---": resJson.member.Zone);
-      await AsyncStorage.setItem("UserImg", resJson.member.ProfilePicture == null ? "https://nlcc-backend-1.onrender.com/file/avator.PNG": resJson.member.ProfilePicture);
-      await AsyncStorage.setItem("UserPrefMail", resJson.member.preferred_email == null ? "0": resJson.member.preferred_email.toString());
-      await AsyncStorage.setItem("UserPrefPhone", resJson.member.preferred_phone == null ? "0": resJson.member.preferred_phone.toString());
-      await AsyncStorage.setItem("UserNok", resJson.member.nxt_of_kin == null? "---": resJson.member.nxt_of_kin);
-      await AsyncStorage.setItem("UserNokPhone", resJson.member.nok_phone == null? "---": resJson.member.nok_phone);
-      await AsyncStorage.setItem("UserNokRel", resJson.member.nok_relationship == null? "---": resJson.member.nok_relationship);
-      await AsyncStorage.setItem("UserMarital", resJson.member.marital_status == 0 ? "---": resJson.member.marital_status);
-      await AsyncStorage.setItem("UserSpouse", resJson.member.sponame == null ? "---": resJson.member.sponame);
-      await AsyncStorage.setItem("UserSpousePhone", resJson.member.spophone == null ? "---": resJson.member.spophone);
+      await AsyncStorage.setItem(
+        "UserEmail",
+        resJson.member.Email == null ? "---" : resJson.member.Email
+      );
+      await AsyncStorage.setItem(
+        "UserPhone",
+        resJson.member.Phone == null ? "---" : resJson.member.Phone
+      );
+      await AsyncStorage.setItem(
+        "UserAddress",
+        resJson.member.Address == null ? "---" : resJson.member.Address
+      );
+      await AsyncStorage.setItem(
+        "UserZone",
+        resJson.member.Zone == null ? "---" : resJson.member.Zone
+      );
+      await AsyncStorage.setItem(
+        "UserImg",
+        resJson.member.ProfilePicture == null
+          ? "https://nlcc-backend-1.onrender.com/file/avator.PNG"
+          : resJson.member.ProfilePicture
+      );
+      await AsyncStorage.setItem(
+        "UserPrefMail",
+        resJson.member.preferred_email == null
+          ? "0"
+          : resJson.member.preferred_email.toString()
+      );
+      await AsyncStorage.setItem(
+        "UserPrefPhone",
+        resJson.member.preferred_phone == null
+          ? "0"
+          : resJson.member.preferred_phone.toString()
+      );
+      await AsyncStorage.setItem(
+        "UserNok",
+        resJson.member.nxt_of_kin == null ? "---" : resJson.member.nxt_of_kin
+      );
+      await AsyncStorage.setItem(
+        "UserNokPhone",
+        resJson.member.nok_phone == null ? "---" : resJson.member.nok_phone
+      );
+      await AsyncStorage.setItem(
+        "UserNokRel",
+        resJson.member.nok_relationship == null
+          ? "---"
+          : resJson.member.nok_relationship
+      );
+      await AsyncStorage.setItem(
+        "UserMarital",
+        resJson.member.marital_status == null
+          ? "---"
+          : resJson.member.marital_status
+      );
+      await AsyncStorage.setItem(
+        "UserSpouse",
+        resJson.member.sponame == null ? "---" : resJson.member.sponame
+      );
+      await AsyncStorage.setItem(
+        "UserSpousePhone",
+        resJson.member.spophone == null ? "---" : resJson.member.spophone
+      );
       if (resJson.member.ministries.length) {
         await AsyncStorage.setItem(
           "UserMinistries",
@@ -133,7 +174,7 @@ const SignIn = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       const clearAsyncStorage = async () => {
-        AsyncStorage.clear();
+        await AsyncStorage.clear();
         console.log("Async Cleared");
       };
 
@@ -166,7 +207,7 @@ const SignIn = ({ navigation }) => {
         cancelText="No, cancel"
         confirmText="Ok"
         confirmButtonColor="#1a6363"
-        confirmButtonStyle={{width: "40%", alignItems: "center"}}
+        confirmButtonStyle={{ width: "40%", alignItems: "center" }}
         onCancelPressed={() => {
           console.log("cancelled");
           setShowAlert(false);
@@ -186,9 +227,6 @@ const SignIn = ({ navigation }) => {
       />
       <Text style={styles.txtTagline}>NEW LIFE COVENANT CHURCH</Text>
       <Text style={styles.txtFormName}>Sign In</Text>
-      {/* <Text style={styles.txtFormInstruction}>
-          Provide your account details and press login button
-        </Text> */}
 
       <View style={styles.viewInputs}>
         <View style={styles.viewInput}>
@@ -264,6 +302,7 @@ const SignIn = ({ navigation }) => {
             </>
           )}
         </TouchableOpacity>
+        
         <Text
           onPress={() => navigation.navigate("ForgotPassword")}
           style={styles.txtForgotPin}
@@ -300,7 +339,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "PlayfairDisplayRegular",
     textAlign: "center",
-    //color: '#FFFFFF',
     color: "#1a6363",
     marginTop: 15,
   },

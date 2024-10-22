@@ -13,11 +13,9 @@ import { useIsFocused } from "@react-navigation/native";
 import {
   FontAwesome6,
   Ionicons,
-  Feather,
   AntDesign,
   ActivityIndicator,
 } from "react-native-vector-icons";
-import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DataTable } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
@@ -53,19 +51,10 @@ const CellgroupMinistry = ({ navigation, props }) => {
   });
 
   const [isactive, setIsactive] = React.useState(false);
-  const [showAlert, setShowAlert] = React.useState(false);
-  const [alerttext, setAlerttext] = React.useState("");
-  const [alerttitle, setAlerttitle] = React.useState("");
 
   const [modalVisible, setModalVisible] = useState(false);
   const handleCancel = () => {
     setModalVisible(false);
-  };
-
-  const doAlert = (txt, ttl) => {
-    setShowAlert(!showAlert);
-    setAlerttext(txt);
-    setAlerttitle(ttl);
   };
 
   const isFocused = useIsFocused();
@@ -85,16 +74,11 @@ const CellgroupMinistry = ({ navigation, props }) => {
       setTableData(members);
     }
   };
-  const [data, setData] = React.useState([]);
+
   const [tableData, setTableData] = React.useState([]);
   const [rmembers, setRmembers] = React.useState([]);
   const [lmembers, setLmembers] = React.useState([]);
   const [members, setMembers] = React.useState([]);
-
-  const [requesting, setRequesting] = useState(false);
-  const [leaving, setLeaving] = useState(false);
-  const [allmembers, setAllmembers] = useState(false);
-  const [acceptdenytext, setAcceptdenytext] = React.useState("");
 
   const [page, setPage] = React.useState(0);
   const [numberOfItemsPerPageList] = React.useState([7, 14, 21]);
@@ -167,17 +151,6 @@ const CellgroupMinistry = ({ navigation, props }) => {
 
       let approveResJson = await approveResponse.json();
       console.log(approveResJson);
-
-      // if (approveResJson.message == "Member ministry updated successfully") {
-      //   doAlert("Member accepted successfully", "Success");
-      //   setIsactive(false);
-      //   return;
-      // }
-      // if (approveResJson.message == "No request found to approve or already approved.") {
-      //   doAlert("Member accepted failed. Contact system admin", "Failed");
-      //   setIsactive(false);
-      //   return;
-      // }
       setIsactive(false);
       navigation.navigate("SelectCellgroup");
     }
@@ -197,24 +170,9 @@ const CellgroupMinistry = ({ navigation, props }) => {
 
       let disapResJson = await disapResponse.json();
       console.log(disapResJson);
-      // if (disapResJson.message == "Member ministry updated successfully") {
-      //   doAlert("Member removed successfully", "Success");
-      //   setIsactive(false);
-      //   return;
-      // }
-      // if (disapResJson.message == "No request found to approve or already approved.") {
-      //   doAlert("Member removal failed. Contact system admin", "Failed");
-      //   setIsactive(false);
-      //   return;
-      // }
       setIsactive(false);
       navigation.navigate("SelectCellgroup");
     }
-
-    // //Member Data Is Set To Leaving Only Because They Are There Already
-    // if (currenttab == 3) {
-    //   console.log("3rd");
-    // }
   };
 
   const handleDenny = () => {
@@ -242,16 +200,6 @@ const CellgroupMinistry = ({ navigation, props }) => {
     let approveResJson = await approveResponse.json();
     console.log(approveResJson);
 
-    // if (approveResJson.message == "Member ministry updated successfully") {
-    //   doAlert("Member accepted successfully", "Success");
-    //   setIsactive(false);
-    //   return;
-    // }
-    // if (approveResJson.message == "No request found to approve or already approved.") {
-    //   doAlert("Member accepted failed. Contact system admin", "Failed");
-    //   setIsactive(false);
-    //   return;
-    // }
     setIsactive(false);
   };
 
@@ -281,33 +229,7 @@ const CellgroupMinistry = ({ navigation, props }) => {
       end={{ x: 1, y: 1 }}
     >
       <StatusBar style="dark" translucent={true} hidden={false} />
-      <AwesomeAlert
-        show={showAlert}
-        contentContainerStyle={{ width: 307 }}
-        showProgress={false}
-        title={alerttitle}
-        message={alerttext}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={false}
-        showConfirmButton={true}
-        cancelText="No, cancel"
-        confirmText="Ok"
-        confirmButtonColor="#1a6363"
-        confirmButtonStyle={{width: "40%", alignItems: "center"}}
-        onCancelPressed={() => {
-          console.log("cancelled");
-          setShowAlert(false);
-          setAlerttext("");
-          setAlerttitle("");
-        }}
-        onConfirmPressed={() => {
-          console.log("closed");
-          setShowAlert(false);
-          setAlerttext("");
-          setAlerttitle("");
-        }}
-      />
+     
       <Modal
         animationType="slide"
         transparent={true}

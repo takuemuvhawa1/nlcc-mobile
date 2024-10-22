@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
-  ImageBackground,
   Text,
   TouchableOpacity,
   Image,
-  ScrollView,
   TextInput,
   FlatList,
   Linking,
@@ -14,98 +12,16 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "@react-navigation/native";
 import {
-  FontAwesome5,
   FontAwesome6,
   Octicons,
-  MaterialIcons,
-  FontAwesome,
-  MaterialCommunityIcons,
   Ionicons,
-  Foundation,
   AntDesign
 } from "react-native-vector-icons";
-import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Apilink from "../constants/Links";
-
-const apiData = [
-  {
-    id: "1",
-    name: "Kingdom Cathedral",
-    weblink: "www.youtube.com",
-    date: "12-12-2000",
-  },
-  {
-    id: "2",
-    name: "Church Renovations",
-    weblink: "www.youtube.com0",
-    date: "12-12-2000",
-  },
-  {
-    id: "3",
-    name: "Special Offering",
-    weblink: "www.youtube.com",
-    date: "12-12-2000",
-  },
-  {
-    id: "4",
-    name: "Kingdom Cathedral",
-    weblink: "www.youtube.com",
-    date: "12-12-2000",
-  },
-  {
-    id: "5",
-    name: "Kingdom Cathedral",
-    weblink: "www.youtube.com",
-    date: "12-12-2000",
-  },
-  {
-    id: "6",
-    name: "Church Renovations",
-    weblink: "www.youtube.com0",
-    date: "12-12-2000",
-  },
-  {
-    id: "7",
-    name: "Special Offering",
-    weblink: "www.youtube.com",
-    date: "12-12-2000",
-  },
-  {
-    id: "8",
-    name: "Kingdom Cathedral",
-    weblink: "www.youtube.com",
-    date: "12-12-2000",
-  },
-  {
-    id: "9",
-    name: "Kingdom Cathedral",
-    weblink: "www.youtube.com",
-    date: "12-12-2000",
-  },
-  {
-    id: "10",
-    name: "Church Renovations",
-    weblink: "www.youtube.com0",
-    date: "12-12-2000",
-  },
-  {
-    id: "11",
-    name: "Special Offering",
-    weblink: "www.youtube.com",
-    date: "12-12-2000",
-  },
-  {
-    id: "12",
-    name: "Kingdom Cathedral",
-    weblink: "www.youtube.com",
-    date: "12-12-2000",
-  },
-];
 
 const Sermons = ({ navigation, props }) => {
   const [fontsLoaded] = useFonts({
@@ -121,16 +37,8 @@ const Sermons = ({ navigation, props }) => {
   const [showTabs, setShowTabs] = useState(true);
 
   const [searchtext, setSearchtext] = React.useState("");
-  const [isactive, setIsactive] = React.useState(false);
-  const [showAlert, setShowAlert] = React.useState(false);
-  const [alerttext, setAlerttext] = React.useState("");
-  const [alerttitle, setAlerttitle] = React.useState("");
   const isFocused = useIsFocused();
-  const doAlert = (txt, ttl) => {
-    setShowAlert(!showAlert);
-    setAlerttext(txt);
-    setAlerttitle(ttl);
-  };
+
 
   const SingleItem = ({ id, name, weblink, date }) => (
     <TouchableOpacity
@@ -209,13 +117,6 @@ const Sermons = ({ navigation, props }) => {
     />
   );
 
-  // useEffect(() => {
-  //   const asyncFetch = () => {
-  //     setData(apiData);
-  //   };
-  //   asyncFetch();
-  // }, []);
-
   useEffect(() => {
     const asyncFetch = async () => {
       //Call API HERE
@@ -274,33 +175,6 @@ const Sermons = ({ navigation, props }) => {
       end={{ x: 1, y: 1 }}
     >
       <StatusBar style="dark" translucent={true} hidden={false} />
-      <AwesomeAlert
-        show={showAlert}
-        contentContainerStyle={{ width: 307 }}
-        showProgress={false}
-        title={alerttitle}
-        message={alerttext}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={false}
-        showConfirmButton={true}
-        cancelText="No, cancel"
-        confirmText="Ok"
-        confirmButtonColor="#1a6363"
-        confirmButtonStyle={{width: "40%", alignItems: "center"}}
-        onCancelPressed={() => {
-          console.log("cancelled");
-          setShowAlert(false);
-          setAlerttext("");
-          setAlerttitle("");
-        }}
-        onConfirmPressed={() => {
-          console.log("closed");
-          setShowAlert(false);
-          setAlerttext("");
-          setAlerttitle("");
-        }}
-      />
       <View style={styles.viewTop}>
         <View
           style={{

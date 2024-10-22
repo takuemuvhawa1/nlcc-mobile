@@ -14,7 +14,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useIsFocused } from "@react-navigation/native";
 import {
   FontAwesome,
-  FontAwesome5,
   Ionicons,
   Feather,
   AntDesign,
@@ -25,7 +24,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DataTable } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import Apilink from "../constants/Links";
-import RNPickerSelect from "react-native-picker-select";
+import { Picker } from "@react-native-picker/picker";
 
 const Kids = ({ navigation, props }) => {
   const [fontsLoaded] = useFonts({
@@ -229,10 +228,7 @@ const Kids = ({ navigation, props }) => {
   const deleteChild = async () => {
     setConfirmDelete(false);
     if (memberdata.name == "") {
-      doAlert(
-        "Deletion failed. Member data is absent",
-        "Submission Error"
-      );
+      doAlert("Deletion failed. Member data is absent", "Submission Error");
       return;
     }
 
@@ -284,7 +280,7 @@ const Kids = ({ navigation, props }) => {
         "Failure"
       );
     }
-  }
+  };
 
   const [tableData, setTableData] = React.useState([]);
 
@@ -515,37 +511,34 @@ const Kids = ({ navigation, props }) => {
                   />
                 </View>
                 <View style={styles.viewPickerInput}>
-                  <RNPickerSelect
-                    onValueChange={(text) =>
-                      setMemberdata({ ...memberdata, gender: text })
+                  <Picker
+                    selectedValue={memberdata.gender}
+                    onValueChange={(value) => {
+                      setMemberdata({ ...memberdata, gender: value });
+                    }}
+                    style={
+                      memberdata.gender == ""
+                        ? {
+                            width: "100%",
+                            height: 55,
+                            color: "#00000090",
+                            fontFamily: "GeneralSansMedium",
+                            fontSize: 16,
+                          }
+                        : {
+                            width: "100%",
+                            height: 55,
+                            color: "#000000",
+                            fontFamily: "GeneralSansMedium",
+                            fontSize: 16,
+                          }
                     }
-                    value={memberdata.gender}
-                    placeholder={{
-                      label: "Gender",
-                      value: null,
-                    }}
-                    style={{
-                      placeholder: { color: "#00000065" },
-                      inputIOS: { color: "#000000" },
-                      inputAndroid: {
-                        color: "#000000",
-                        fontFamily: "GeneralSansMedium",
-                        fontSize: 16,
-                      },
-                    }}
-                    items={[
-                      {
-                        value: "M",
-                        label: "Male",
-                        key: "1",
-                      },
-                      {
-                        value: "F",
-                        label: "Female",
-                        key: "2",
-                      },
-                    ]}
-                  />
+                  >
+                    <Picker.Item value="" label="Gender" />
+                    <Picker.Item value="M" label="Male" />
+                    <Picker.Item value="F" label="Female" />
+                    <Picker.Item value="O" label="Other" />
+                  </Picker>
                 </View>
               </View>
             </View>
@@ -571,388 +564,148 @@ const Kids = ({ navigation, props }) => {
               </View>
               <View style={styles.viewInput}>
                 <View style={[styles.viewDatPickerInput, { width: "30%" }]}>
-                  <RNPickerSelect
-                    onValueChange={(text) =>
-                      setMemberdata({ ...memberdata, dd: text })
+                  <Picker
+                    selectedValue={memberdata.dd}
+                    onValueChange={(value) => {
+                      setMemberdata({ ...memberdata, dd: value });
+                    }}
+                    style={
+                      memberdata.dd == ""
+                        ? {
+                            width: "100%",
+                            height: 55,
+                            color: "#00000090",
+                            fontFamily: "GeneralSansMedium",
+                            fontSize: 16,
+                          }
+                        : {
+                            width: "100%",
+                            height: 55,
+                            color: "#000000",
+                            fontFamily: "GeneralSansMedium",
+                            fontSize: 16,
+                          }
                     }
-                    placeholder={{
-                      label: "",
-                      value: null,
-                    }}
-                    value={memberdata.dd}
-                    style={{
-                      placeholder: { color: "#00000065" },
-                      inputIOS: { color: "#000000" },
-                      inputAndroid: {
-                        color: "#000000",
-                        fontFamily: "GeneralSansMedium",
-                        fontSize: 16,
-                      },
-                    }}
-                    items={[
-                      {
-                        value: "01",
-                        label: "01",
-                        key: "1",
-                      },
-                      {
-                        value: "02",
-                        label: "02",
-                        key: "2",
-                      },
-                      {
-                        value: "03",
-                        label: "03",
-                        key: "3",
-                      },
-                      {
-                        value: "04",
-                        label: "04",
-                        key: "4",
-                      },
-                      {
-                        value: "05",
-                        label: "05",
-                        key: "5",
-                      },
-                      {
-                        value: "06",
-                        label: "06",
-                        key: "6",
-                      },
-                      {
-                        value: "07",
-                        label: "07",
-                        key: "7",
-                      },
-                      {
-                        value: "08",
-                        label: "08",
-                        key: "8",
-                      },
-                      {
-                        value: "09",
-                        label: "09",
-                        key: "9",
-                      },
-                      {
-                        value: "10",
-                        label: "10",
-                        key: "10",
-                      },
-                      {
-                        value: "11",
-                        label: "11",
-                        key: "11",
-                      },
-                      {
-                        value: "12",
-                        label: "12",
-                        key: "12",
-                      },
-                      {
-                        value: "13",
-                        label: "13",
-                        key: "13",
-                      },
-                      {
-                        value: "14",
-                        label: "14",
-                        key: "14",
-                      },
-                      {
-                        value: "15",
-                        label: "15",
-                        key: "15",
-                      },
-                      {
-                        value: "16",
-                        label: "16",
-                        key: "16",
-                      },
-                      {
-                        value: "17",
-                        label: "17",
-                        key: "17",
-                      },
-                      {
-                        value: "18",
-                        label: "18",
-                        key: "18",
-                      },
-                      {
-                        value: "19",
-                        label: "19",
-                        key: "19",
-                      },
-                      {
-                        value: "20",
-                        label: "20",
-                        key: "20",
-                      },
-                      {
-                        value: "21",
-                        label: "21",
-                        key: "21",
-                      },
-                      {
-                        value: "22",
-                        label: "22",
-                        key: "22",
-                      },
-                      {
-                        value: "23",
-                        label: "23",
-                        key: "23",
-                      },
-                      {
-                        value: "24",
-                        label: "24",
-                        key: "24",
-                      },
-                      {
-                        value: "25",
-                        label: "25",
-                        key: "25",
-                      },
-                      {
-                        value: "26",
-                        label: "26",
-                        key: "26",
-                      },
-                      {
-                        value: "27",
-                        label: "27",
-                        key: "27",
-                      },
-                      {
-                        value: "28",
-                        label: "28",
-                        key: "28",
-                      },
-                      {
-                        value: "29",
-                        label: "29",
-                        key: "29",
-                      },
-                      {
-                        value: "30",
-                        label: "30",
-                        key: "30",
-                      },
-                      {
-                        value: "31",
-                        label: "31",
-                        key: "31",
-                      },
-                    ]}
-                  />
+                  >
+                    <Picker.Item value="" label="" />
+                    <Picker.Item value="01" label="01" />
+                    <Picker.Item value="02" label="02" />
+                    <Picker.Item value="03" label="03" />
+                    <Picker.Item value="04" label="04" />
+                    <Picker.Item value="05" label="05" />
+                    <Picker.Item value="06" label="06" />
+                    <Picker.Item value="07" label="07" />
+                    <Picker.Item value="08" label="08" />
+                    <Picker.Item value="09" label="09" />
+                    <Picker.Item value="10" label="10" />
+                    <Picker.Item value="11" label="11" />
+                    <Picker.Item value="12" label="12" />
+                    <Picker.Item value="13" label="13" />
+                    <Picker.Item value="14" label="14" />
+                    <Picker.Item value="15" label="15" />
+                    <Picker.Item value="16" label="16" />
+                    <Picker.Item value="17" label="17" />
+                    <Picker.Item value="18" label="18" />
+                    <Picker.Item value="19" label="19" />
+                    <Picker.Item value="20" label="20" />
+                    <Picker.Item value="21" label="21" />
+                    <Picker.Item value="22" label="22" />
+                    <Picker.Item value="23" label="23" />
+                    <Picker.Item value="24" label="24" />
+                    <Picker.Item value="25" label="25" />
+                    <Picker.Item value="26" label="26" />
+                    <Picker.Item value="27" label="27" />
+                    <Picker.Item value="28" label="28" />
+                    <Picker.Item value="29" label="29" />
+                    <Picker.Item value="30" label="30" />
+                    <Picker.Item value="31" label="31" />
+                  </Picker>
                 </View>
                 <View style={[styles.viewDatPickerInput, { width: "35%" }]}>
-                  <RNPickerSelect
-                    onValueChange={(text) =>
-                      setMemberdata({ ...memberdata, mm: text })
+                  <Picker
+                    selectedValue={memberdata.mm}
+                    onValueChange={(value) => {
+                      setMemberdata({ ...memberdata, mm: value });
+                    }}
+                    style={
+                      memberdata.mm == ""
+                        ? {
+                            width: "100%",
+                            height: 55,
+                            color: "#00000090",
+                            fontFamily: "GeneralSansMedium",
+                            fontSize: 16,
+                          }
+                        : {
+                            width: "100%",
+                            height: 55,
+                            color: "#000000",
+                            fontFamily: "GeneralSansMedium",
+                            fontSize: 16,
+                          }
                     }
-                    value={memberdata.mm}
-                    placeholder={{
-                      label: "",
-                      value: null,
-                    }}
-                    style={{
-                      placeholder: { color: "#00000065" },
-                      inputIOS: { color: "#000000" },
-                      inputAndroid: {
-                        color: "#000000",
-                        fontFamily: "GeneralSansMedium",
-                        fontSize: 16,
-                      },
-                    }}
-                    items={[
-                      {
-                        value: "01",
-                        label: "Jan",
-                        key: "1",
-                      },
-                      {
-                        value: "02",
-                        label: "Feb",
-                        key: "2",
-                      },
-                      {
-                        value: "03",
-                        label: "Mar",
-                        key: "3",
-                      },
-                      {
-                        value: "04",
-                        label: "Apr",
-                        key: "4",
-                      },
-                      {
-                        value: "05",
-                        label: "May",
-                        key: "5",
-                      },
-                      {
-                        value: "06",
-                        label: "Jun",
-                        key: "6",
-                      },
-                      {
-                        value: "07",
-                        label: "Jul",
-                        key: "7",
-                      },
-                      {
-                        value: "08",
-                        label: "Aug",
-                        key: "8",
-                      },
-                      {
-                        value: "09",
-                        label: "Sep",
-                        key: "9",
-                      },
-                      {
-                        value: "10",
-                        label: "Oct",
-                        key: "10",
-                      },
-                      {
-                        value: "11",
-                        label: "Nov",
-                        key: "11",
-                      },
-                      {
-                        value: "12",
-                        label: "Dec",
-                        key: "12",
-                      },
-                    ]}
-                  />
+                  >
+                    <Picker.Item value="" label="" />
+                    <Picker.Item value="01" label="Jan" />
+                    <Picker.Item value="02" label="Feb" />
+                    <Picker.Item value="03" label="Mar" />
+                    <Picker.Item value="04" label="Apr" />
+                    <Picker.Item value="05" label="May" />
+                    <Picker.Item value="06" label="Jun" />
+                    <Picker.Item value="07" label="Jul" />
+                    <Picker.Item value="08" label="Aug" />
+                    <Picker.Item value="09" label="Sep" />
+                    <Picker.Item value="10" label="Oct" />
+                    <Picker.Item value="11" label="Nov" />
+                    <Picker.Item value="12" label="Dec" />
+                  </Picker>
                 </View>
                 <View style={[styles.viewDatPickerInput, { width: "35%" }]}>
-                  <RNPickerSelect
-                    onValueChange={(text) =>
-                      setMemberdata({ ...memberdata, yy: text })
+                  <Picker
+                    selectedValue={memberdata.yy}
+                    onValueChange={(value) => {
+                      setMemberdata({ ...memberdata, yy: value });
+                    }}
+                    style={
+                      memberdata.yy == ""
+                        ? {
+                            width: "100%",
+                            height: 55,
+                            color: "#00000090",
+                            fontFamily: "GeneralSansMedium",
+                            fontSize: 16,
+                          }
+                        : {
+                            width: "100%",
+                            height: 55,
+                            color: "#000000",
+                            fontFamily: "GeneralSansMedium",
+                            fontSize: 16,
+                          }
                     }
-                    placeholder={{
-                      label: "",
-                      value: null,
-                    }}
-                    value={memberdata.yy}
-                    style={{
-                      placeholder: { color: "#00000065" },
-                      inputIOS: { color: "#000000" },
-                      inputAndroid: {
-                        color: "#000000",
-                        fontFamily: "GeneralSansMedium",
-                        fontSize: 16,
-                      },
-                    }}
-                    items={[
-                      {
-                        value: "2024",
-                        label: "2024",
-                        key: "1",
-                      },
-                      {
-                        value: "2023",
-                        label: "2023",
-                        key: "2",
-                      },
-                      {
-                        value: "2022",
-                        label: "2022",
-                        key: "3",
-                      },
-                      {
-                        value: "2021",
-                        label: "2021",
-                        key: "4",
-                      },
-                      {
-                        value: "2020",
-                        label: "2020",
-                        key: "5",
-                      },
-                      {
-                        value: "2019",
-                        label: "2019",
-                        key: "6",
-                      },
-                      {
-                        value: "2018",
-                        label: "2018",
-                        key: "7",
-                      },
-                      {
-                        value: "2017",
-                        label: "2017",
-                        key: "8",
-                      },
-                      {
-                        value: "2016",
-                        label: "2016",
-                        key: "9",
-                      },
-                      {
-                        value: "2015",
-                        label: "2015",
-                        key: "10",
-                      },
-                      {
-                        value: "2014",
-                        label: "2014",
-                        key: "11",
-                      },
-                      {
-                        value: "2013",
-                        label: "2013",
-                        key: "12",
-                      },
-                      {
-                        value: "2012",
-                        label: "2012",
-                        key: "13",
-                      },
-                      {
-                        value: "2011",
-                        label: "2011",
-                        key: "14",
-                      },
-                      {
-                        value: "2010",
-                        label: "2010",
-                        key: "15",
-                      },
-                      {
-                        value: "2009",
-                        label: "2009",
-                        key: "16",
-                      },
-                      {
-                        value: "2008",
-                        label: "2008",
-                        key: "17",
-                      },
-                      {
-                        value: "2007",
-                        label: "2007",
-                        key: "18",
-                      },
-                      {
-                        value: "2006",
-                        label: "2006",
-                        key: "19",
-                      },
-                      {
-                        value: "2005",
-                        label: "2005",
-                        key: "20",
-                      },
-                    ]}
-                  />
+                  >
+                    <Picker.Item value="" label="" />
+                    <Picker.Item value="2024" label="2024" />
+                    <Picker.Item value="2023" label="2023" />
+                    <Picker.Item value="2022" label="2022" />
+                    <Picker.Item value="2021" label="2021" />
+                    <Picker.Item value="2020" label="2020" />
+                    <Picker.Item value="2019" label="2019" />
+                    <Picker.Item value="2018" label="2018" />
+                    <Picker.Item value="2017" label="2017" />
+                    <Picker.Item value="2016" label="2016" />
+                    <Picker.Item value="2015" label="2015" />
+                    <Picker.Item value="2014" label="2014" />
+                    <Picker.Item value="2013" label="2013" />
+                    <Picker.Item value="2012" label="2012" />
+                    <Picker.Item value="2011" label="2011" />
+                    <Picker.Item value="2010" label="2010" />
+                    <Picker.Item value="2009" label="2009" />
+                    <Picker.Item value="2008" label="2008" />
+                    <Picker.Item value="2007" label="2007" />
+                    <Picker.Item value="2006" label="2006" />
+                    <Picker.Item value="2005" label="2005" />
+                  </Picker>
                 </View>
               </View>
             </View>
@@ -972,58 +725,39 @@ const Kids = ({ navigation, props }) => {
                   />
                 </View>
                 <View style={styles.viewPickerInput}>
-                  <RNPickerSelect
-                    onValueChange={(text) =>
-                      setMemberdata({ ...memberdata, relationship: text })
+                  <Picker
+                    selectedValue={memberdata.relationship}
+                    onValueChange={(value) => {
+                      setMemberdata({ ...memberdata, relationship: value });
+                    }}
+                    style={
+                      memberdata.relationship == ""
+                        ? {
+                            width: "100%",
+                            height: 55,
+                            color: "#00000090",
+                            fontFamily: "GeneralSansMedium",
+                            fontSize: 16,
+                          }
+                        : {
+                            width: "100%",
+                            height: 55,
+                            color: "#000000",
+                            fontFamily: "GeneralSansMedium",
+                            fontSize: 16,
+                          }
                     }
-                    value={memberdata.relationship}
-                    placeholder={{
-                      label: "Relationship",
-                      value: null,
-                    }}
-                    style={{
-                      placeholder: { color: "#00000065" },
-                      inputIOS: { color: "#000000" },
-                      inputAndroid: {
-                        color: "#000000",
-                        fontFamily: "GeneralSansMedium",
-                        fontSize: 16,
-                      },
-                    }}
-                    items={[
-                      {
-                        value: "Son",
-                        label: "Son",
-                        key: "1",
-                      },
-                      {
-                        value: "Daughter",
-                        label: "Daughter",
-                        key: "2",
-                      },
-                      {
-                        value: "GrandSon",
-                        label: "GrandSon",
-                        key: "3",
-                      },
-                      {
-                        value: "GrandDaughter",
-                        label: "GrandDaughter",
-                        key: "4",
-                      },
-                      {
-                        value: "Brother",
-                        label: "Brother",
-                        key: "5",
-                      },
-                      {
-                        value: "Sister",
-                        label: "Sister",
-                        key: "6",
-                      },
-                    ]}
-                  />
+                  >
+                    <Picker.Item value="" label="Relationship" />
+                    <Picker.Item value="Son" label="Son" />
+                    <Picker.Item value="Daughter" label="Daughter" />
+                    <Picker.Item value="GrandSon" label="GrandSon" />
+                    <Picker.Item value="GrandDaughter" label="GrandDaughter" />
+                    <Picker.Item value="Brother" label="Brother" />
+                    <Picker.Item value="Sister" label="Sister" />
+                  </Picker>
                 </View>
+             
               </View>
             </View>
             <View style={styles.viewBtns}>
@@ -1156,7 +890,9 @@ const Kids = ({ navigation, props }) => {
             <DataTable.Header>
               <DataTable.Title style={{ flex: 4 }}>Full Name</DataTable.Title>
               <DataTable.Title style={{ flex: 2 }}>Gender</DataTable.Title>
-              <DataTable.Title style={{ flex: 0.5 }}><AntDesign name="delete" size={25} color={"black"}/></DataTable.Title>
+              <DataTable.Title style={{ flex: 0.5 }}>
+                <AntDesign name="delete" size={25} color={"black"} />
+              </DataTable.Title>
             </DataTable.Header>
 
             {tableData.length
@@ -1173,7 +909,12 @@ const Kids = ({ navigation, props }) => {
                       {item.gender == "M" ? "Male" : "Female"}
                     </DataTable.Cell>
                     <DataTable.Cell style={{ flex: 0.5 }}>
-                      <AntDesign onPress={()=>findOneToDelete(`${item.childID}`)} name="delete" size={25} color={"red"}/>
+                      <AntDesign
+                        onPress={() => findOneToDelete(`${item.childID}`)}
+                        name="delete"
+                        size={25}
+                        color={"red"}
+                      />
                     </DataTable.Cell>
                   </DataTable.Row>
                 ))

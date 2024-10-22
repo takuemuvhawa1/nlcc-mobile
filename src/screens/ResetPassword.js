@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from '@react-navigation/native';
 import { SimpleLineIcons, FontAwesome } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { StatusBar } from "expo-status-bar";
@@ -45,12 +44,6 @@ const ResetPassword = ({ navigation }) => {
     setShowAlert(!showAlert);
     setAlerttext(txt);
     setAlerttitle(ttl);
-  };
-
-  const validateEmail = (email) => {
-    return email.match(
-      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
   };
 
   const handleBtnPress = async () => {
@@ -157,9 +150,6 @@ const ResetPassword = ({ navigation }) => {
       />
       <Text style={styles.txtTagline}>NEW LIFE COVENANT CHURCH</Text>
       <Text style={styles.txtFormName}>Set New Password</Text>
-      {/* <Text style={styles.txtFormInstruction}>
-          Provide your account details and press login button
-        </Text> */}
 
         <View style={styles.viewInputs}>
          
@@ -290,7 +280,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'PlayfairDisplayRegular',
     textAlign: 'center',
-    //color: '#FFFFFF',
     color: '#1a6363',
     marginTop: 15
   },

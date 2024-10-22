@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   View,
-  ImageBackground,
   Text,
   TouchableOpacity,
   Image,
@@ -11,20 +10,13 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "@react-navigation/native";
+
 import {
-  FontAwesome5,
   FontAwesome6,
   Octicons,
-  MaterialIcons,
-  FontAwesome,
-  MaterialCommunityIcons,
   Ionicons,
-  Foundation,
   AntDesign,
 } from "react-native-vector-icons";
-import AwesomeAlert from "react-native-awesome-alerts";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import Calender from "./Calender";
 
@@ -38,21 +30,10 @@ const Events = ({ navigation }) => {
     PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
   });
 
-  const [isactive, setIsactive] = React.useState(false);
-  const [showAlert, setShowAlert] = React.useState(false);
-  const [alerttext, setAlerttext] = React.useState("");
-  const [alerttitle, setAlerttitle] = React.useState("");
-  const [filtereddata, setFilteredData] = useState([]);
   const [showTabs, setShowTabs] = useState(true);
   const [searchtext, setSearchtext] = React.useState("");
 
   const calenderRef = useRef();
-
-  const doAlert = (txt, ttl) => {
-    setShowAlert(!showAlert);
-    setAlerttext(txt);
-    setAlerttitle(ttl);
-  };
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -85,33 +66,6 @@ const Events = ({ navigation }) => {
       end={{ x: 1, y: 1 }}
     >
       <StatusBar style="dark" translucent={true} hidden={false} />
-      <AwesomeAlert
-        show={showAlert}
-        contentContainerStyle={{ width: 307 }}
-        showProgress={false}
-        title={alerttitle}
-        message={alerttext}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={false}
-        showConfirmButton={true}
-        cancelText="No, cancel"
-        confirmText="Ok"
-        confirmButtonColor="#1a6363"
-        confirmButtonStyle={{width: "40%", alignItems: "center"}}
-        onCancelPressed={() => {
-          console.log("cancelled");
-          setShowAlert(false);
-          setAlerttext("");
-          setAlerttitle("");
-        }}
-        onConfirmPressed={() => {
-          console.log("closed");
-          setShowAlert(false);
-          setAlerttext("");
-          setAlerttitle("");
-        }}
-      />
       <View style={styles.viewTop}>
         <View
           style={{

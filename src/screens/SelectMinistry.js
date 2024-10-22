@@ -1,22 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import {
-  FontAwesome6,
-  FontAwesome,
-  Ionicons,
-  AntDesign,
-  Feather,
-  SimpleLineIcons,
+  Ionicons
 } from "react-native-vector-icons";
-import { useIsFocused } from "@react-navigation/native";
-import AwesomeAlert from "react-native-awesome-alerts";
 import { StatusBar } from "expo-status-bar";
 import MyMinistries from "./MyMinistries";
-import Apilink from "../constants/Links";
 
 const SelectMinistry = ({ navigation }) => {
+  
   const [fontsLoaded] = useFonts({
     GeneralSansMedium: require("../../assets/font/GeneralSans/GeneralSans-Medium.otf"),
     GeneralSansRegular: require("../../assets/font/GeneralSans/GeneralSans-Regular.otf"),
@@ -24,21 +17,6 @@ const SelectMinistry = ({ navigation }) => {
     PlayfairDisplayRegular: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Regular.otf"),
     PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
   });
-
-  const [isactive, setIsactive] = React.useState(false);
-  const [showAlert, setShowAlert] = React.useState(false);
-  const [alerttext, setAlerttext] = React.useState("");
-  const [alerttitle, setAlerttitle] = React.useState("");
-
-  const [data, setData] = useState([]);
-
-  const isFocused = useIsFocused();
-
-  const doAlert = (txt, ttl) => {
-    setShowAlert(!showAlert);
-    setAlerttext(txt);
-    setAlerttitle(ttl);
-  };
 
   if (!fontsLoaded) {
     return null;
@@ -52,33 +30,6 @@ const SelectMinistry = ({ navigation }) => {
       end={{ x: 1, y: 1 }}
     >
       <StatusBar style="dark" translucent={true} hidden={false} />
-      <AwesomeAlert
-        show={showAlert}
-        contentContainerStyle={{ width: 307 }}
-        showProgress={false}
-        title={alerttitle}
-        message={alerttext}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={false}
-        showConfirmButton={true}
-        cancelText="No, cancel"
-        confirmText="Ok"
-        confirmButtonColor="#1a6363"
-        confirmButtonStyle={{width: "40%", alignItems: "center"}}
-        onCancelPressed={() => {
-          console.log("cancelled");
-          setShowAlert(false);
-          setAlerttext("");
-          setAlerttitle("");
-        }}
-        onConfirmPressed={() => {
-          console.log("closed");
-          setShowAlert(false);
-          setAlerttext("");
-          setAlerttitle("");
-        }}
-      />
       <View style={styles.viewTop}>
         <View
           style={{

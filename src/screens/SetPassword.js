@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from '@react-navigation/native';
 import { SimpleLineIcons, FontAwesome } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -49,12 +48,6 @@ const SetPassword = ({ navigation }) => {
     setShowAlert(!showAlert);
     setAlerttext(txt);
     setAlerttitle(ttl);
-  };
-
-  const validateEmail = (email) => {
-    return email.match(
-      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
   };
 
   const handleBtnPress = async () => {
@@ -122,6 +115,7 @@ const SetPassword = ({ navigation }) => {
       })
     }
     findData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
   if (!fontsLoaded) {

@@ -36,44 +36,32 @@ const BtnsData = [
   {
     id: "6",
     title: "About",
-    vectoricon: "SimpleLineIcons",
-    icon: "info",
-    selected: false,
+    selected: true,
   },
   {
     id: "1",
     title: "Ministries",
-    vectoricon: "FontAwesome5",
-    icon: "church",
     selected: false,
   },
   {
     id: "2",
     title: "Calender",
-    vectoricon: "FontAwesome6",
-    icon: "people-roof",
     selected: false,
   },
   {
     id: "3",
     title: "Cell Groups",
-    vectoricon: "FontAwesome6",
-    icon: "people-roof",
     selected: false,
   },
   {
     id: "4",
     title: "Prayer Requests",
-    vectoricon: "FontAwesome5",
-    icon: "pray",
     selected: false,
   },
   {
     id: "5",
     title: "Refresh",
-    vectoricon: "SimpleLineIcons",
-    icon: "refresh",
-    selected: true,
+    selected: false,
   },
 ];
 
@@ -120,7 +108,6 @@ const Home = ({ navigation }) => {
     setAlerttitle(ttl);
   };
 
-  const [isOpen, setIsOpen] = useState(false);
   const [btns, setBtns] = useState([]);
   const [prevbtn, setPrevbtn] = useState("5");
   const [page, setPage] = useState("6");
@@ -155,15 +142,19 @@ const Home = ({ navigation }) => {
     }
   }
   const changeState = (id) => {
+    if (page==id){
+      return;
+    }
     setPage(id);
+
     let markers = [...btns];
     let index = markers.findIndex((el) => el.id == id);
     let previndex = markers.findIndex((el) => el.id == prevbtn);
 
-    markers[index] = { ...markers[index], selected: !markers[index].selected };
+    markers[index] = { ...markers[index], selected: true};
     markers[previndex] = {
       ...markers[previndex],
-      selected: !markers[previndex].selected,
+      selected: false
     };
 
     setPrevbtn(id);
@@ -172,6 +163,9 @@ const Home = ({ navigation }) => {
 
   const findSearched = (text) => {
     setSearchtext(text);
+    if (page==6 || page == 5){
+      return;
+    }
     if (prevbtn == 1) {
       ministryRef.current.getFilterValue(text);
     }
@@ -189,7 +183,7 @@ const Home = ({ navigation }) => {
     }
   };
 
-  const OneItem = ({ id, title, vectoricon, icon, selected }) => (
+  const OneItem = ({ id, title, selected }) => (
     <TouchableOpacity
       style={
         selected == true
@@ -323,8 +317,6 @@ const Home = ({ navigation }) => {
     <OneItem
       id={item.id}
       title={item.title}
-      vectoricon={item.vectoricon}
-      icon={item.icon}
       selected={item.selected}
     />
   );
@@ -341,7 +333,8 @@ const Home = ({ navigation }) => {
       const UserAddress = await AsyncStorage.getItem("UserAddress");
       const UserZone = await AsyncStorage.getItem("UserZone");
       const UserImg = await AsyncStorage.getItem("UserImg");
-
+      console.log(UserAlias)
+      
       if (UserID) {
         setUserdata({
           Tkn,
@@ -432,12 +425,12 @@ const Home = ({ navigation }) => {
             >
               <Image
                 style={styles.imgUsr}
-                source={
-                  userdata.UserImg ? { uri: `${userdata.UserImg}` } : null
-                }
-                // source={{
-                //   uri: `${userdata.UserImg}`,
-                // }}
+                // source={
+                //   userdata.UserImg ? { uri: `${userdata.UserImg}` } : null
+                // }
+                source={{
+                  uri: `${userdata.UserImg}`,
+                }}
               />
             </View>
             <View
@@ -818,6 +811,7 @@ const Home = ({ navigation }) => {
                 }}
               >
                 <Text
+                onPress={()=>navigation.navigate("AllNotifications")}
                   style={{ fontFamily: "GeneralSansRegular", fontSize: 14 }}
                 >
                   View All

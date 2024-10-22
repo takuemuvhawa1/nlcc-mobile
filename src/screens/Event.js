@@ -51,7 +51,7 @@ const Event = ({ navigation, props }) => {
     setAlerttitle(ttl);
   };
 
-  const OneTask = ({ id, task, requirements }) => (
+  const OneTask = ({ task }) => (
     <View
       style={{
         marginTop: 10,
@@ -77,7 +77,7 @@ const Event = ({ navigation, props }) => {
   );
 
   const renderItem = ({ item }) => (
-    <OneTask id={item.id} task={item.task} requirements={item.requirements} />
+    <OneTask task={item.task}  />
   );
 
   useEffect(() => {

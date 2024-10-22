@@ -43,9 +43,6 @@ const Otp = ({ navigation }) => {
       setToken(num);
     }
   };
-  const doFocusing = (num) => {
-    inputElement.current.focus();
-  };
 
   const removeLastChar = () => {
     var latestsStr = token.slice(0, -1);

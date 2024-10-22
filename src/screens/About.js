@@ -15,7 +15,6 @@ import {
   Feather,
   SimpleLineIcons
 } from "react-native-vector-icons";
-import AwesomeAlert from "react-native-awesome-alerts";
 import { StatusBar } from "expo-status-bar";
 
 const About = ({ navigation }) => {
@@ -26,17 +25,6 @@ const About = ({ navigation }) => {
     PlayfairDisplayRegular: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Regular.otf"),
     PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
   });
-
-  const [isactive, setIsactive] = React.useState(false);
-  const [showAlert, setShowAlert] = React.useState(false);
-  const [alerttext, setAlerttext] = React.useState("");
-  const [alerttitle, setAlerttitle] = React.useState("");
-
-  const doAlert = (txt, ttl) => {
-    setShowAlert(!showAlert);
-    setAlerttext(txt);
-    setAlerttitle(ttl);
-  };
 
   const RenderItem = ({ title }) => (
     <TouchableOpacity
@@ -115,13 +103,6 @@ const About = ({ navigation }) => {
     </TouchableOpacity>
   );
   
-  useEffect(() => {
-    const asyncFetch = () => {
-      console.log("first");
-    };
-    asyncFetch();
-  }, []);
-  
   if (!fontsLoaded) {
     return null;
   }
@@ -135,33 +116,7 @@ const About = ({ navigation }) => {
     >
     <StatusBar style="dark" translucent={true} hidden={false} />
     <ScrollView showsVerticalScrollIndicator={false}>
-      <AwesomeAlert
-        show={showAlert}
-        contentContainerStyle={{ width: 307 }}
-        showProgress={false}
-        title={alerttitle}
-        message={alerttext}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={false}
-        showConfirmButton={true}
-        cancelText="No, cancel"
-        confirmText="Ok"
-        confirmButtonColor="#1a6363"
-        confirmButtonStyle={{width: "40%", alignItems: "center"}}
-        onCancelPressed={() => {
-          console.log("cancelled");
-          setShowAlert(false);
-          setAlerttext("");
-          setAlerttitle("");
-        }}
-        onConfirmPressed={() => {
-          console.log("closed");
-          setShowAlert(false);
-          setAlerttext("");
-          setAlerttitle("");
-        }}
-      />
+    
       <View style={styles.viewTop}>
         <TouchableOpacity
           onPress={()=>navigation.navigate('More')}

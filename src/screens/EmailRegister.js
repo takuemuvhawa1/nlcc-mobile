@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "@react-navigation/native";
 import {
   FontAwesome5,
   AntDesign,
@@ -23,7 +22,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import Apilink from "../constants/Links";
-import RNPickerSelect from "react-native-picker-select";
+import { Picker } from "@react-native-picker/picker";
 
 const EmailRegister = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
@@ -34,7 +33,6 @@ const EmailRegister = ({ navigation }) => {
     PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
   });
 
-  const [hidepin, setHidepin] = React.useState(true);
   const [inputs, setInputs] = React.useState({
     registerwith: "Email",
     name: "",
@@ -56,12 +54,6 @@ const EmailRegister = ({ navigation }) => {
     setShowAlert(!showAlert);
     setAlerttext(txt);
     setAlerttitle(ttl);
-  };
-
-  const validateEmail = (email) => {
-    return email.match(
-      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
   };
 
   const dropDown = () => {
@@ -131,7 +123,6 @@ const EmailRegister = ({ navigation }) => {
     console.log(resJson);
 
     if (resJson.message == "Member added successfully") {
-      
       setIsactive(false);
       await AsyncStorage.setItem("TypedEmail", inputs.email);
       await AsyncStorage.setItem("ReceivedOTP", resJson.randNum);
@@ -144,19 +135,20 @@ const EmailRegister = ({ navigation }) => {
         name: "",
         surname: "",
         phone: "",
-        email: "",
         gender: "",
         address: "",
-        country: ""
+        country: "",
       });
       navigation.navigate("SetPassword");
       return;
     }
     if (resJson.message == "User already registered") {
-      
       setIsactive(false);
-        doAlert("Proceeding failed. User is registered already", "Submission Error");
-        return;
+      doAlert(
+        "Proceeding failed. User is registered already",
+        "Submission Error"
+      );
+      return;
     }
   };
 
@@ -262,113 +254,51 @@ const EmailRegister = ({ navigation }) => {
       </View>
       <View style={styles.viewInputs}>
         <View style={styles.viewInput}>
-          <View style={styles.viewIcon}>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "flex-end",
+              width: "11%",
+            }}
+          >
             <MaterialCommunityIcons
               name="gender-male-female"
               size={25}
-              style={styles.icoInputIcon}
+              style={{ color: "#00000050" }}
             />
           </View>
-          <TouchableOpacity
-            onPress={() => dropDown()}
-            style={styles.viewGenderInput}
-          >
-            <Text
+          <View style={styles.viewPickerInput}>
+            <Picker
+              selectedValue={inputs.gender}
+              onValueChange={(value) => {
+                setInputs({ ...inputs, gender: value });
+              }}
               style={
                 inputs.gender == ""
                   ? {
-                      color: "#00000060",
-                      fontSize: 16,
+                      width: "100%",
+                      height: 55,
+                      color: "#00000090",
                       fontFamily: "GeneralSansMedium",
+                      fontSize: 16,
                     }
                   : {
+                      width: "100%",
+                      height: 55,
                       color: "#ffffff",
-                      fontSize: 16,
                       fontFamily: "GeneralSansMedium",
+                      fontSize: 16,
                     }
               }
             >
-              {inputs.gender == "" ? "Gender" : inputs.gender}
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.viewGenderArrow}>
-            {drooped == false && (
-              <>
-                <MaterialIcons
-                  name="arrow-drop-down"
-                  size={26}
-                  style={{ color: "#00000090" }}
-                />
-              </>
-            )}
-            {drooped == true && (
-              <>
-                <MaterialIcons
-                  name="arrow-drop-up"
-                  size={26}
-                  style={{ color: "#00000090" }}
-                />
-              </>
-            )}
+              <Picker.Item value="" label="Gender" />
+              <Picker.Item value="Male" label="Male" />
+              <Picker.Item value="Female" label="Female" />
+              <Picker.Item value="Other" label="Other" />
+            </Picker>
           </View>
         </View>
       </View>
-      {drooped == true && (
-        <>
-          <TouchableOpacity
-            onPress={() => maleSelected()}
-            style={styles.viewInputs}
-          >
-            <View style={styles.viewGenders}>
-              <View style={styles.viewIcon}>
-                <MaterialCommunityIcons
-                  name="gender-male"
-                  size={22}
-                  style={styles.icoInputIcon}
-                />
-              </View>
-              <View style={styles.viewTextInput}>
-                <Text
-                  style={{
-                    color: "#00000060",
-                    fontSize: 16,
-                    fontFamily: "GeneralSansMedium",
-                    alignSelf: "flex-start",
-                  }}
-                >
-                  Male
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => femaleSelected()}
-            style={styles.viewInputs}
-          >
-            <View style={styles.viewGenders}>
-              <View style={styles.viewIcon}>
-                <MaterialCommunityIcons
-                  name="gender-female"
-                  size={22}
-                  style={styles.icoInputIcon}
-                />
-              </View>
-              <View style={styles.viewTextInput}>
-                <Text
-                  style={{
-                    color: "#00000060",
-                    fontSize: 16,
-                    fontFamily: "GeneralSansMedium",
-                    alignSelf: "flex-start",
-                  }}
-                >
-                  Female
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </>
-      )}
       <View style={styles.viewInputs}>
         <View style={styles.viewInput}>
           <View style={styles.viewIcon}>
@@ -421,520 +351,390 @@ const EmailRegister = ({ navigation }) => {
             />
           </View>
           <View style={styles.viewPickerInput}>
-            <RNPickerSelect
-              onValueChange={(text) => setInputs({ ...inputs, country: text })}
-              placeholder={{
-                label: "Country",
-                value: null,
+            <Picker
+              selectedValue={inputs.country}
+              onValueChange={(value) => {
+                setInputs({ ...inputs, country: value });
               }}
-              style={{
-                placeholder: { color: "#00000085" },
-                inputIOS: { color: "#ffffff" },
-                inputAndroid: {
-                  color: "#ffffff",
-                  fontFamily: "GeneralSansMedium",
-                  fontSize: 16,
-                },
-              }}
-              items={[
-                { value: "Afghanistan", label: "Afghanistan", key: "1" },
-                {
-                  value: "Aland Islands",
-                  label: "Aland Islands",
-                  key: "2",
-                },
-                { value: "Albania", label: "Albania", key: "3" },
-                { value: "Algeria", label: "Algeria", key: "4" },
-                {
-                  value: "American Samoa",
-                  label: "American Samoa",
-                  key: "5",
-                },
-                { value: "AndorrA", label: "AndorrA", key: "6" },
-                { value: "Angola", label: "Angola", key: "7" },
-                { value: "Anguilla", label: "Anguilla", key: "8" },
-                { value: "Antarctica", label: "Antarctica", key: "9" },
-                {
-                  value: "Antigua and Barbuda",
-                  label: "Antigua and Barbuda",
-                  key: "10",
-                },
-                { value: "Argentina", label: "Argentina", key: "11" },
-                { value: "Armenia", label: "Armenia", key: "12" },
-                { value: "Aruba", label: "Aruba", key: "13" },
-                { value: "Australia", label: "Australia", key: "14" },
-                { value: "Austria", label: "Austria", key: "15" },
-                { value: "Azerbaijan", label: "Azerbaijan", key: "16" },
-                { value: "Bahamas", label: "Bahamas", key: "17" },
-                { value: "Bahrain", label: "Bahrain", key: "18" },
-                { value: "Bangladesh", label: "Bangladesh", key: "19" },
-                { value: "Barbados", label: "Barbados", key: "20" },
-                { value: "Belarus", label: "Belarus", key: "21" },
-                { value: "Belgium", label: "Belgium", key: "22" },
-                { value: "Belize", label: "Belize", key: "23" },
-                { value: "Benin", label: "Benin", key: "24" },
-                { value: "Bermuda", label: "Bermuda", key: "25" },
-                { value: "Bhutan", label: "Bhutan", key: "26" },
-                { value: "Bolivia", label: "Bolivia", key: "27" },
-                {
-                  value: "Bosnia and Herzegovina",
-                  label: "Bosnia and Herzegovina",
-                  key: "28",
-                },
-                { value: "Botswana", label: "Botswana", key: "29" },
-                {
-                  value: "Bouvet Island",
-                  label: "ouvet Island",
-                  key: "30",
-                },
-                { value: "Brazil", label: "Brazil", key: "31" },
-                {
-                  value: "British Indian Ocean Territory",
-                  label: "British Indian Ocean Territory",
-                  key: "32",
-                },
-                {
-                  value: "Brunei Darussalam",
-                  label: "Brunei Darussalam",
-                  key: "33",
-                },
-                { value: "Bulgaria", label: "Bulgaria", key: "34" },
-                { value: "Burkina Faso", label: "Burkina Faso", key: "35" },
-                { value: "Burundi", label: "Burundi", key: "36" },
-                { value: "Cambodia", label: "Cambodia", key: "37" },
-                { value: "Cameroon", label: "Cameroon", key: "38" },
-                { value: "Canada", label: "Canada", key: "39" },
-                { value: "Cape Verde", label: "Cape Verde", key: "40" },
-                {
-                  value: "Cayman Islands",
-                  label: "Cayman Islands",
-                  key: "41",
-                },
-                {
-                  value: "Central African Republic",
-                  label: "Central African Republic",
-                  key: "42",
-                },
-                { value: "Chad", label: "TChadD", key: "43" },
-                { value: "Chile", label: "Chile", key: "44" },
-                { value: "China", label: "China", key: "45" },
-                {
-                  value: "Christmas Island",
-                  label: "Christmas Island",
-                  key: "46",
-                },
-                {
-                  value: "Cocos (Keeling) Islands",
-                  label: "Cocos (Keeling) Islands",
-                  key: "47",
-                },
-                { value: "Colombia", label: "Colombia", key: "48" },
-                { value: "Comoros", label: "Comoros", key: "49" },
-                { value: "Congo", label: "Congo", key: "50" },
-                {
-                  value: "The Democratic Republic of Congo",
-                  label: "The Democratic Republic of Congo",
-                  key: "51",
-                },
-                { value: "Cook Islands", label: "Cook Islands", key: "52" },
-                { value: "Costa Rica", label: "Costa Rica", key: "53" },
-                { value: "Croatia", label: "Croatia", key: "54" },
-                { value: "Cuba", label: "Cuba", key: "55" },
-                { value: "Cyprus", label: "Cyprus", key: "56" },
-                {
-                  value: "Czech Republic",
-                  label: "Czech Republic",
-                  key: "57",
-                },
-                { value: "Denmark", label: "Denmark", key: "58" },
-                { value: "Djibouti", label: "Djibouti", key: "59" },
-                { value: "Dominica", label: "Dominica", key: "60" },
-                {
-                  value: "Dominican Republic",
-                  label: "Dominican Republic",
-                  key: "61",
-                },
-                { value: "Ecuador", label: "Ecuador", key: "62" },
-                { value: "Egypt", label: "Egypt", key: "63" },
-                { value: "El Salvador", label: "El Salvador", key: "64" },
-                {
-                  value: "Equatorial Guinea",
-                  label: "Equatorial Guinea",
-                  key: "65",
-                },
-                { value: "Eritrea", label: "Eritrea", key: "66" },
-                { value: "Estonia", label: "Estonia", key: "67" },
-                { value: "Ethiopia", label: "Ethiopia", key: "68" },
-                {
-                  value: "Falkland Islands (Malvinas)",
-                  label: "Falkland Islands (Malvinas)",
-                  key: "69",
-                },
-                {
-                  value: "Faroe Islands",
-                  label: "Faroe Islands",
-                  key: "70",
-                },
-                { value: "Fiji", label: "Fiji", key: "71" },
-                { value: "Finland", label: "Finland", key: "72" },
-                { value: "France", label: "France", key: "73" },
-                {
-                  value: "French Guiana",
-                  label: "French Guiana",
-                  key: "74",
-                },
-                {
-                  value: "French Polynesia",
-                  label: "French Polynesia",
-                  key: "75",
-                },
-                {
-                  value: "French Southern Territories",
-                  label: "French Southern Territories",
-                  key: "76",
-                },
-                { value: "Gabon", label: "Gabon", key: "77" },
-                { value: "Gambia", label: "Gambia", key: "78" },
-                { value: "Georgia", label: "Georgia", key: "79" },
-                { value: "Germany", label: "Germany", key: "80" },
-                { value: "Ghana", label: "Ghana", key: "81" },
-                { value: "Gibraltar", label: "Gibraltar", key: "82" },
-                { value: "Greece", label: "Greece", key: "83" },
-                { value: "Greenland", label: "Greenland", key: "84" },
-                { value: "Grenada", label: "Grenada", key: "85" },
-                { value: "Guadeloupe", label: "Guadeloupe", key: "86" },
-                { value: "Guam", label: "Guam", key: "87" },
-                { value: "Guatemala", label: "Guatemala", key: "88" },
-                { value: "Guernsey", label: "Guernsey", key: "89" },
-                { value: "Guinea", label: "Guinea", key: "90" },
-                {
-                  value: "Guinea-Bissau",
-                  label: "Guinea-Bissau",
-                  key: "91",
-                },
-                { value: "Guyana", label: "Guyana", key: "92" },
-                { value: "Haiti", label: "Haiti", key: "93" },
-                {
-                  value: "Heard Island and Mcdonald Islands",
-                  label: "Heard Island and Mcdonald Islands",
-                  key: "94",
-                },
-                {
-                  value: "Holy See (Vatican City State)",
-                  label: "Holy See (Vatican City State)",
-                  key: "95",
-                },
-                { value: "Honduras", label: "Honduras", key: "96" },
-                { value: "Hong Kong", label: "Hong Kong", key: "97" },
-                { value: "Hungary", label: "Hungary", key: "98" },
-                { value: "Iceland", label: "Iceland", key: "99" },
-                { value: "India", label: "India", key: "100" },
-                { value: "Indonesia", label: "Indonesia", key: "101" },
-                {
-                  value: "Islamic Republic Of Iran",
-                  label: "Islamic Republic Of Iran",
-                  key: "102",
-                },
-                { value: "Iraq", label: "Iraq", key: "104" },
-                { value: "Ireland", label: "Ireland", key: "105" },
-                { value: "Isle of Man", label: "Isle of Man", key: "106" },
-                { value: "Israel", label: "Israel", key: "107" },
-                { value: "Italy", label: "Italy", key: "108" },
-                { value: "Jamaica", label: "Jamaica", key: "109" },
-                { value: "Japan", label: "Japan", key: "110" },
-                { value: "Jersey", label: "Jersey", key: "111" },
-                { value: "Jordan", label: "Jordan", key: "112" },
-                { value: "Kazakhstan", label: "Kazakhstan", key: "113" },
-                { value: "Kenya", label: "Kenya", key: "114" },
-                { value: "Kiribati", label: "Kiribati", key: "115" },
-                {
-                  value: "Republic of Korea",
-                  label: "Republic of Korea",
-                  key: "116",
-                },
-                { value: "Kuwait", label: "Kuwait", key: "117" },
-                { value: "Kyrgyzstan", label: "Kyrgyzstan", key: "118" },
-                { value: "Latvia", label: "Latvia", key: "119" },
-                { value: "Lebanon", label: "Lebanon", key: "120" },
-                { value: "Lesotho", label: "Lesotho", key: "121" },
-                { value: "Liberia", label: "Liberia", key: "122" },
-                {
-                  value: "Libyan Arab Jamahiriya",
-                  label: "Libyan Arab Jamahiriya",
-                  key: "123",
-                },
-                {
-                  value: "Liechtenstein",
-                  label: "Liechtenstein",
-                  key: "124",
-                },
-                { value: "Lithuania", label: "Lithuania", key: "125" },
-                { value: "Luxembourg", label: "Luxembourg", key: "126" },
-                { value: "Macao", label: "Macao", key: "127" },
-                {
-                  value: "North Macedonia",
-                  label: "North Macedonia",
-                  key: "128",
-                },
-                { value: "Madagascar", label: "Madagascar", key: "129" },
-                { value: "Malawi", label: "Malawi", key: "130" },
-                { value: "Malaysia", label: "Malaysia", key: "131" },
-                { value: "Maldives", label: "Maldives", key: "132" },
-                { value: "Mali", label: "Mali", key: "133" },
-                { value: "Malta", label: "Malta", key: "134" },
-                {
-                  value: "Marshall Islands",
-                  label: "Marshall Islands",
-                  key: "135",
-                },
-                { value: "Martinique", label: "Martinique", key: "136" },
-                { value: "Mauritania", label: "Mauritania", key: "137" },
-                { value: "Mauritius", label: "Mauritius", key: "138" },
-                { value: "Mayotte", label: "Mayotte", key: "139" },
-                { value: "Mexico", label: "Mexico", key: "140" },
-                {
-                  value: "Federated States of Micronesia",
-                  label: "Federated States of Micronesia",
-                  key: "141",
-                },
-                {
-                  value: "Republic of Moldova",
-                  label: "Republic of Moldova",
-                  key: "142",
-                },
-                { value: "Monaco", label: "Monaco", key: "143" },
-                { value: "Mongolia", label: "Mongolia", key: "144" },
-                { value: "Montserrat", label: "Montserrat", key: "145" },
-                { value: "Morocco", label: "Morocco", key: "146" },
-                { value: "Mozambique", label: "Mozambique", key: "147" },
-                { value: "Myanmar", label: "Myanmar", key: "148" },
-                { value: "Namibia", label: "Namibia", key: "149" },
-                { value: "Nauru", label: "Nauru", key: "150" },
-                { value: "Nepal", label: "Nepal", key: "151" },
-                { value: "Netherlands", label: "Netherlands", key: "152" },
-                {
-                  value: "Netherlands Antilles",
-                  label: "Netherlands Antilles",
-                  key: "153",
-                },
-                {
-                  value: "New Caledonia",
-                  label: "New Caledonia",
-                  key: "154",
-                },
-                { value: "New Zealand", label: "New Zealand", key: "155" },
-                { value: "Nicaragua", label: "Nicaragua", key: "156" },
-                { value: "Niger", label: "Niger", key: "157" },
-                { value: "Nigeria", label: "Nigeria", key: "158" },
-                { value: "Niue", label: "Niue", key: "159" },
-                {
-                  value: "Norfolk Island",
-                  label: "Norfolk Island",
-                  key: "160",
-                },
-                {
-                  value: "Northern Mariana Islands",
-                  label: "Northern Mariana Islands",
-                  key: "161",
-                },
-                { value: "Norway", label: "Norway", key: "162" },
-                { value: "Oman", label: "Oman", key: "163" },
-                { value: "Pakistan", label: "Pakistan", key: "164" },
-                { value: "Palau", label: "Palau", key: "165" },
-                {
-                  value: "Palestinian Territory, Occupied",
-                  label: "Palestinian Territory, Occupied",
-                  key: "166",
-                },
-                { value: "Panama", label: "Panama", key: "167" },
-                {
-                  value: "Papua New Guinea",
-                  label: "Papua New Guinea",
-                  key: "168",
-                },
-                { value: "Paraguay", label: "Paraguay", key: "169" },
-                { value: "Peru", label: "Peru", key: "170" },
-                { value: "Philippines", label: "Philippines", key: "171" },
-                {
-                  value: "Pitcairn Islands",
-                  label: "Pitcairn Islands",
-                  key: "172",
-                },
-                { value: "Poland", label: "Poland", key: "173" },
-                { value: "Portugal", label: "Portugal", key: "174" },
-                { value: "Puerto Rico", label: "Puerto Rico", key: "175" },
-                { value: "Qatar", label: "Qatar", key: "176" },
-                { value: "Reunion", label: "Reunion", key: "177" },
-                { value: "Romania", label: "Romania", key: "178" },
-                {
-                  value: "Russian Federation",
-                  label: "Russian Federation",
-                  key: "179",
-                },
-                { value: "Rwanda", label: "Rwanda", key: "180" },
-                {
-                  value: "Saint Helena",
-                  label: "Saint Helena",
-                  key: "181",
-                },
-                {
-                  value: "Saint Kitts and Nevis",
-                  label: "Saint Kitts and Nevis",
-                  key: "182",
-                },
-                { value: "Saint Lucia", label: "Saint Lucia", key: "183" },
-                {
-                  value: "Saint Pierre and Miquelon",
-                  label: "Saint Pierre and Miquelon",
-                  key: "184",
-                },
-                {
-                  value: "Saint Vincent and the Grenadines",
-                  label: "Saint Vincent and the Grenadines",
-                  key: "185",
-                },
-                { value: "Samoa", label: "Samoa", key: "186" },
-                { value: "San Marino", label: "San Marino", key: "187" },
-                {
-                  value: "Sao Tome and Principe",
-                  label: "Sao Tome and Principe",
-                  key: "188",
-                },
-                {
-                  value: "Saudi Arabia",
-                  label: "Saudi Arabia",
-                  key: "189",
-                },
-                { value: "Senegal", label: "Senegal", key: "190" },
-                {
-                  value: "Serbia and Montenegro",
-                  label: "Serbia and Montenegro",
-                  key: "191",
-                },
-                { value: "Seychelles", label: "Seychelles", key: "192" },
-                {
-                  value: "Sierra Leone",
-                  label: "Sierra Leone",
-                  key: "193",
-                },
-                { value: "Singapore", label: "Singapore", key: "194" },
-                { value: "Slovakia", label: "Slovakia", key: "195" },
-                { value: "Slovenia", label: "Slovenia", key: "196" },
-                {
-                  value: "Solomon Islands",
-                  label: "Solomon Islands",
-                  key: "197",
-                },
-                { value: "Somalia", label: "Somalia", key: "198" },
-                {
-                  value: "South Africa",
-                  label: "South Africa",
-                  key: "199",
-                },
-                {
-                  value: "South Georgia and the South Sandwich Islands",
-                  label: "South Georgia and the South Sandwich Islands",
-                  key: "200",
-                },
-                { value: "Spain", label: "Spain", key: "201" },
-                { value: "Sri Lanka", label: "Sri Lanka", key: "202" },
-                { value: "Sudan", label: "Sudan", key: "203" },
-                { value: "Suriname", label: "Suriname", key: "204" },
-                {
-                  value: "Svalbard and Jan Mayen",
-                  label: "Svalbard and Jan Mayen",
-                  key: "205",
-                },
-                { value: "Swaziland", label: "SSwazilandZ", key: "206" },
-                { value: "Sweden", label: "Sweden", key: "207" },
-                { value: "Switzerland", label: "Switzerland", key: "208" },
-                {
-                  value: "Syrian Arab Republic",
-                  label: "Syrian Arab Republic",
-                  key: "209",
-                },
-                { value: "Taiwan", label: "Taiwan", key: "210" },
-                { value: "Tajikistan", label: "Tajikistan", key: "211" },
-                {
-                  value: "United Republic of Tanzania",
-                  label: "United Republic of Tanzania",
-                  key: "212",
-                },
-                { value: "Thailand", label: "Thailand", key: "213" },
-                { value: "Timor-Leste", label: "Timor-Leste", key: "214" },
-                { value: "Togo", label: "Togo", key: "215" },
-                { value: "Tokelau", label: "Tokelau", key: "216" },
-                { value: "Tonga", label: "Tonga", key: "217" },
-                {
-                  value: "Trinidad and Tobago",
-                  label: "Trinidad and Tobago",
-                  key: "218",
-                },
-                { value: "Tunisia", label: "Tunisia", key: "219" },
-                { value: "Turkey", label: "Turkey", key: "220" },
-                {
-                  value: "Turkmenistan",
-                  label: "Turkmenistan",
-                  key: "221",
-                },
-                {
-                  value: "Turks and Caicos Islands",
-                  label: "Turks and Caicos Islands",
-                  key: "222",
-                },
-                { value: "Tuvalu", label: "Tuvalu", key: "223" },
-                { value: "Uganda", label: "Uganda", key: "224" },
-                { value: "Ukraine", label: "Ukraine", key: "225" },
-                {
-                  value: "United Arab Emirates",
-                  label: "United Arab Emirates",
-                  key: "226",
-                },
-                {
-                  value: "United Kingdom",
-                  label: "United Kingdom",
-                  key: "227",
-                },
-                {
-                  value: "United States",
-                  label: "United States",
-                  key: "228",
-                },
-                {
-                  value: "United States Minor Outlying Islands",
-                  label: "United States Minor Outlying Islands",
-                  key: "229",
-                },
-                { value: "Uruguay", label: "Uruguay", key: "230" },
-                { value: "Uzbekistan", label: "Uzbekistan", key: "231" },
-                { value: "Vanuatu", label: "Vanuatu", key: "232" },
-                { value: "Venezuela", label: "Venezuela", key: "233" },
-                { value: "Vietnam", label: "Vietnam", key: "234" },
-                {
-                  value: "Virgin Islands, British",
-                  label: "Virgin Islands, British",
-                  key: "235",
-                },
-                {
-                  value: "Virgin Islands, U.S.",
-                  label: "Virgin Islands, U.S.",
-                  key: "236",
-                },
-                {
-                  value: "Wallis and Futuna",
-                  label: "Wallis and Futuna",
-                  key: "237",
-                },
-                {
-                  value: "Western Sahara",
-                  label: "Western Sahara",
-                  key: "238",
-                },
-                { value: "Yemen", label: "Yemen", key: "239" },
-                { value: "Zambia", label: "Zambia", key: "240" },
-                { value: "Zimbabwe", label: "Zimbabwe", key: "241" },
-              ]}
-            />
+              style={
+                inputs.country == ""
+                  ? {
+                      width: "100%",
+                      height: 55,
+                      color: "#00000090",
+                      fontFamily: "GeneralSansMedium",
+                      fontSize: 16,
+                    }
+                  : {
+                      width: "100%",
+                      height: 55,
+                      color: "#ffffff",
+                      fontFamily: "GeneralSansMedium",
+                      fontSize: 16,
+                    }
+              }
+            >
+              <Picker.Item value="" label="Country" />
+              <Picker.Item value="Afghanistan" label="Afghanistan" />
+              <Picker.Item value="Aland Islands" label="Aland Islands" />
+              <Picker.Item value="Albania" label="Albania" />
+              <Picker.Item value="Algeria" label="Algeria" />
+              <Picker.Item value="American Samoa" label="American Samoa" />
+              <Picker.Item value="AndorrA" label="AndorrA" />
+              <Picker.Item value="Angola" label="Angola" />
+              <Picker.Item value="Anguilla" label="Anguilla" />
+              <Picker.Item value="Antarctica" label="Antarctica" />
+              <Picker.Item
+                value="Antigua and Barbuda"
+                label="Antigua and Barbuda"
+              />
+              <Picker.Item value="Argentina" label="Argentina" />
+              <Picker.Item value="Armenia" label="Armenia" />
+              <Picker.Item value="Aruba" label="Aruba" />
+              <Picker.Item value="Australia" label="Australia" />
+              <Picker.Item value="Austria" label="Austria" />
+              <Picker.Item value="Azerbaijan" label="Azerbaijan" />
+              <Picker.Item value="Bahamas" label="Bahamas" />
+              <Picker.Item value="Bahrain" label="Bahrain" />
+              <Picker.Item value="Bangladesh" label="Bangladesh" />
+              <Picker.Item value="Barbados" label="Barbados" />
+              <Picker.Item value="Belarus" label="Belarus" />
+              <Picker.Item value="Belgium" label="Belgium" />
+              <Picker.Item value="Belize" label="Belize" />
+              <Picker.Item value="Benin" label="Benin" />
+              <Picker.Item value="Bermuda" label="Bermuda" />
+              <Picker.Item value="Bhutan" label="Bhutan" />
+              <Picker.Item value="Bolivia" label="Bolivia" />
+              <Picker.Item
+                value="Bosnia and Herzegovina"
+                label="Bosnia and Herzegovina"
+              />
+              <Picker.Item value="Botswana" label="Botswana" />
+              <Picker.Item value="Bouvet Island" label="Bouvet Island" />
+              <Picker.Item value="Brazil" label="Brazil" />
+              <Picker.Item
+                value="British Indian Ocean Territory"
+                label="British Indian Ocean Territory"
+              />
+              <Picker.Item
+                value="Brunei Darussalam"
+                label="Brunei Darussalam"
+              />
+              <Picker.Item value="Bulgaria" label="Bulgaria" />
+              <Picker.Item value="Burkina Faso" label="Burkina Faso" />
+              <Picker.Item value="Burundi" label="Burundi" />
+              <Picker.Item value="Cambodia" label="Cambodia" />
+              <Picker.Item value="Cameroon" label="Cameroon" />
+              <Picker.Item value="Canada" label="Canada" />
+              <Picker.Item value="Cape Verde" label="Cape Verde" />
+              <Picker.Item value="Cayman Islands" label="Cayman Islands" />
+              <Picker.Item
+                value="Central African Republic"
+                label="Central African Republic"
+              />
+              <Picker.Item value="Chad" label="TChadD" />
+              <Picker.Item value="Chile" label="Chile" />
+              <Picker.Item value="China" label="China" />
+              <Picker.Item value="Christmas Island" label="Christmas Island" />
+              <Picker.Item
+                value="Cocos (Keeling) Islands"
+                label="Cocos (Keeling) Islands"
+              />
+              <Picker.Item value="Colombia" label="Colombia" />
+              <Picker.Item value="Comoros" label="Comoros" />
+              <Picker.Item value="Congo" label="Congo" />
+              <Picker.Item
+                value="The Democratic Republic of Congo"
+                label="The Democratic Republic of Congo"
+              />
+              <Picker.Item value="Cook Islands" label="Cook Islands" />
+              <Picker.Item value="Costa Rica" label="Costa Rica" />
+              <Picker.Item value="Croatia" label="Croatia" />
+              <Picker.Item value="Cuba" label="Cuba" />
+              <Picker.Item value="Cyprus" label="Cyprus" />
+              <Picker.Item value="Czech Republic" label="Czech Republic" />
+              <Picker.Item value="Denmark" label="Denmark" />
+              <Picker.Item value="Djibouti" label="Djibouti" />
+              <Picker.Item value="Dominica" label="Dominica" />
+              <Picker.Item
+                value="Dominican Republic"
+                label="Dominican Republic"
+              />
+              <Picker.Item value="Ecuador" label="Ecuador" />
+              <Picker.Item value="Egypt" label="Egypt" />
+              <Picker.Item value="El Salvador" label="El Salvador" />
+              <Picker.Item
+                value="Equatorial Guinea"
+                label="Equatorial Guinea"
+              />
+              <Picker.Item value="Eritrea" label="Eritrea" />
+              <Picker.Item value="Estonia" label="Estonia" />
+              <Picker.Item value="Ethiopia" label="Ethiopia" />
+              <Picker.Item
+                value="Falkland Islands (Malvinas)"
+                label="Falkland Islands (Malvinas)"
+              />
+              <Picker.Item value="Faroe Islands" label="Faroe Islands" />
+              <Picker.Item value="Fiji" label="Fiji" />
+              <Picker.Item value="Finland" label="Finland" />
+              <Picker.Item value="France" label="France" />
+              <Picker.Item value="French Guiana" label="French Guiana" />
+              <Picker.Item value="French Polynesia" label="French Polynesia" />
+              <Picker.Item
+                value="French Southern Territories"
+                label="French Southern Territories"
+              />
+              <Picker.Item value="Gabon" label="Gabon" />
+              <Picker.Item value="Gambia" label="Gambia" />
+              <Picker.Item value="Georgia" label="Georgia" />
+              <Picker.Item value="Germany" label="Germany" />
+              <Picker.Item value="Ghana" label="Ghana" />
+              <Picker.Item value="Gibraltar" label="Gibraltar" />
+              <Picker.Item value="Greece" label="Greece" />
+              <Picker.Item value="Greenland" label="Greenland" />
+              <Picker.Item value="Grenada" label="Grenada" />
+              <Picker.Item value="Guadeloupe" label="Guadeloupe" />
+              <Picker.Item value="Guam" label="Guam" />
+              <Picker.Item value="Guatemala" label="Guatemala" />
+              <Picker.Item value="Guernsey" label="Guernsey" />
+              <Picker.Item value="Guinea" label="Guinea" />
+              <Picker.Item value="Guinea-Bissau" label="Guinea-Bissau" />
+              <Picker.Item value="Guyana" label="Guyana" />
+              <Picker.Item value="Haiti" label="Haiti" />
+              <Picker.Item
+                value="Heard Island and Mcdonald Islands"
+                label="Heard Island and Mcdonald Islands"
+              />
+              <Picker.Item
+                value="Holy See (Vatican City State)"
+                label="Holy See (Vatican City State)"
+              />
+              <Picker.Item value="Honduras" label="Honduras" />
+              <Picker.Item value="Hong Kong" label="Hong Kong" />
+              <Picker.Item value="Hungary" label="Hungary" />
+              <Picker.Item value="Iceland" label="Iceland" />
+              <Picker.Item value="India" label="India" />
+
+              <Picker.Item value="Indonesia" label="Indonesia" />
+
+              <Picker.Item
+                value="Islamic Republic Of Iran"
+                label="Islamic Republic Of Iran"
+              />
+              <Picker.Item value="Iraq" label="Iraq" />
+
+              <Picker.Item value="Ireland" label="Ireland" />
+
+              <Picker.Item value="Isle of Man" label="Isle of Man" />
+
+              <Picker.Item value="Israel" label="Israel" />
+              <Picker.Item value="Italy" label="Italy" />
+              <Picker.Item value="Jamaica" label="Jamaica" />
+              <Picker.Item value="Japan" label="Japan" />
+              <Picker.Item value="Jersey" label="Jersey" />
+              <Picker.Item value="Jordan" label="Jordan" />
+              <Picker.Item value="Kazakhstan" label="Kazakhstan" />
+              <Picker.Item value="Kenya" label="Kenya" />
+              <Picker.Item value="Kiribati" label="Kiribati" />
+              <Picker.Item
+                value="Republic of Korea"
+                label="Republic of Korea"
+              />
+              <Picker.Item value="Kuwait" label="Kuwait" />
+              <Picker.Item value="Kyrgyzstan" label="Kyrgyzstan" />
+              <Picker.Item value="Latvia" label="Latvia" />
+              <Picker.Item value="Lebanon" label="Lebanon" />
+              <Picker.Item value="Lesotho" label="Lesotho" />
+              <Picker.Item value="Liberia" label="Liberia" />
+              <Picker.Item
+                value="Libyan Arab Jamahiriya"
+                label="Libyan Arab Jamahiriya"
+              />
+              <Picker.Item value="Liechtenstein" label="Liechtenstein" />
+              <Picker.Item value="Lithuania" label="Lithuania" />
+              <Picker.Item value="Luxembourg" label="Luxembourg" />
+              <Picker.Item value="Macao" label="Macao" />
+              <Picker.Item value="North Macedonia" label="North Macedonia" />
+              <Picker.Item value="Madagascar" label="Madagascar" />
+              <Picker.Item value="Malawi" label="Malawi" />
+              <Picker.Item value="Malaysia" label="Malaysia" />
+              <Picker.Item value="Maldives" label="Maldives" />
+              <Picker.Item value="Mali" label="Mali" />
+              <Picker.Item value="Malta" label="Malta" />
+              <Picker.Item value="Marshall Islands" label="Marshall Islands" />
+              <Picker.Item value="Martinique" label="Martinique" />
+              <Picker.Item value="Mauritania" label="Mauritania" />
+              <Picker.Item value="Mauritius" label="Mauritius" />
+              <Picker.Item value="Mayotte" label="Mayotte" />
+              <Picker.Item value="Mexico" label="Mexico" />
+              <Picker.Item
+                value="Federated States of Micronesia"
+                label="Federated States of Micronesia"
+              />
+              <Picker.Item
+                value="Republic of Moldova"
+                label="Republic of Moldova"
+              />
+              <Picker.Item value="Monaco" label="Monaco" />
+              <Picker.Item value="Mongolia" label="Mongolia" />
+              <Picker.Item value="Montserrat" label="Montserrat" />
+              <Picker.Item value="Morocco" label="Morocco" />
+              <Picker.Item value="Mozambique" label="Mozambique" />
+              <Picker.Item value="Myanmar" label="Myanmar" />
+              <Picker.Item value="Namibia" label="Namibia" />
+              <Picker.Item value="Nauru" label="Nauru" />
+              <Picker.Item value="Nepal" label="Nepal" />
+              <Picker.Item value="Netherlands" label="Netherlands" />
+              <Picker.Item
+                value="Netherlands Antilles"
+                label="Netherlands Antilles"
+              />
+              <Picker.Item value="New Caledonia" label="New Caledonia" />
+              <Picker.Item value="New Zealand" label="New Zealand" />
+              <Picker.Item value="Nicaragua" label="Nicaragua" />
+              <Picker.Item value="Niger" label="Niger" />
+              <Picker.Item value="Nigeria" label="Nigeria" />
+              <Picker.Item value="Niue" label="Niue" />
+              <Picker.Item value="Norfolk Island" label="Norfolk Island" />
+              <Picker.Item
+                value="Northern Mariana Islands"
+                label="Northern Mariana Islands"
+              />
+              <Picker.Item value="Norway" label="Norway" />
+              <Picker.Item value="Oman" label="Oman" />
+              <Picker.Item value="Pakistan" label="Pakistan" />
+              <Picker.Item value="Palau" label="Palau" />
+              <Picker.Item
+                value="Palestinian Territory Occupied"
+                label="Palestinian Territory Occupied"
+              />
+              <Picker.Item value="Panama" label="Panama" />
+              <Picker.Item value="Papua New Guinea" label="Papua New Guinea" />
+              <Picker.Item value="Paraguay" label="Paraguay" />
+              <Picker.Item value="Peru" label="Peru" />
+              <Picker.Item value="Philippines" label="Philippines" />
+              <Picker.Item value="Pitcairn Islands" label="Pitcairn Islands" />
+              <Picker.Item value="Poland" label="Poland" />
+              <Picker.Item value="Portugal" label="Portugal" />
+              <Picker.Item value="Puerto Rico" label="Puerto Rico" />
+              <Picker.Item value="Qatar" label="Qatar" />
+              <Picker.Item value="Reunion" label="Reunion" />
+              <Picker.Item value="Romania" label="Romania" />
+              <Picker.Item
+                value="Russian Federation"
+                label="Russian Federation"
+              />
+              <Picker.Item value="Rwanda" label="Rwanda" />
+              <Picker.Item value="Saint Helena" label="Saint Helena" />
+              <Picker.Item
+                value="Saint Kitts and Nevis"
+                label="Saint Kitts and Nevis"
+              />
+              <Picker.Item value="Saint Lucia" label="Saint Lucia" />
+              <Picker.Item
+                value="Saint Pierre and Miquelon"
+                label="Saint Pierre and Miquelon"
+              />
+              <Picker.Item
+                value="Saint Vincent and the Grenadines"
+                label="Saint Vincent and the Grenadines"
+              />
+              <Picker.Item value="Samoa" label="Samoa" />
+              <Picker.Item value="San Marino" label="San Marino" />
+              <Picker.Item
+                value="Sao Tome and Principe"
+                label="Sao Tome and Principe"
+              />
+              <Picker.Item value="Saudi Arabia" label="Saudi Arabia" />
+              <Picker.Item value="Senegal" label="Senegal" />
+              <Picker.Item
+                value="Serbia and Montenegro"
+                label="Serbia and Montenegro"
+              />
+              <Picker.Item value="Seychelles" label="Seychelles" />
+              <Picker.Item value="Sierra Leone" label="Sierra Leone" />
+              <Picker.Item value="Singapore" label="Singapore" />
+              <Picker.Item value="Slovakia" label="Slovakia" />
+              <Picker.Item value="Slovenia" label="Slovenia" />
+              <Picker.Item value="Solomon Islands" label="Solomon Islands" />
+              <Picker.Item value="Somalia" label="Somalia" />
+              <Picker.Item value="South Africa" label="South Africa" />
+              <Picker.Item
+                value="South Georgia and the South Sandwich Islands"
+                label="South Georgia and the South Sandwich Islands"
+              />
+              <Picker.Item value="Spain" label="Spain" />
+              <Picker.Item value="Sri Lanka" label="Sri Lanka" />
+              <Picker.Item value="Sudan" label="Sudan" />
+              <Picker.Item value="Suriname" label="Suriname" />
+              <Picker.Item
+                value="Svalbard and Jan Mayen"
+                label="Svalbard and Jan Mayen"
+              />
+              <Picker.Item value="Swaziland" label="SSwazilandZ" />
+              <Picker.Item value="Sweden" label="Sweden" />
+              <Picker.Item value="Switzerland" label="Switzerland" />
+              <Picker.Item
+                value="Syrian Arab Republic"
+                label="Syrian Arab Republic"
+              />
+              <Picker.Item value="Taiwan" label="Taiwan" />
+              <Picker.Item value="Tajikistan" label="Tajikistan" />
+              <Picker.Item
+                value="United Republic of Tanzania"
+                label="United Republic of Tanzania"
+              />
+              <Picker.Item value="Thailand" label="Thailand" />
+              <Picker.Item value="Timor-Leste" label="Timor-Leste" />
+              <Picker.Item value="Togo" label="Togo" />
+              <Picker.Item value="Tokelau" label="Tokelau" />
+              <Picker.Item value="Tonga" label="Tonga" />
+              <Picker.Item
+                value="Trinidad and Tobago"
+                label="Trinidad and Tobago"
+              />
+              <Picker.Item value="Tunisia" label="Tunisia" />
+              <Picker.Item value="Turkey" label="Turkey" />
+              <Picker.Item value="Turkmenistan" label="Turkmenistan" />
+              <Picker.Item
+                value="Turks and Caicos Islands"
+                label="Turks and Caicos Islands"
+              />
+              <Picker.Item value="Tuvalu" label="Tuvalu" />
+              <Picker.Item value="Uganda" label="Uganda" />
+              <Picker.Item value="Ukraine" label="Ukraine" />
+              <Picker.Item
+                value="United Arab Emirates"
+                label="United Arab Emirates"
+              />
+              <Picker.Item value="United Kingdom" label="United Kingdom" />
+              <Picker.Item value="United States" label="United States" />
+              <Picker.Item
+                value="United States Minor Outlying Islands"
+                label="United States Minor Outlying Islands"
+              />
+              <Picker.Item value="Uruguay" label="Uruguay" />
+              <Picker.Item value="Uzbekistan" label="Uzbekistan" />
+              <Picker.Item value="Vanuatu" label="Vanuatu" />
+              <Picker.Item value="Venezuela" label="Venezuela" />
+              <Picker.Item value="Vietnam" label="Vietnam" />
+              <Picker.Item
+                value="Virgin Islands British"
+                label="Virgin Islands British"
+              />
+              <Picker.Item
+                value="Virgin Islands U.S."
+                label="Virgin Islands U.S."
+              />
+              <Picker.Item
+                value="Wallis and Futuna"
+                label="Wallis and Futuna"
+              />
+              <Picker.Item value="Western Sahara" label="Western Sahara" />
+              <Picker.Item value="Yemen" label="Yemen" />
+              <Picker.Item value="Zambia" label="Zambia" />
+              <Picker.Item value="Zimbabwe" label="Zimbabwe" />
+            </Picker>
           </View>
         </View>
       </View>
@@ -971,13 +771,6 @@ const styles = StyleSheet.create({
     height: 40,
     alignSelf: "flex-end",
     resizeMode: "cover",
-  },
-  txtTagline: {
-    fontSize: 14,
-    fontFamily: "PlayfairDisplayRegular",
-    textAlign: "center",
-    color: "#1a6363",
-    marginTop: 15,
   },
   txtFormName: {
     fontSize: 20,
@@ -1025,7 +818,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 40,
     paddingHorizontal: 20,
-    marginBottom: 100
+    marginBottom: 100,
   },
   viewIcon: {
     justifyContent: "center",

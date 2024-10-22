@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
-  ImageBackground,
   Text,
-  TouchableOpacity,
   Image,
-  StatusBar,
-  ScrollView,
+  StatusBar
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
@@ -15,8 +12,6 @@ import {
   FontAwesome6
 } from "react-native-vector-icons";
 import { useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { setStatusBarBackgroundColor } from "expo-status-bar";
 
 const Splash = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
@@ -30,7 +25,6 @@ const Splash = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       const unloadScreen = () => {
-        //console.log('SignIn');
         navigation.navigate('SignIn');
       };
       setTimeout(() => {
@@ -95,7 +89,6 @@ const styles = StyleSheet.create({
     fontFamily: 'PlayfairDisplayRegular',
     alignSelf: 'flex-end',
     color: '#FFFFFF',
-    // color: '#1a6363',
     marginTop: 5,
     marginRight: 25
   },
@@ -105,7 +98,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     lineHeight: 30,
     color: '#FFFFFF',
-    //color: '#1a6363',
     marginTop: 5,
     marginRight: 25
   },

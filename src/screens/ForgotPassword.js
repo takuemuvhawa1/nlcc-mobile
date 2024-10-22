@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from '@react-navigation/native';
 import { SimpleLineIcons } from "react-native-vector-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { StatusBar } from "expo-status-bar";
@@ -27,7 +26,6 @@ const ForgotPassword = ({ navigation }) => {
     PlayfairDisplayBold: require("../../assets/font/PlayfairDisplay/PlayfairDisplay-Bold.otf"),
   });
 
-  const [hidepin, setHidepin] = React.useState(true);
   const [inputs, setInputs] = React.useState({
     email: "",
     password: "",
@@ -42,12 +40,6 @@ const ForgotPassword = ({ navigation }) => {
     setShowAlert(!showAlert);
     setAlerttext(txt);
     setAlerttitle(ttl);
-  };
-
-  const validateEmail = (email) => {
-    return email.match(
-      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
   };
 
   const handleProceed = async () => {
@@ -200,7 +192,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'PlayfairDisplayRegular',
     textAlign: 'center',
-    //color: '#FFFFFF',
     color: '#1a6363',
     marginTop: 15
   },

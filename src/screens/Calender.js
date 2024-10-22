@@ -5,22 +5,15 @@ import React, {
   useImperativeHandle
 } from "react";
 import {
-  StyleSheet,
   View,
-  ImageBackground,
   Text,
   TouchableOpacity,
-  Image,
-  ScrollView,
-  TextInput,
-  FlatList,
-  Keyboard,
+  FlatList
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "react-native-vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useIsFocused } from "@react-navigation/native";
 import Apilink from "../constants/Links";
 import moment from 'moment';
 
@@ -28,7 +21,6 @@ const Calender = forwardRef((props, ref) => {
   const [data, setData] = useState([]);
   const [filtereddata, setFilteredData] = useState([]);
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
 
   const showEvent = async (id) => {
     let result = data.find((obj) => obj.id === id);
@@ -119,13 +111,6 @@ const Calender = forwardRef((props, ref) => {
       time={item.time}
     />
   );
-
-  // useEffect(() => {
-  //   const asyncFetch = () => {
-  //     setData(apiData);
-  //   };
-  //   asyncFetch();
-  // }, []);
 
   useEffect(() => {
     const asyncFetch = async () => {
