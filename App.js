@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,13 +30,13 @@ import SelectCellgroup from './src/screens/SelectCellgroup';
 import CellgroupMinistry from './src/screens/CellgroupMinistry';
 import Kids from './src/screens/Kids';
 import Donations from './src/screens/Donations';
+import AllNotifications from './src/screens/AllNotifications';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   
-  const [initialRouteName, setInitialRouteName] = React.useState('Ministry');
-  
+  const [initialRouteName, setInitialRouteName] = React.useState('Splash');
   // React.useEffect(() => {
   //   setTimeout(() => {
   //     authUser();
@@ -93,6 +93,7 @@ const App = () => {
             <Stack.Screen name="CellgroupMinistry" component={CellgroupMinistry} />
             <Stack.Screen name="Kids" component={Kids} />
             <Stack.Screen name="Donations" component={Donations} />
+            <Stack.Screen name="AllNotifications" component={AllNotifications} />
           </Stack.Navigator>
     </NavigationContainer>
   );
